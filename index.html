@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PowerShare Studio v8 | Clean Aerospace MGSE Workspace</title>
+<title>PowerShare Studio v9 | Clean Aerospace MGSE Workspace</title>
 <style>
   :root {
     --bg-base: #090d16;
@@ -78,7 +78,6 @@
     transition: background-color 0.2s ease, color 0.2s ease;
   }
 
-  /* Header */
   header {
     background: var(--bg-sidebar);
     border-bottom: 1px solid var(--border);
@@ -172,7 +171,6 @@
   .btn-icon-danger { color: var(--danger); }
   .btn-icon-danger:hover { background: var(--danger); color: #fff; }
 
-  /* Workspace Layout */
   .workspace-layout {
     flex: 1;
     display: flex;
@@ -180,7 +178,6 @@
     position: relative;
   }
 
-  /* Left Sidebar */
   .left-sidebar {
     width: 230px;
     background: var(--bg-sidebar);
@@ -265,15 +262,13 @@
     line-height: 1.4;
   }
 
-  /* Canvas Stage */
   .canvas-stage {
     flex: 1;
     display: flex;
     gap: 12px;
     padding: 12px;
     background: var(--bg-base);
-    overflow-x: auto;
-    overflow-y: hidden;
+    overflow: hidden;
   }
 
   .window-panel {
@@ -288,7 +283,7 @@
     box-shadow: 0 8px 25px rgba(0,0,0,0.25);
   }
 
-  .canvas-stage.mode-split .window-panel { min-width: 540px; }
+  .canvas-stage.mode-split .window-panel { min-width: 520px; }
   .canvas-stage.mode-fullscreen .window-panel { width: 100%; min-width: 100%; }
 
   .window-header {
@@ -352,12 +347,12 @@
 
   .window-content {
     flex: 1;
-    overflow: hidden;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
   }
 
-  /* TAB 1: SHEET */
+  /* SHEET */
   .sheet-scroll {
     flex: 1;
     overflow: auto;
@@ -422,7 +417,7 @@
   .status-orange { background: rgba(249, 115, 22, 0.2); color: var(--status-orange); border-color: rgba(249, 115, 22, 0.4); }
   .status-red { background: rgba(239, 68, 68, 0.2); color: var(--status-red); border-color: rgba(239, 68, 68, 0.4); }
 
-  /* TAB 2: DOC */
+  /* DOC */
   .doc-split {
     flex: 1;
     display: flex;
@@ -453,10 +448,7 @@
     margin-bottom: 6px;
   }
 
-  .main-section-group {
-    margin-bottom: 8px;
-  }
-
+  .main-section-group { margin-bottom: 8px; }
   .main-section-item {
     padding: 6px 8px;
     border-radius: 5px;
@@ -529,7 +521,7 @@
     resize: none;
   }
 
-  /* TAB 3: POWERPOINT */
+  /* POWERPOINT */
   .ppt-view {
     flex: 1;
     display: flex;
@@ -582,7 +574,7 @@
     padding-top: 10px;
   }
 
-  /* TAB 4: GRAPHS */
+  /* GRAPHS */
   .graph-view {
     flex: 1;
     padding: 20px;
@@ -631,7 +623,6 @@
   .pillar-card.pillar-cad { border-top: 3px solid var(--cad-color); }
   .pillar-card.pillar-elec { border-top: 3px solid var(--elec-color); }
   .pillar-card.pillar-mecha { border-top: 3px solid var(--mecha-color); }
-
   .pillar-header { display: flex; justify-content: space-between; align-items: center; }
   .pillar-name { font-size: 13px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
 
@@ -690,86 +681,112 @@
   }
 
   /* ================================================= */
-  /* TAB 5: CAD & DESIGN VAULT (EXPANDED SUBFOLDER TREE) */
+  /* TAB 5: CAD & DESIGN VAULT (CLEAN EXPLORER ENGINE) */
   /* ================================================= */
-  .vault-view {
+  .vault-split-container {
     flex: 1;
-    padding: 20px;
-    background: var(--bg-base);
-    overflow-y: auto;
     display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .vault-accordion-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: visible;
-    transition: all 0.2s ease;
-  }
-
-  .vault-accordion-header {
-    background: var(--bg-card-header);
-    padding: 12px 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    user-select: none;
-    font-weight: 700;
-    font-size: 13px;
-  }
-  .vault-accordion-header:hover { background: var(--border); }
-
-  .vault-folder-badge {
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 4px;
-    background: rgba(255,255,255,0.06);
-    color: var(--text-muted);
-  }
-
-  .vault-accordion-body {
-    padding: 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    border-top: 1px solid var(--border);
-  }
-
-  /* Subfolder / Category Card */
-  .vault-subfolder-card {
-    background: rgba(15, 23, 42, 0.6);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    margin-bottom: 8px;
     overflow: hidden;
+    background: var(--bg-base);
   }
 
-  .vault-subfolder-header {
-    background: rgba(30, 41, 59, 0.8);
-    padding: 8px 12px;
+  /* Left Folder Navigator */
+  .vault-tree-sidebar {
+    width: 280px;
+    background: var(--bg-card);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: 12px 8px;
+    flex-shrink: 0;
+  }
+
+  .vault-tree-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 6px 8px 10px 8px;
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 8px;
+  }
+
+  .disc-folder-group {
+    margin-bottom: 10px;
+  }
+
+  .disc-folder-title {
+    font-size: 12px;
+    font-weight: 800;
+    padding: 6px 8px;
+    border-radius: 6px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.15s ease;
+  }
+  .disc-folder-title:hover { background: var(--border); }
+
+  .subfolder-item {
+    margin-left: 14px;
+    padding: 6px 10px;
+    border-left: 2px solid var(--border);
+    border-radius: 0 6px 6px 0;
     font-size: 12px;
     font-weight: 600;
-    user-select: none;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.15s ease;
+    margin-top: 3px;
   }
-  .vault-subfolder-header:hover { background: rgba(51, 65, 85, 0.6); }
+  .subfolder-item:hover {
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .subfolder-item.active {
+    background: rgba(56, 189, 248, 0.15);
+    border-left-color: var(--accent);
+    color: var(--accent);
+    font-weight: 700;
+  }
 
-  .vault-subfolder-body {
-    padding: 10px;
+  /* Right File Explorer Panel */
+  .vault-browser-main {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    overflow: hidden;
+    padding: 18px 24px;
+    background: var(--bg-base);
   }
 
-  .folder-dropzone {
+  .vault-browser-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .vault-current-path {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .compact-dropzone {
     border: 2px dashed var(--accent);
     background: rgba(56, 189, 248, 0.05);
     border-radius: 8px;
@@ -780,23 +797,54 @@
     color: var(--accent);
     font-weight: 600;
     transition: all 0.15s ease;
+    margin-bottom: 14px;
+    flex-shrink: 0;
   }
-  .folder-dropzone:hover, .folder-dropzone.dragover {
+  .compact-dropzone:hover, .compact-dropzone.dragover {
     background: rgba(56, 189, 248, 0.15);
   }
 
-  .vault-file-row {
-    background: var(--bg-card);
+  /* Explicit File Table View */
+  .vault-table-wrap {
+    flex: 1;
+    overflow-y: auto;
     border: 1px solid var(--border);
-    padding: 8px 12px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 12px;
+    border-radius: 8px;
+    background: var(--bg-card);
   }
 
-  /* Taskbar */
+  table.vault-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    text-align: left;
+  }
+
+  table.vault-table th {
+    background: var(--bg-card-header);
+    color: var(--text-muted);
+    padding: 10px 14px;
+    font-weight: 700;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+  }
+
+  table.vault-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-main);
+  }
+
+  table.vault-table tr:hover td {
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  /* Bottom taskbar */
   footer.bottom-taskbar {
     height: 40px;
     background: var(--bg-sidebar);
@@ -858,7 +906,6 @@
   </div>
 
   <div class="header-actions">
-    <!-- Theme Selector -->
     <select class="theme-select" id="theme-selector" onchange="changeTheme(this.value)">
       <option value="theme-dark" selected>🌌 Deep Dark (Aerospace)</option>
       <option value="theme-light">☀️ Cleanroom Light</option>
@@ -866,7 +913,6 @@
       <option value="theme-slate">🏢 Industrial Slate</option>
     </select>
 
-    <!-- View Mode Switch -->
     <div class="view-mode-toggle">
       <button class="mode-toggle-btn active" id="btn-mode-full" onclick="setViewMode('fullscreen')">
         🖥️ Complete Screen
@@ -956,7 +1002,7 @@
 
 <script>
 /* ========================================================================= */
-/* DATA STATE & REPOSITORY                                                  */
+/* DATA STATE & REPOSITORY (V9)                                             */
 /* ========================================================================= */
 const defaultHeaders = [
   "Discipline",
@@ -1084,94 +1130,112 @@ const defaultSlides = [
   }
 ];
 
-// Subfolder structure with nested categories
-const defaultVault = {
-  cad: [
-    {
-      subfolder: "3D CAD Models & Assembly",
-      files: [
-        { name: "TOP_BASE_ISOGRID_REV_C.sldprt", size: "14.2 MB", date: "2026-10-28" },
-        { name: "HEXALIFT_6DOF_TOP_ASSY.sldasm", size: "48.6 MB", date: "2026-10-29" },
-        { name: "STRUT_ROLLER_SCREW_ACTUATOR.stl", size: "8.4 MB", date: "2026-10-26" }
-      ]
-    },
-    {
-      subfolder: "Interface Ring & STEP Exports",
-      files: [
-        { name: "SPACECRAFT_INTERFACE_RING.step", size: "12.1 MB", date: "2026-10-27" },
-        { name: "PEEK_JAW_PROTECTIVE_PADS.step", size: "3.2 MB", date: "2026-10-28" }
-      ]
-    },
-    {
-      subfolder: "User Uploads & Revisions",
-      files: []
-    }
-  ],
-  elec: [
-    {
-      subfolder: "Schematics & Power Distribution",
-      files: [
-        { name: "POWER_DISTRIBUTION_48V_SCH.pdf", size: "2.8 MB", date: "2026-10-25" },
-        { name: "DC_DC_REGULATOR_CIRCUIT.pdf", size: "1.4 MB", date: "2026-10-26" }
-      ]
-    },
-    {
-      subfolder: "PCB Layouts & Bill of Materials",
-      files: [
-        { name: "FAILSAFE_BRAKE_STO_CIRCUIT.kicad_pcb", size: "4.1 MB", date: "2026-10-27" },
-        { name: "CLEANROOM_HARNESS_BOM.xlsx", size: "340 KB", date: "2026-10-29" }
-      ]
-    },
-    {
-      subfolder: "User Uploads & Revisions",
-      files: []
-    }
-  ],
-  mecha: [
-    {
-      subfolder: "Kinematics & Motion Control Algorithms",
-      files: [
-        { name: "STEWART_GOUGH_KINEMATICS.py", size: "18 KB", date: "2026-10-28" },
-        { name: "FLOAT_MODE_IMPEDANCE_CONTROL.c", size: "32 KB", date: "2026-10-29" }
-      ]
-    },
-    {
-      subfolder: "Bus Configuration & Telemetry",
-      files: [
-        { name: "ETHERCAT_TWINCAT_MASTER_CONFIG.xml", size: "64 KB", date: "2026-10-27" },
-        { name: "MQTT_TELEMETRY_BROKER.json", size: "12 KB", date: "2026-10-28" }
-      ]
-    },
-    {
-      subfolder: "User Uploads & Revisions",
-      files: []
-    }
-  ]
+const defaultVaultV9 = {
+  cad: {
+    title: "Mechanical CAD Designs",
+    icon: "📐",
+    color: "var(--cad-color)",
+    subfolders: [
+      {
+        id: "cad_sub_1",
+        name: "3D CAD Models & Assemblies",
+        files: [
+          { name: "TOP_BASE_ISOGRID_REV_C.sldprt", size: "14.2 MB", date: "2026-10-28" },
+          { name: "HEXALIFT_6DOF_TOP_ASSY.sldasm", size: "48.6 MB", date: "2026-10-29" },
+          { name: "STRUT_ROLLER_SCREW_ACTUATOR.stl", size: "8.4 MB", date: "2026-10-26" },
+          { name: "CLEVIS_BRACKET_17_4PH.sldprt", size: "5.1 MB", date: "2026-10-25" }
+        ]
+      },
+      {
+        id: "cad_sub_2",
+        name: "Interface Ring & STEP Exports",
+        files: [
+          { name: "SPACECRAFT_INTERFACE_RING.step", size: "12.1 MB", date: "2026-10-27" },
+          { name: "PEEK_JAW_PROTECTIVE_PADS.step", size: "3.2 MB", date: "2026-10-28" },
+          { name: "MOUNTING_FLANGE_SPEC_REV_B.step", size: "6.8 MB", date: "2026-10-29" }
+        ]
+      },
+      {
+        id: "cad_sub_3",
+        name: "Drawings & GD&T Sheets",
+        files: [
+          { name: "DWG_ISOGRID_BASE_PLATE_A1.pdf", size: "4.3 MB", date: "2026-10-27" },
+          { name: "DWG_TOLERANCE_STACKUP_RING.pdf", size: "1.9 MB", date: "2026-10-28" }
+        ]
+      }
+    ]
+  },
+  elec: {
+    title: "Electronics Schematics & PCBs",
+    icon: "⚡",
+    color: "var(--elec-color)",
+    subfolders: [
+      {
+        id: "elec_sub_1",
+        name: "Power Distribution & Batteries",
+        files: [
+          { name: "POWER_DISTRIBUTION_48V_SCH.pdf", size: "2.8 MB", date: "2026-10-25" },
+          { name: "DC_DC_REGULATOR_BUCK_5V_24V.pdf", size: "1.4 MB", date: "2026-10-26" },
+          { name: "LIFEPO4_BATTERY_MANAGEMENT_BOM.xlsx", size: "520 KB", date: "2026-10-27" }
+        ]
+      },
+      {
+        id: "elec_sub_2",
+        name: "Safety Interlocks & PCB Layouts",
+        files: [
+          { name: "FAILSAFE_BRAKE_STO_CIRCUIT.kicad_pcb", size: "4.1 MB", date: "2026-10-27" },
+          { name: "CLEANROOM_HARNESS_BOM.xlsx", size: "340 KB", date: "2026-10-29" },
+          { name: "ESD_GROUNDING_ECSS_REPORT.pdf", size: "2.1 MB", date: "2026-10-28" }
+        ]
+      }
+    ]
+  },
+  mecha: {
+    title: "Mechatronics & Firmware",
+    icon: "🤖",
+    color: "var(--mecha-color)",
+    subfolders: [
+      {
+        id: "mecha_sub_1",
+        name: "Inverse Kinematics & Controllers",
+        files: [
+          { name: "STEWART_GOUGH_KINEMATICS.py", size: "18 KB", date: "2026-10-28" },
+          { name: "FLOAT_MODE_IMPEDANCE_CONTROL.c", size: "32 KB", date: "2026-10-29" },
+          { name: "DAMPING_CALIBRATION_CURVES.mat", size: "145 KB", date: "2026-10-27" }
+        ]
+      },
+      {
+        id: "mecha_sub_2",
+        name: "Fieldbus & Sensor Telemetry",
+        files: [
+          { name: "ETHERCAT_TWINCAT_MASTER_CONFIG.xml", size: "64 KB", date: "2026-10-27" },
+          { name: "KEYENCE_LASER_DOCKING_DRIVER.cpp", size: "44 KB", date: "2026-10-28" },
+          { name: "MQTT_TELEMETRY_BROKER_CONFIG.json", size: "12 KB", date: "2026-10-29" }
+        ]
+      }
+    ]
+  }
 };
 
 let viewMode = 'fullscreen';
 let focusedTool = 'vault';
 let splitOpenTools = { sheet: true, graph: true, doc: false, ppt: false, vault: true };
 
-let activeDocSelection = {
-  mainIndex: 0,
-  subIndex: null
-};
-
+let activeDocSelection = { mainIndex: 0, subIndex: null };
 let currentSlideIndex = 0;
+
+// Active Vault Navigation Selection:
+let activeVaultSelection = {
+  discKey: "cad",
+  subfolderIdx: 0
+};
 
 let workspaceData = {
   sheetHeaders: defaultHeaders,
   sheet: defaultSheetRows,
   docSections: defaultDocSections,
   slides: defaultSlides,
-  vault: defaultVault,
-  vaultOpen: { cad: true, elec: true, mecha: true },
-  subfolderOpen: {
-    "cad_0": true, "cad_1": true, "cad_2": true,
-    "elec_0": true, "elec_1": true, "elec_2": true,
-    "mecha_0": true, "mecha_1": true, "mecha_2": true
-  },
+  vault: defaultVaultV9,
   theme: "theme-dark"
 };
 
@@ -1179,19 +1243,19 @@ let workspaceData = {
 /* INITIALIZATION                                                            */
 /* ========================================================================= */
 function init() {
-  const savedData = localStorage.getItem("POWERSHARE_STUDIO_DATA_V8_SUB");
+  const savedData = localStorage.getItem("POWERSHARE_STUDIO_VAULT_V9");
   if (savedData) {
     try {
       const parsed = JSON.parse(savedData);
-      if (parsed.vault && parsed.vault.cad && Array.isArray(parsed.vault.cad) && parsed.vault.cad[0] && parsed.vault.cad[0].subfolder) {
+      if (parsed.vault && parsed.vault.cad && parsed.vault.cad.subfolders) {
         workspaceData = parsed;
       }
     } catch(e){}
   }
-  const savedMode = localStorage.getItem("POWERSHARE_STUDIO_VIEWMODE_V8");
+  const savedMode = localStorage.getItem("POWERSHARE_STUDIO_VIEWMODE_V9");
   if (savedMode) viewMode = savedMode;
 
-  const savedFocus = localStorage.getItem("POWERSHARE_STUDIO_FOCUSED_V8");
+  const savedFocus = localStorage.getItem("POWERSHARE_STUDIO_FOCUSED_V9");
   if (savedFocus) focusedTool = savedFocus;
 
   if (workspaceData.theme) {
@@ -1203,9 +1267,9 @@ function init() {
 }
 
 function saveState(showNotify = false) {
-  localStorage.setItem("POWERSHARE_STUDIO_DATA_V8_SUB", JSON.stringify(workspaceData));
-  localStorage.setItem("POWERSHARE_STUDIO_VIEWMODE_V8", viewMode);
-  localStorage.setItem("POWERSHARE_STUDIO_FOCUSED_V8", focusedTool);
+  localStorage.setItem("POWERSHARE_STUDIO_VAULT_V9", JSON.stringify(workspaceData));
+  localStorage.setItem("POWERSHARE_STUDIO_VIEWMODE_V9", viewMode);
+  localStorage.setItem("POWERSHARE_STUDIO_FOCUSED_V9", focusedTool);
   if (showNotify) alert("Workspace successfully saved!");
 }
 
@@ -1342,7 +1406,6 @@ function getDisciplineClass(val) {
 function buildSheetPanel(isSplit) {
   const panel = document.createElement("div");
   panel.className = "window-panel";
-
   const statusColIndex = workspaceData.sheetHeaders.length - 1;
 
   panel.innerHTML = `
@@ -1466,9 +1529,8 @@ function deleteSelectedRow() {
 }
 
 function addSheetColumn() {
-  const colName = prompt("Enter New Column Name (e.g. Owner, Drawing No, Reviewer):", "Design Owner");
+  const colName = prompt("Enter New Column Name:", "Design Owner");
   if (!colName) return;
-
   const insertPos = workspaceData.sheetHeaders.length - 1;
   workspaceData.sheetHeaders.splice(insertPos, 0, colName);
   workspaceData.sheet.forEach(row => row.splice(insertPos, 0, "-"));
@@ -1479,13 +1541,8 @@ function addSheetColumn() {
 function deleteSheetColumn() {
   const statusIdx = workspaceData.sheetHeaders.length - 1;
   const deletable = [];
-  for (let i = 2; i < statusIdx; i++) {
-    deletable.push(`${i}: ${workspaceData.sheetHeaders[i]}`);
-  }
-  if (deletable.length === 0) {
-    alert("No custom columns to delete.");
-    return;
-  }
+  for (let i = 2; i < statusIdx; i++) deletable.push(`${i}: ${workspaceData.sheetHeaders[i]}`);
+  if (deletable.length === 0) { alert("No custom columns to delete."); return; }
   const choice = prompt("Enter the number of the column to delete:\n" + deletable.join("\n"));
   if (choice !== null && !isNaN(choice)) {
     const idx = parseInt(choice);
@@ -1509,25 +1566,14 @@ function getActiveDocObject() {
   const mIdx = activeDocSelection.mainIndex;
   const mainSec = workspaceData.docSections[mIdx] || workspaceData.docSections[0];
   if (activeDocSelection.subIndex !== null && mainSec.subsections && mainSec.subsections[activeDocSelection.subIndex]) {
-    return {
-      isSub: true,
-      obj: mainSec.subsections[activeDocSelection.subIndex],
-      mainIdx: mIdx,
-      subIdx: activeDocSelection.subIndex
-    };
+    return { isSub: true, obj: mainSec.subsections[activeDocSelection.subIndex], mainIdx: mIdx, subIdx: activeDocSelection.subIndex };
   }
-  return {
-    isSub: false,
-    obj: mainSec,
-    mainIdx: mIdx,
-    subIdx: null
-  };
+  return { isSub: false, obj: mainSec, mainIdx: mIdx, subIdx: null };
 }
 
 function buildDocPanel(isSplit) {
   const panel = document.createElement("div");
   panel.className = "window-panel";
-
   const activeDoc = getActiveDocObject();
 
   panel.innerHTML = `
@@ -1595,29 +1641,10 @@ function buildDocPanel(isSplit) {
   return panel;
 }
 
-function selectDocMain(mIdx) {
-  activeDocSelection.mainIndex = mIdx;
-  activeDocSelection.subIndex = null;
-  renderAll();
-}
-
-function selectDocSub(mIdx, sIdx) {
-  activeDocSelection.mainIndex = mIdx;
-  activeDocSelection.subIndex = sIdx;
-  renderAll();
-}
-
-function updateActiveDocTitle(val) {
-  const activeDoc = getActiveDocObject();
-  activeDoc.obj.title = val;
-  saveState();
-}
-
-function updateActiveDocContent(val) {
-  const activeDoc = getActiveDocObject();
-  activeDoc.obj.content = val;
-  saveState();
-}
+function selectDocMain(mIdx) { activeDocSelection.mainIndex = mIdx; activeDocSelection.subIndex = null; renderAll(); }
+function selectDocSub(mIdx, sIdx) { activeDocSelection.mainIndex = mIdx; activeDocSelection.subIndex = sIdx; renderAll(); }
+function updateActiveDocTitle(val) { getActiveDocObject().obj.title = val; saveState(); }
+function updateActiveDocContent(val) { getActiveDocObject().obj.content = val; saveState(); }
 
 function addMainDocSection() {
   const title = prompt("Enter Main Section Title:", "New Engineering Section");
@@ -1634,22 +1661,18 @@ function addMainDocSection() {
   saveState();
 }
 
-function addSubDocSection() {
-  addSubDocSectionTo(activeDocSelection.mainIndex);
-}
+function addSubDocSection() { addSubDocSectionTo(activeDocSelection.mainIndex); }
 
 function addSubDocSectionTo(mIdx) {
   const mainSec = workspaceData.docSections[mIdx];
   if (!mainSec.subsections) mainSec.subsections = [];
   const title = prompt(`Enter Sub-section Title for "${mainSec.title}":`, "New Sub-section Detail");
   if (!title) return;
-
   mainSec.subsections.push({
     id: "sub-" + Date.now(),
     title: title,
     content: "### " + title.toUpperCase() + "\n\nEnter detailed calculations, GD&T, or schematics here..."
   });
-
   activeDocSelection.mainIndex = mIdx;
   activeDocSelection.subIndex = mainSec.subsections.length - 1;
   renderAll();
@@ -1666,10 +1689,7 @@ function deleteActiveDocItem() {
       saveState();
     }
   } else {
-    if (workspaceData.docSections.length <= 1) {
-      alert("Cannot delete the last remaining main section.");
-      return;
-    }
+    if (workspaceData.docSections.length <= 1) { alert("Cannot delete the last remaining main section."); return; }
     if (confirm(`Delete main section: "${activeDoc.obj.title}" and all its sub-sections?`)) {
       workspaceData.docSections.splice(activeDoc.mainIdx, 1);
       activeDocSelection.mainIndex = 0;
@@ -1746,25 +1766,9 @@ function buildPptPanel(isSplit) {
   return panel;
 }
 
-function prevSlide() {
-  if (currentSlideIndex > 0) {
-    currentSlideIndex--;
-    renderAll();
-  }
-}
-
-function nextSlide() {
-  if (currentSlideIndex < workspaceData.slides.length - 1) {
-    currentSlideIndex++;
-    renderAll();
-  }
-}
-
-function saveSlideTitle(val) {
-  workspaceData.slides[currentSlideIndex].title = val.trim();
-  saveState();
-}
-
+function prevSlide() { if (currentSlideIndex > 0) { currentSlideIndex--; renderAll(); } }
+function nextSlide() { if (currentSlideIndex < workspaceData.slides.length - 1) { currentSlideIndex++; renderAll(); } }
+function saveSlideTitle(val) { workspaceData.slides[currentSlideIndex].title = val.trim(); saveState(); }
 function saveSlideBody() {
   const items = document.querySelectorAll("#ppt-body-editor li");
   let text = "";
@@ -1772,7 +1776,6 @@ function saveSlideBody() {
   if (text) workspaceData.slides[currentSlideIndex].body = text.trim();
   saveState();
 }
-
 function addNewSlide() {
   workspaceData.slides.push({
     title: "New Presentation Slide",
@@ -1783,18 +1786,11 @@ function addNewSlide() {
   renderAll();
   saveState();
 }
-
 function deleteCurrentSlide() {
-  if (workspaceData.slides.length <= 1) {
-    alert("Cannot delete the last remaining slide.");
-    return;
-  }
-  const toDelete = workspaceData.slides[currentSlideIndex].title;
-  if (confirm(`Are you sure you want to delete slide: "${toDelete}"?`)) {
+  if (workspaceData.slides.length <= 1) { alert("Cannot delete the last remaining slide."); return; }
+  if (confirm(`Are you sure you want to delete slide: "${workspaceData.slides[currentSlideIndex].title}"?`)) {
     workspaceData.slides.splice(currentSlideIndex, 1);
-    if (currentSlideIndex >= workspaceData.slides.length) {
-      currentSlideIndex = workspaceData.slides.length - 1;
-    }
+    if (currentSlideIndex >= workspaceData.slides.length) currentSlideIndex = workspaceData.slides.length - 1;
     renderAll();
     saveState();
   }
@@ -1806,7 +1802,6 @@ function deleteCurrentSlide() {
 function buildGraphPanel(isSplit) {
   const panel = document.createElement("div");
   panel.className = "window-panel";
-
   const statusIdx = workspaceData.sheetHeaders.length - 1;
 
   const discStats = {
@@ -1821,22 +1816,15 @@ function buildGraphPanel(isSplit) {
   workspaceData.sheet.forEach(row => {
     const disc = row[0] || "Mechanical CAD";
     const st = row[statusIdx] || "Yet to be done";
-
-    if (!discStats[disc]) {
-      discStats[disc] = { total: 0, "Completed": 0, "In Progress": 0, "In Review": 0, "Yet to be done": 0 };
-    }
+    if (!discStats[disc]) discStats[disc] = { total: 0, "Completed": 0, "In Progress": 0, "In Review": 0, "Yet to be done": 0 };
     discStats[disc].total++;
-    if (discStats[disc][st] !== undefined) discStats[disc][st]++;
-    else discStats[disc]["Yet to be done"]++;
-
-    if (globalCounts[st] !== undefined) globalCounts[st]++;
-    else globalCounts["Yet to be done"]++;
+    if (discStats[disc][st] !== undefined) discStats[disc][st]++; else discStats[disc]["Yet to be done"]++;
+    if (globalCounts[st] !== undefined) globalCounts[st]++; else globalCounts["Yet to be done"]++;
     grandTotal++;
   });
 
   if (grandTotal === 0) grandTotal = 1;
   const overallCompletedPct = Math.round((globalCounts["Completed"] / grandTotal) * 100);
-
   const r = 68;
   const c = 2 * Math.PI * r;
   const offset = c * (1 - globalCounts["Completed"] / grandTotal);
@@ -1852,8 +1840,6 @@ function buildGraphPanel(isSplit) {
     </div>
     <div class="window-content">
       <div class="graph-view">
-
-        <!-- Top KPI Row -->
         <div class="overall-kpi-bar">
           <div class="kpi-tile" style="border-left:3px solid var(--status-green);">
             <div class="kpi-title">Completed Tasks</div>
@@ -1873,14 +1859,12 @@ function buildGraphPanel(isSplit) {
           </div>
         </div>
 
-        <!-- 3 Pillars Grid -->
         <div class="three-pillars-grid">
           ${renderPillarCard("Mechanical CAD", "📐", "pillar-cad", "var(--cad-color)", discStats["Mechanical CAD"])}
           ${renderPillarCard("Electronics", "⚡", "pillar-elec", "var(--elec-color)", discStats["Electronics"])}
           ${renderPillarCard("Mechatronics", "🤖", "pillar-mecha", "var(--mecha-color)", discStats["Mechatronics"])}
         </div>
 
-        <!-- Circular Progress Gauge -->
         <div class="project-health-container">
           <div class="gauge-meta-box">
             <div class="gauge-meta-title">
@@ -1909,7 +1893,6 @@ function buildGraphPanel(isSplit) {
             </div>
           </div>
         </div>
-
       </div>
     </div>
   `;
@@ -1936,43 +1919,20 @@ function renderPillarCard(name, icon, cssClass, color, stats) {
 
       <div style="display:flex; flex-direction:column; gap:8px;">
         <div class="mini-bar-row">
-          <div class="mini-bar-labels">
-            <span style="color:var(--status-green);">Completed</span>
-            <span>${stats["Completed"]} (${pComp}%)</span>
-          </div>
-          <div class="mini-bar-track">
-            <div class="mini-bar-fill" style="width:${pComp}%; background:var(--status-green);"></div>
-          </div>
+          <div class="mini-bar-labels"><span style="color:var(--status-green);">Completed</span><span>${stats["Completed"]} (${pComp}%)</span></div>
+          <div class="mini-bar-track"><div class="mini-bar-fill" style="width:${pComp}%; background:var(--status-green);"></div></div>
         </div>
-
         <div class="mini-bar-row">
-          <div class="mini-bar-labels">
-            <span style="color:var(--status-yellow);">In Progress</span>
-            <span>${stats["In Progress"]} (${pProg}%)</span>
-          </div>
-          <div class="mini-bar-track">
-            <div class="mini-bar-fill" style="width:${pProg}%; background:var(--status-yellow);"></div>
-          </div>
+          <div class="mini-bar-labels"><span style="color:var(--status-yellow);">In Progress</span><span>${stats["In Progress"]} (${pProg}%)</span></div>
+          <div class="mini-bar-track"><div class="mini-bar-fill" style="width:${pProg}%; background:var(--status-yellow);"></div></div>
         </div>
-
         <div class="mini-bar-row">
-          <div class="mini-bar-labels">
-            <span style="color:var(--status-orange);">In Review</span>
-            <span>${stats["In Review"]} (${pRev}%)</span>
-          </div>
-          <div class="mini-bar-track">
-            <div class="mini-bar-fill" style="width:${pRev}%; background:var(--status-orange);"></div>
-          </div>
+          <div class="mini-bar-labels"><span style="color:var(--status-orange);">In Review</span><span>${stats["In Review"]} (${pRev}%)</span></div>
+          <div class="mini-bar-track"><div class="mini-bar-fill" style="width:${pRev}%; background:var(--status-orange);"></div></div>
         </div>
-
         <div class="mini-bar-row">
-          <div class="mini-bar-labels">
-            <span style="color:var(--status-red);">Yet to do</span>
-            <span>${stats["Yet to be done"]} (${pTodo}%)</span>
-          </div>
-          <div class="mini-bar-track">
-            <div class="mini-bar-fill" style="width:${pTodo}%; background:var(--status-red);"></div>
-          </div>
+          <div class="mini-bar-labels"><span style="color:var(--status-red);">Yet to do</span><span>${stats["Yet to be done"]} (${pTodo}%)</span></div>
+          <div class="mini-bar-track"><div class="mini-bar-fill" style="width:${pTodo}%; background:var(--status-red);"></div></div>
         </div>
       </div>
     </div>
@@ -1980,181 +1940,213 @@ function renderPillarCard(name, icon, cssClass, color, stats) {
 }
 
 /* ========================================================================= */
-/* PANEL 5: CAD & DESIGN VAULT (WITH EXPANDED HIERARCHY & VISIBLE SUBFOLDERS)*/
+/* PANEL 5: CAD & DESIGN VAULT (EXPLORER ENGINE V9)                          */
 /* ========================================================================= */
 function buildVaultPanel(isSplit) {
   const panel = document.createElement("div");
   panel.className = "window-panel";
 
+  const disc = workspaceData.vault[activeVaultSelection.discKey] || workspaceData.vault.cad;
+  const currentSubfolder = disc.subfolders[activeVaultSelection.subfolderIdx] || disc.subfolders[0];
+
   panel.innerHTML = `
     <div class="window-header">
       <div class="window-title" style="color:var(--vault-color);">
-        <span>📦</span> CAD & Design Vault (Multi-Tier Hierarchical Structure)
+        <span>📦</span> CAD & Design Vault Explorer
       </div>
       <div class="window-controls">
-        <button class="btn-icon" style="padding:2px 8px; font-size:11px;" onclick="createCustomSubfolder()">📁+ Add Subfolder</button>
+        <button class="btn-icon" style="padding:2px 8px; font-size:11px;" onclick="addVaultSubfolder()">📁+ Add Subfolder</button>
         ${isSplit ? `<button class="btn-icon btn-icon-danger" style="padding:2px 6px;" onclick="closeToolInSplit('vault')">✕</button>` : ''}
       </div>
     </div>
-    <div class="window-content">
-      <div class="vault-view">
-        ${renderVaultDiscipline('cad', '📐 Mechanical CAD Designs (SolidParts, STLs, Assemblies, STEP)', 'var(--cad-color)', workspaceData.vault.cad)}
-        ${renderVaultDiscipline('elec', '⚡ Electronics Schematics & PCBs (Gerbers, KiCad, Schematics)', 'var(--elec-color)', workspaceData.vault.elec)}
-        ${renderVaultDiscipline('mecha', '🤖 Mechatronics & Firmware (TwinCAT, Python Kinematics, Firmware)', 'var(--mecha-color)', workspaceData.vault.mecha)}
-      </div>
+
+    <div class="vault-split-container">
+      <!-- Left Folder Navigator -->
+      <aside class="vault-tree-sidebar">
+        <div class="vault-tree-header">
+          <span>Vault Directories</span>
+          <span style="font-size:10px; color:var(--text-muted);">Click to Open</span>
+        </div>
+
+        ${['cad', 'elec', 'mecha'].map(dKey => {
+          const d = workspaceData.vault[dKey];
+          const totalFiles = d.subfolders.reduce((acc, sub) => acc + sub.files.length, 0);
+          return `
+            <div class="disc-folder-group">
+              <div class="disc-folder-title" style="color:${d.color};" onclick="selectVaultSubfolder('${dKey}', 0)">
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <span>${d.icon}</span>
+                  <span>${d.title}</span>
+                </div>
+                <span style="font-size:10px; color:var(--text-muted);">${totalFiles}</span>
+              </div>
+
+              <div>
+                ${d.subfolders.map((sub, sIdx) => {
+                  const isActive = (activeVaultSelection.discKey === dKey && activeVaultSelection.subfolderIdx === sIdx);
+                  return `
+                    <div class="subfolder-item ${isActive ? 'active' : ''}" onclick="selectVaultSubfolder('${dKey}', ${sIdx})">
+                      <div style="display:flex; align-items:center; gap:6px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                        <span>${isActive ? '📂' : '📁'}</span>
+                        <span>${sub.name}</span>
+                      </div>
+                      <span style="font-size:10px; opacity:0.8;">${sub.files.length}</span>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </aside>
+
+      <!-- Right File Explorer Panel -->
+      <main class="vault-browser-main">
+        <div class="vault-browser-header">
+          <div class="vault-current-path">
+            <span style="color:${disc.color}; font-size:16px;">${disc.icon}</span>
+            <span style="color:var(--text-muted);">${disc.title}</span>
+            <span style="color:var(--border);">/</span>
+            <span style="color:var(--text-main); font-weight:800;">${currentSubfolder.name}</span>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn-icon" onclick="document.getElementById('vault-file-uploader').click()">
+              ⬆️ Upload File
+            </button>
+            <input type="file" id="vault-file-uploader" style="display:none;" multiple onchange="handleBrowserFileUpload(this.files)">
+            <button class="btn-icon btn-icon-danger" onclick="deleteActiveSubfolder()" title="Delete Subfolder">
+              🗑️ Delete Subfolder
+            </button>
+          </div>
+        </div>
+
+        <!-- Compact drag & drop strip -->
+        <div class="compact-dropzone" id="vault-compact-dropzone" onclick="document.getElementById('vault-file-uploader').click()">
+          📥 Drag & Drop files here to upload directly to <strong>${currentSubfolder.name}</strong> (or click to browse)
+        </div>
+
+        <!-- Clearly Elaborated File Table -->
+        <div class="vault-table-wrap">
+          <table class="vault-table">
+            <thead>
+              <tr>
+                <th style="width:30px;">Type</th>
+                <th>File Name</th>
+                <th style="width:110px;">Size</th>
+                <th style="width:120px;">Upload Date</th>
+                <th style="width:150px; text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${currentSubfolder.files.length === 0 ? `
+                <tr>
+                  <td colspan="5" style="text-align:center; padding:32px; color:var(--text-muted); font-style:italic;">
+                    This folder is empty. Drag and drop files above or click "Upload File" to add documents.
+                  </td>
+                </tr>
+              ` : currentSubfolder.files.map((file, fIdx) => `
+                <tr>
+                  <td style="font-size:15px; text-align:center;">📄</td>
+                  <td style="font-weight:700; color:var(--text-main);">${file.name}</td>
+                  <td style="color:var(--accent); font-weight:600;">${file.size}</td>
+                  <td style="color:var(--text-muted);">${file.date}</td>
+                  <td style="text-align:right;">
+                    <button class="btn-icon" style="padding:3px 8px; font-size:11px;" onclick="alert('Downloading ${file.name}')">
+                      ⬇️ Download
+                    </button>
+                    <button class="btn-icon btn-icon-danger" style="padding:3px 8px; font-size:11px;" onclick="deleteBrowserFile(${fIdx})">
+                      ✕
+                    </button>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </main>
     </div>
   `;
 
   setTimeout(() => {
-    ['cad', 'elec', 'mecha'].forEach(folderKey => {
-      workspaceData.vault[folderKey].forEach((sub, sIdx) => {
-        const dz = document.getElementById(`dropzone-${folderKey}-${sIdx}`);
-        if (!dz) return;
-        dz.addEventListener("dragover", (e) => { e.preventDefault(); dz.classList.add("dragover"); });
-        dz.addEventListener("dragleave", () => { dz.classList.remove("dragover"); });
-        dz.addEventListener("drop", (e) => {
-          e.preventDefault();
-          dz.classList.remove("dragover");
-          if (e.dataTransfer.files.length) handleSubfolderUpload(folderKey, sIdx, e.dataTransfer.files);
-        });
-      });
+    const dz = document.getElementById("vault-compact-dropzone");
+    if (!dz) return;
+    dz.addEventListener("dragover", (e) => { e.preventDefault(); dz.classList.add("dragover"); });
+    dz.addEventListener("dragleave", () => { dz.classList.remove("dragover"); });
+    dz.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dz.classList.remove("dragover");
+      if (e.dataTransfer.files.length) handleBrowserFileUpload(e.dataTransfer.files);
     });
   }, 100);
 
   return panel;
 }
 
-function renderVaultDiscipline(folderKey, folderTitle, colorVar, subfolders) {
-  const isOpen = workspaceData.vaultOpen[folderKey];
-  const totalFiles = subfolders.reduce((acc, sub) => acc + sub.files.length, 0);
-
-  return `
-    <div class="vault-accordion-card">
-      <div class="vault-accordion-header" onclick="toggleVaultDiscipline('${folderKey}')">
-        <span style="color:${colorVar}; display:flex; align-items:center; gap:8px;">
-          <span style="font-size:15px;">${isOpen ? '📂' : '📁'}</span>
-          <span>${folderTitle}</span>
-        </span>
-        <div style="display:flex; align-items:center; gap:8px;">
-          <span class="vault-folder-badge">${subfolders.length} subfolders • ${totalFiles} files</span>
-          <span style="font-size:11px;">${isOpen ? '▲' : '▼'}</span>
-        </div>
-      </div>
-
-      ${isOpen ? `
-        <div class="vault-accordion-body">
-          ${subfolders.map((sub, sIdx) => {
-            const subKey = `${folderKey}_${sIdx}`;
-            const isSubOpen = workspaceData.subfolderOpen[subKey] !== false;
-            return `
-              <div class="vault-subfolder-card">
-                <div class="vault-subfolder-header" onclick="toggleSubfolder('${subKey}')">
-                  <div style="display:flex; align-items:center; gap:7px;">
-                    <span style="color:${colorVar}; font-size:13px;">${isSubOpen ? '📂' : '📁'}</span>
-                    <strong style="color:var(--text-main);">${sub.subfolder}</strong>
-                  </div>
-                  <div style="display:flex; align-items:center; gap:8px;">
-                    <span style="font-size:10px; color:var(--text-muted);">${sub.files.length} files</span>
-                    <span style="font-size:10px; color:var(--text-muted);">${isSubOpen ? '▲' : '▼'}</span>
-                  </div>
-                </div>
-
-                ${isSubOpen ? `
-                  <div class="vault-subfolder-body">
-                    <!-- Dropzone directly in subfolder -->
-                    <div class="folder-dropzone" id="dropzone-${folderKey}-${sIdx}" onclick="document.getElementById('input-${folderKey}-${sIdx}').click()">
-                      <input type="file" id="input-${folderKey}-${sIdx}" style="display:none;" multiple onchange="handleSubfolderUpload('${folderKey}', ${sIdx}, this.files)">
-                      📥 Drop files directly into <strong>"${sub.subfolder}"</strong> (or click to browse)
-                    </div>
-
-                    <!-- Explicit File Listing -->
-                    ${sub.files.length === 0 ? `
-                      <div style="padding:10px; text-align:center; font-size:11px; color:var(--text-muted); font-style:italic;">
-                        No files in this subfolder yet. Drag & drop or upload files above.
-                      </div>
-                    ` : `
-                      <div style="display:flex; flex-direction:column; gap:6px;">
-                        ${sub.files.map((f, fIdx) => `
-                          <div class="vault-file-row">
-                            <div style="display:flex; align-items:center; gap:8px; overflow:hidden;">
-                              <span style="font-size:14px;">📄</span>
-                              <span style="font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--text-main);">${f.name}</span>
-                              <span style="font-size:11px; color:var(--text-muted);">(${f.size} • ${f.date})</span>
-                            </div>
-                            <div style="display:flex; gap:6px;">
-                              <button class="btn-icon" style="padding:2px 8px; font-size:11px;" onclick="alert('Downloading ${f.name}')">⬇️ Download</button>
-                              <button class="btn-icon btn-icon-danger" style="padding:2px 8px; font-size:11px;" onclick="deleteSubfolderFile('${folderKey}', ${sIdx}, ${fIdx})">✕ Delete</button>
-                            </div>
-                          </div>
-                        `).join('')}
-                      </div>
-                    `}
-                  </div>
-                ` : ''}
-              </div>
-            `;
-          }).join('')}
-        </div>
-      ` : ''}
-    </div>
-  `;
-}
-
-function toggleVaultDiscipline(folderKey) {
-  workspaceData.vaultOpen[folderKey] = !workspaceData.vaultOpen[folderKey];
+function selectVaultSubfolder(dKey, sIdx) {
+  activeVaultSelection.discKey = dKey;
+  activeVaultSelection.subfolderIdx = sIdx;
   renderAll();
-  saveState();
 }
 
-function toggleSubfolder(subKey) {
-  workspaceData.subfolderOpen[subKey] = !workspaceData.subfolderOpen[subKey];
-  renderAll();
-  saveState();
-}
-
-function handleSubfolderUpload(folderKey, subfolderIdx, files) {
+function handleBrowserFileUpload(files) {
+  const disc = workspaceData.vault[activeVaultSelection.discKey];
+  const sub = disc.subfolders[activeVaultSelection.subfolderIdx];
   Array.from(files).forEach(file => {
-    const sizeStr = (file.size / (1024 * 1024)).toFixed(1) + " MB";
+    const sizeStr = file.size > 1024 * 1024 
+      ? (file.size / (1024 * 1024)).toFixed(1) + " MB" 
+      : (file.size / 1024).toFixed(0) + " KB";
     const dateStr = new Date().toISOString().split('T')[0];
-    workspaceData.vault[folderKey][subfolderIdx].files.push({
-      name: file.name,
-      size: sizeStr,
-      date: dateStr
-    });
+    sub.files.push({ name: file.name, size: sizeStr, date: dateStr });
   });
   renderAll();
   saveState();
 }
 
-function deleteSubfolderFile(folderKey, subfolderIdx, fileIdx) {
-  const fileName = workspaceData.vault[folderKey][subfolderIdx].files[fileIdx].name;
-  if (confirm(`Remove "${fileName}" from ${workspaceData.vault[folderKey][subfolderIdx].subfolder}?`)) {
-    workspaceData.vault[folderKey][subfolderIdx].files.splice(fileIdx, 1);
+function deleteBrowserFile(fIdx) {
+  const disc = workspaceData.vault[activeVaultSelection.discKey];
+  const sub = disc.subfolders[activeVaultSelection.subfolderIdx];
+  const fileName = sub.files[fIdx].name;
+  if (confirm(`Remove "${fileName}" from ${sub.name}?`)) {
+    sub.files.splice(fIdx, 1);
     renderAll();
     saveState();
   }
 }
 
-function createCustomSubfolder() {
-  const discChoice = prompt("Choose discipline to add subfolder to:\n1. Mechanical CAD\n2. Electronics\n3. Mechatronics", "1");
-  let folderKey = "cad";
-  if (discChoice === "2") folderKey = "elec";
-  else if (discChoice === "3") folderKey = "mecha";
+function addVaultSubfolder() {
+  const choice = prompt("Select discipline for new subfolder:\n1. Mechanical CAD\n2. Electronics\n3. Mechatronics", "1");
+  let dKey = "cad";
+  if (choice === "2") dKey = "elec";
+  else if (choice === "3") dKey = "mecha";
 
-  const subName = prompt("Enter the new Subfolder name (e.g. Detailed FEA Meshes, Harness Diagrams, STO Certification):", "New Subfolder");
-  if (!subName) return;
+  const name = prompt(`Enter new subfolder name for ${workspaceData.vault[dKey].title}:`, "New Subfolder");
+  if (!name) return;
 
-  workspaceData.vault[folderKey].push({
-    subfolder: subName.trim(),
+  workspaceData.vault[dKey].subfolders.push({
+    id: "sub_" + Date.now(),
+    name: name.trim(),
     files: []
   });
 
-  const newIdx = workspaceData.vault[folderKey].length - 1;
-  workspaceData.subfolderOpen[`${folderKey}_${newIdx}`] = true;
-  workspaceData.vaultOpen[folderKey] = true;
-
+  activeVaultSelection.discKey = dKey;
+  activeVaultSelection.subfolderIdx = workspaceData.vault[dKey].subfolders.length - 1;
   renderAll();
   saveState();
+}
+
+function deleteActiveSubfolder() {
+  const disc = workspaceData.vault[activeVaultSelection.discKey];
+  if (disc.subfolders.length <= 1) {
+    alert("Cannot delete the only subfolder in this discipline.");
+    return;
+  }
+  const sub = disc.subfolders[activeVaultSelection.subfolderIdx];
+  if (confirm(`Are you sure you want to delete subfolder "${sub.name}" and all its ${sub.files.length} files?`)) {
+    disc.subfolders.splice(activeVaultSelection.subfolderIdx, 1);
+    activeVaultSelection.subfolderIdx = 0;
+    renderAll();
+    saveState();
+  }
 }
 
 /* ========================================================================= */
@@ -2164,7 +2156,7 @@ function exportDataJson() {
   const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(workspaceData, null, 2));
   const a = document.createElement("a");
   a.setAttribute("href", dataStr);
-  a.setAttribute("download", "ICEYE_PowerShare_Workspace_Data_v8.json");
+  a.setAttribute("download", "ICEYE_PowerShare_Workspace_Data_v9.json");
   document.body.appendChild(a);
   a.click();
   a.remove();
