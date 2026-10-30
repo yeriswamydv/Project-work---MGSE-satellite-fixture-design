@@ -357,9 +357,7 @@
     flex-direction: column;
   }
 
-  /* ================================================= */
-  /* TAB 1: SHEET                                      */
-  /* ================================================= */
+  /* TAB 1: SHEET */
   .sheet-scroll {
     flex: 1;
     overflow: auto;
@@ -424,9 +422,7 @@
   .status-orange { background: rgba(249, 115, 22, 0.2); color: var(--status-orange); border-color: rgba(249, 115, 22, 0.4); }
   .status-red { background: rgba(239, 68, 68, 0.2); color: var(--status-red); border-color: rgba(239, 68, 68, 0.4); }
 
-  /* ================================================= */
-  /* TAB 2: DOC                                        */
-  /* ================================================= */
+  /* TAB 2: DOC */
   .doc-split {
     flex: 1;
     display: flex;
@@ -533,9 +529,7 @@
     resize: none;
   }
 
-  /* ================================================= */
-  /* TAB 3: POWERPOINT                                 */
-  /* ================================================= */
+  /* TAB 3: POWERPOINT */
   .ppt-view {
     flex: 1;
     display: flex;
@@ -588,9 +582,7 @@
     padding-top: 10px;
   }
 
-  /* ================================================= */
-  /* TAB 4: GRAPHS & RESTORED % COMPLETION GAUGE CARD  */
-  /* ================================================= */
+  /* TAB 4: GRAPHS */
   .graph-view {
     flex: 1;
     padding: 20px;
@@ -648,7 +640,6 @@
   .mini-bar-track { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
   .mini-bar-fill { height: 100%; border-radius: 3px; }
 
-  /* RESTORED % CIRCULAR GAUGE SECTION */
   .project-health-container {
     background: var(--bg-card);
     border: 1px solid var(--border);
@@ -699,7 +690,7 @@
   }
 
   /* ================================================= */
-  /* TAB 5: CAD & DESIGN VAULT                         */
+  /* TAB 5: CAD & DESIGN VAULT (EXPANDED SUBFOLDER TREE) */
   /* ================================================= */
   .vault-view {
     flex: 1;
@@ -715,7 +706,7 @@
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 8px;
-    overflow: hidden;
+    overflow: visible;
     transition: all 0.2s ease;
   }
 
@@ -748,11 +739,41 @@
     border-top: 1px solid var(--border);
   }
 
+  /* Subfolder / Category Card */
+  .vault-subfolder-card {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+
+  .vault-subfolder-header {
+    background: rgba(30, 41, 59, 0.8);
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    user-select: none;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .vault-subfolder-header:hover { background: rgba(51, 65, 85, 0.6); }
+
+  .vault-subfolder-body {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
   .folder-dropzone {
     border: 2px dashed var(--accent);
     background: rgba(56, 189, 248, 0.05);
     border-radius: 8px;
-    padding: 16px;
+    padding: 14px;
     text-align: center;
     cursor: pointer;
     font-size: 12px;
@@ -765,7 +786,7 @@
   }
 
   .vault-file-row {
-    background: var(--bg-base);
+    background: var(--bg-card);
     border: 1px solid var(--border);
     padding: 8px 12px;
     border-radius: 6px;
@@ -867,7 +888,7 @@
     <div>
       <div class="nav-group-title">WORKSPACE APPS</div>
 
-      <button class="tool-item-btn active-tool" id="btn-tool-sheet" data-tool="sheet" onclick="handleToolClick('sheet')">
+      <button class="tool-item-btn" id="btn-tool-sheet" data-tool="sheet" onclick="handleToolClick('sheet')">
         <div class="tool-icon-text">
           <span style="font-size: 16px;">📊</span>
           <span>Sheet</span>
@@ -899,7 +920,7 @@
         <span class="indicator-dot"></span>
       </button>
 
-      <button class="tool-item-btn" id="btn-tool-vault" data-tool="vault" onclick="handleToolClick('vault')">
+      <button class="tool-item-btn active-tool" id="btn-tool-vault" data-tool="vault" onclick="handleToolClick('vault')">
         <div class="tool-icon-text">
           <span style="font-size: 16px;">📦</span>
           <span>CAD & Design Vault</span>
@@ -1063,28 +1084,74 @@ const defaultSlides = [
   }
 ];
 
+// Subfolder structure with nested categories
 const defaultVault = {
   cad: [
-    { name: "TOP_BASE_ISOGRID_REV_C.sldprt", size: "14.2 MB", date: "2026-10-28" },
-    { name: "HEXALIFT_6DOF_TOP_ASSY.sldasm", size: "48.6 MB", date: "2026-10-29" },
-    { name: "STRUT_ROLLER_SCREW_ACTUATOR.stl", size: "8.4 MB", date: "2026-10-26" },
-    { name: "SPACECRAFT_INTERFACE_RING.step", size: "12.1 MB", date: "2026-10-27" }
+    {
+      subfolder: "3D CAD Models & Assembly",
+      files: [
+        { name: "TOP_BASE_ISOGRID_REV_C.sldprt", size: "14.2 MB", date: "2026-10-28" },
+        { name: "HEXALIFT_6DOF_TOP_ASSY.sldasm", size: "48.6 MB", date: "2026-10-29" },
+        { name: "STRUT_ROLLER_SCREW_ACTUATOR.stl", size: "8.4 MB", date: "2026-10-26" }
+      ]
+    },
+    {
+      subfolder: "Interface Ring & STEP Exports",
+      files: [
+        { name: "SPACECRAFT_INTERFACE_RING.step", size: "12.1 MB", date: "2026-10-27" },
+        { name: "PEEK_JAW_PROTECTIVE_PADS.step", size: "3.2 MB", date: "2026-10-28" }
+      ]
+    },
+    {
+      subfolder: "User Uploads & Revisions",
+      files: []
+    }
   ],
   elec: [
-    { name: "POWER_DISTRIBUTION_48V_SCH.pdf", size: "2.8 MB", date: "2026-10-25" },
-    { name: "FAILSAFE_BRAKE_STO_CIRCUIT.kicad_pcb", size: "4.1 MB", date: "2026-10-27" },
-    { name: "CLEANROOM_HARNESS_BOM.xlsx", size: "340 KB", date: "2026-10-29" }
+    {
+      subfolder: "Schematics & Power Distribution",
+      files: [
+        { name: "POWER_DISTRIBUTION_48V_SCH.pdf", size: "2.8 MB", date: "2026-10-25" },
+        { name: "DC_DC_REGULATOR_CIRCUIT.pdf", size: "1.4 MB", date: "2026-10-26" }
+      ]
+    },
+    {
+      subfolder: "PCB Layouts & Bill of Materials",
+      files: [
+        { name: "FAILSAFE_BRAKE_STO_CIRCUIT.kicad_pcb", size: "4.1 MB", date: "2026-10-27" },
+        { name: "CLEANROOM_HARNESS_BOM.xlsx", size: "340 KB", date: "2026-10-29" }
+      ]
+    },
+    {
+      subfolder: "User Uploads & Revisions",
+      files: []
+    }
   ],
   mecha: [
-    { name: "STEWART_GOUGH_KINEMATICS.py", size: "18 KB", date: "2026-10-28" },
-    { name: "ETHERCAT_TWINCAT_MASTER_CONFIG.xml", size: "64 KB", date: "2026-10-27" },
-    { name: "FLOAT_MODE_IMPEDANCE_CONTROL.c", size: "32 KB", date: "2026-10-29" }
+    {
+      subfolder: "Kinematics & Motion Control Algorithms",
+      files: [
+        { name: "STEWART_GOUGH_KINEMATICS.py", size: "18 KB", date: "2026-10-28" },
+        { name: "FLOAT_MODE_IMPEDANCE_CONTROL.c", size: "32 KB", date: "2026-10-29" }
+      ]
+    },
+    {
+      subfolder: "Bus Configuration & Telemetry",
+      files: [
+        { name: "ETHERCAT_TWINCAT_MASTER_CONFIG.xml", size: "64 KB", date: "2026-10-27" },
+        { name: "MQTT_TELEMETRY_BROKER.json", size: "12 KB", date: "2026-10-28" }
+      ]
+    },
+    {
+      subfolder: "User Uploads & Revisions",
+      files: []
+    }
   ]
 };
 
 let viewMode = 'fullscreen';
-let focusedTool = 'graph'; // Set graph as initial or focused
-let splitOpenTools = { sheet: true, graph: true, doc: false, ppt: false, vault: false };
+let focusedTool = 'vault';
+let splitOpenTools = { sheet: true, graph: true, doc: false, ppt: false, vault: true };
 
 let activeDocSelection = {
   mainIndex: 0,
@@ -1100,6 +1167,11 @@ let workspaceData = {
   slides: defaultSlides,
   vault: defaultVault,
   vaultOpen: { cad: true, elec: true, mecha: true },
+  subfolderOpen: {
+    "cad_0": true, "cad_1": true, "cad_2": true,
+    "elec_0": true, "elec_1": true, "elec_2": true,
+    "mecha_0": true, "mecha_1": true, "mecha_2": true
+  },
   theme: "theme-dark"
 };
 
@@ -1107,14 +1179,13 @@ let workspaceData = {
 /* INITIALIZATION                                                            */
 /* ========================================================================= */
 function init() {
-  const savedData = localStorage.getItem("POWERSHARE_STUDIO_DATA_V8");
+  const savedData = localStorage.getItem("POWERSHARE_STUDIO_DATA_V8_SUB");
   if (savedData) {
     try {
-      workspaceData = JSON.parse(savedData);
-      if (!workspaceData.sheetHeaders) workspaceData.sheetHeaders = defaultHeaders;
-      if (!workspaceData.docSections) workspaceData.docSections = defaultDocSections;
-      if (!workspaceData.vault) workspaceData.vault = defaultVault;
-      if (!workspaceData.vaultOpen) workspaceData.vaultOpen = { cad: true, elec: true, mecha: true };
+      const parsed = JSON.parse(savedData);
+      if (parsed.vault && parsed.vault.cad && Array.isArray(parsed.vault.cad) && parsed.vault.cad[0] && parsed.vault.cad[0].subfolder) {
+        workspaceData = parsed;
+      }
     } catch(e){}
   }
   const savedMode = localStorage.getItem("POWERSHARE_STUDIO_VIEWMODE_V8");
@@ -1132,7 +1203,7 @@ function init() {
 }
 
 function saveState(showNotify = false) {
-  localStorage.setItem("POWERSHARE_STUDIO_DATA_V8", JSON.stringify(workspaceData));
+  localStorage.setItem("POWERSHARE_STUDIO_DATA_V8_SUB", JSON.stringify(workspaceData));
   localStorage.setItem("POWERSHARE_STUDIO_VIEWMODE_V8", viewMode);
   localStorage.setItem("POWERSHARE_STUDIO_FOCUSED_V8", focusedTool);
   if (showNotify) alert("Workspace successfully saved!");
@@ -1730,7 +1801,7 @@ function deleteCurrentSlide() {
 }
 
 /* ========================================================================= */
-/* PANEL 4: 3-PILLAR GRAPHS WITH RESTORED % CIRCULAR GAUGE CARD             */
+/* PANEL 4: 3-PILLAR GRAPHS                                                  */
 /* ========================================================================= */
 function buildGraphPanel(isSplit) {
   const panel = document.createElement("div");
@@ -1766,7 +1837,6 @@ function buildGraphPanel(isSplit) {
   if (grandTotal === 0) grandTotal = 1;
   const overallCompletedPct = Math.round((globalCounts["Completed"] / grandTotal) * 100);
 
-  // SVG Circular Gauge calculation
   const r = 68;
   const c = 2 * Math.PI * r;
   const offset = c * (1 - globalCounts["Completed"] / grandTotal);
@@ -1810,7 +1880,7 @@ function buildGraphPanel(isSplit) {
           ${renderPillarCard("Mechatronics", "🤖", "pillar-mecha", "var(--mecha-color)", discStats["Mechatronics"])}
         </div>
 
-        <!-- RESTORED % CIRCULAR PROGRESS & OVERALL HEALTH GAUGE -->
+        <!-- Circular Progress Gauge -->
         <div class="project-health-container">
           <div class="gauge-meta-box">
             <div class="gauge-meta-title">
@@ -1910,7 +1980,7 @@ function renderPillarCard(name, icon, cssClass, color, stats) {
 }
 
 /* ========================================================================= */
-/* PANEL 5: CAD & DESIGN VAULT                                               */
+/* PANEL 5: CAD & DESIGN VAULT (WITH EXPANDED HIERARCHY & VISIBLE SUBFOLDERS)*/
 /* ========================================================================= */
 function buildVaultPanel(isSplit) {
   const panel = document.createElement("div");
@@ -1919,31 +1989,34 @@ function buildVaultPanel(isSplit) {
   panel.innerHTML = `
     <div class="window-header">
       <div class="window-title" style="color:var(--vault-color);">
-        <span>📦</span> CAD & Design Vault (Dropdown Sub-Sections & Folders)
+        <span>📦</span> CAD & Design Vault (Multi-Tier Hierarchical Structure)
       </div>
       <div class="window-controls">
+        <button class="btn-icon" style="padding:2px 8px; font-size:11px;" onclick="createCustomSubfolder()">📁+ Add Subfolder</button>
         ${isSplit ? `<button class="btn-icon btn-icon-danger" style="padding:2px 6px;" onclick="closeToolInSplit('vault')">✕</button>` : ''}
       </div>
     </div>
     <div class="window-content">
       <div class="vault-view">
-        ${renderVaultFolder('cad', '📐 Mechanical CAD Designs (SolidParts, STLs, Assemblies, STEP)', 'var(--cad-color)', workspaceData.vault.cad)}
-        ${renderVaultFolder('elec', '⚡ Electronics Schematics & PCBs (Gerbers, KiCad, Schematics)', 'var(--elec-color)', workspaceData.vault.elec)}
-        ${renderVaultFolder('mecha', '🤖 Mechatronics & Firmware (TwinCAT, Python Kinematics, Firmware)', 'var(--mecha-color)', workspaceData.vault.mecha)}
+        ${renderVaultDiscipline('cad', '📐 Mechanical CAD Designs (SolidParts, STLs, Assemblies, STEP)', 'var(--cad-color)', workspaceData.vault.cad)}
+        ${renderVaultDiscipline('elec', '⚡ Electronics Schematics & PCBs (Gerbers, KiCad, Schematics)', 'var(--elec-color)', workspaceData.vault.elec)}
+        ${renderVaultDiscipline('mecha', '🤖 Mechatronics & Firmware (TwinCAT, Python Kinematics, Firmware)', 'var(--mecha-color)', workspaceData.vault.mecha)}
       </div>
     </div>
   `;
 
   setTimeout(() => {
     ['cad', 'elec', 'mecha'].forEach(folderKey => {
-      const dz = document.getElementById(`dropzone-${folderKey}`);
-      if (!dz) return;
-      dz.addEventListener("dragover", (e) => { e.preventDefault(); dz.classList.add("dragover"); });
-      dz.addEventListener("dragleave", () => { dz.classList.remove("dragover"); });
-      dz.addEventListener("drop", (e) => {
-        e.preventDefault();
-        dz.classList.remove("dragover");
-        if (e.dataTransfer.files.length) handleFolderUpload(folderKey, e.dataTransfer.files);
+      workspaceData.vault[folderKey].forEach((sub, sIdx) => {
+        const dz = document.getElementById(`dropzone-${folderKey}-${sIdx}`);
+        if (!dz) return;
+        dz.addEventListener("dragover", (e) => { e.preventDefault(); dz.classList.add("dragover"); });
+        dz.addEventListener("dragleave", () => { dz.classList.remove("dragover"); });
+        dz.addEventListener("drop", (e) => {
+          e.preventDefault();
+          dz.classList.remove("dragover");
+          if (e.dataTransfer.files.length) handleSubfolderUpload(folderKey, sIdx, e.dataTransfer.files);
+        });
       });
     });
   }, 100);
@@ -1951,60 +2024,99 @@ function buildVaultPanel(isSplit) {
   return panel;
 }
 
-function renderVaultFolder(folderKey, folderTitle, colorVar, files) {
+function renderVaultDiscipline(folderKey, folderTitle, colorVar, subfolders) {
   const isOpen = workspaceData.vaultOpen[folderKey];
+  const totalFiles = subfolders.reduce((acc, sub) => acc + sub.files.length, 0);
+
   return `
     <div class="vault-accordion-card">
-      <div class="vault-accordion-header" onclick="toggleVaultFolder('${folderKey}')">
+      <div class="vault-accordion-header" onclick="toggleVaultDiscipline('${folderKey}')">
         <span style="color:${colorVar}; display:flex; align-items:center; gap:8px;">
-          <span>${isOpen ? '📂' : '📁'}</span>
+          <span style="font-size:15px;">${isOpen ? '📂' : '📁'}</span>
           <span>${folderTitle}</span>
         </span>
         <div style="display:flex; align-items:center; gap:8px;">
-          <span class="vault-folder-badge">${files.length} items</span>
-          <span>${isOpen ? '▲' : '▼'}</span>
+          <span class="vault-folder-badge">${subfolders.length} subfolders • ${totalFiles} files</span>
+          <span style="font-size:11px;">${isOpen ? '▲' : '▼'}</span>
         </div>
       </div>
 
       ${isOpen ? `
         <div class="vault-accordion-body">
-          <div class="folder-dropzone" id="dropzone-${folderKey}" onclick="document.getElementById('input-${folderKey}').click()">
-            <input type="file" id="input-${folderKey}" style="display:none;" multiple onchange="handleFolderUpload('${folderKey}', this.files)">
-            📥 Drop files directly into this ${folderKey.toUpperCase()} folder (or click to browse)
-          </div>
+          ${subfolders.map((sub, sIdx) => {
+            const subKey = `${folderKey}_${sIdx}`;
+            const isSubOpen = workspaceData.subfolderOpen[subKey] !== false;
+            return `
+              <div class="vault-subfolder-card">
+                <div class="vault-subfolder-header" onclick="toggleSubfolder('${subKey}')">
+                  <div style="display:flex; align-items:center; gap:7px;">
+                    <span style="color:${colorVar}; font-size:13px;">${isSubOpen ? '📂' : '📁'}</span>
+                    <strong style="color:var(--text-main);">${sub.subfolder}</strong>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:10px; color:var(--text-muted);">${sub.files.length} files</span>
+                    <span style="font-size:10px; color:var(--text-muted);">${isSubOpen ? '▲' : '▼'}</span>
+                  </div>
+                </div>
 
-          <div style="display:flex; flex-direction:column; gap:6px;">
-            ${files.map((f, i) => `
-              <div class="vault-file-row">
-                <div style="display:flex; align-items:center; gap:8px; overflow:hidden;">
-                  <span>📄</span>
-                  <span style="font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${f.name}</span>
-                  <span style="font-size:10px; color:var(--text-muted);">(${f.size} • ${f.date})</span>
-                </div>
-                <div style="display:flex; gap:6px;">
-                  <button class="btn-icon" style="padding:2px 6px; font-size:11px;" onclick="alert('Downloading ${f.name}')">⬇️</button>
-                  <button class="btn-icon btn-icon-danger" style="padding:2px 6px; font-size:11px;" onclick="deleteVaultFile('${folderKey}', ${i})">✕</button>
-                </div>
+                ${isSubOpen ? `
+                  <div class="vault-subfolder-body">
+                    <!-- Dropzone directly in subfolder -->
+                    <div class="folder-dropzone" id="dropzone-${folderKey}-${sIdx}" onclick="document.getElementById('input-${folderKey}-${sIdx}').click()">
+                      <input type="file" id="input-${folderKey}-${sIdx}" style="display:none;" multiple onchange="handleSubfolderUpload('${folderKey}', ${sIdx}, this.files)">
+                      📥 Drop files directly into <strong>"${sub.subfolder}"</strong> (or click to browse)
+                    </div>
+
+                    <!-- Explicit File Listing -->
+                    ${sub.files.length === 0 ? `
+                      <div style="padding:10px; text-align:center; font-size:11px; color:var(--text-muted); font-style:italic;">
+                        No files in this subfolder yet. Drag & drop or upload files above.
+                      </div>
+                    ` : `
+                      <div style="display:flex; flex-direction:column; gap:6px;">
+                        ${sub.files.map((f, fIdx) => `
+                          <div class="vault-file-row">
+                            <div style="display:flex; align-items:center; gap:8px; overflow:hidden;">
+                              <span style="font-size:14px;">📄</span>
+                              <span style="font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--text-main);">${f.name}</span>
+                              <span style="font-size:11px; color:var(--text-muted);">(${f.size} • ${f.date})</span>
+                            </div>
+                            <div style="display:flex; gap:6px;">
+                              <button class="btn-icon" style="padding:2px 8px; font-size:11px;" onclick="alert('Downloading ${f.name}')">⬇️ Download</button>
+                              <button class="btn-icon btn-icon-danger" style="padding:2px 8px; font-size:11px;" onclick="deleteSubfolderFile('${folderKey}', ${sIdx}, ${fIdx})">✕ Delete</button>
+                            </div>
+                          </div>
+                        `).join('')}
+                      </div>
+                    `}
+                  </div>
+                ` : ''}
               </div>
-            `).join('')}
-          </div>
+            `;
+          }).join('')}
         </div>
       ` : ''}
     </div>
   `;
 }
 
-function toggleVaultFolder(folderKey) {
+function toggleVaultDiscipline(folderKey) {
   workspaceData.vaultOpen[folderKey] = !workspaceData.vaultOpen[folderKey];
   renderAll();
   saveState();
 }
 
-function handleFolderUpload(folderKey, files) {
+function toggleSubfolder(subKey) {
+  workspaceData.subfolderOpen[subKey] = !workspaceData.subfolderOpen[subKey];
+  renderAll();
+  saveState();
+}
+
+function handleSubfolderUpload(folderKey, subfolderIdx, files) {
   Array.from(files).forEach(file => {
     const sizeStr = (file.size / (1024 * 1024)).toFixed(1) + " MB";
     const dateStr = new Date().toISOString().split('T')[0];
-    workspaceData.vault[folderKey].push({
+    workspaceData.vault[folderKey][subfolderIdx].files.push({
       name: file.name,
       size: sizeStr,
       date: dateStr
@@ -2014,12 +2126,35 @@ function handleFolderUpload(folderKey, files) {
   saveState();
 }
 
-function deleteVaultFile(folderKey, idx) {
-  if (confirm(`Remove "${workspaceData.vault[folderKey][idx].name}"?`)) {
-    workspaceData.vault[folderKey].splice(idx, 1);
+function deleteSubfolderFile(folderKey, subfolderIdx, fileIdx) {
+  const fileName = workspaceData.vault[folderKey][subfolderIdx].files[fileIdx].name;
+  if (confirm(`Remove "${fileName}" from ${workspaceData.vault[folderKey][subfolderIdx].subfolder}?`)) {
+    workspaceData.vault[folderKey][subfolderIdx].files.splice(fileIdx, 1);
     renderAll();
     saveState();
   }
+}
+
+function createCustomSubfolder() {
+  const discChoice = prompt("Choose discipline to add subfolder to:\n1. Mechanical CAD\n2. Electronics\n3. Mechatronics", "1");
+  let folderKey = "cad";
+  if (discChoice === "2") folderKey = "elec";
+  else if (discChoice === "3") folderKey = "mecha";
+
+  const subName = prompt("Enter the new Subfolder name (e.g. Detailed FEA Meshes, Harness Diagrams, STO Certification):", "New Subfolder");
+  if (!subName) return;
+
+  workspaceData.vault[folderKey].push({
+    subfolder: subName.trim(),
+    files: []
+  });
+
+  const newIdx = workspaceData.vault[folderKey].length - 1;
+  workspaceData.subfolderOpen[`${folderKey}_${newIdx}`] = true;
+  workspaceData.vaultOpen[folderKey] = true;
+
+  renderAll();
+  saveState();
 }
 
 /* ========================================================================= */
