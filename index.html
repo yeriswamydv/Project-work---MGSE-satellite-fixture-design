@@ -417,6 +417,67 @@
   .status-orange { background: rgba(249, 115, 22, 0.2); color: var(--status-orange); border-color: rgba(249, 115, 22, 0.4); }
   .status-red { background: rgba(239, 68, 68, 0.2); color: var(--status-red); border-color: rgba(239, 68, 68, 0.4); }
 
+  
+  /* Live Markdown & Math View */
+  .doc-split-editor {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .doc-pane {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .doc-preview-pane {
+    flex: 1;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    overflow-y: auto;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-main);
+  }
+
+  .doc-preview-pane h1 { font-size: 24px; margin-bottom: 14px; color: var(--accent); border-bottom: 2px solid var(--border); padding-bottom: 8px; }
+  .doc-preview-pane h2 { font-size: 19px; margin-top: 18px; margin-bottom: 10px; color: var(--doc-color); border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+  .doc-preview-pane h3 { font-size: 16px; margin-top: 14px; margin-bottom: 8px; color: var(--sheet-color); }
+  .doc-preview-pane h4 { font-size: 14px; margin-top: 10px; margin-bottom: 6px; color: var(--ppt-color); }
+  .doc-preview-pane p { margin-bottom: 12px; }
+  .doc-preview-pane ul, .doc-preview-pane ol { margin-left: 24px; margin-bottom: 14px; }
+  .doc-preview-pane li { margin-bottom: 5px; }
+  .doc-preview-pane code { background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 12px; color: var(--accent); }
+  .doc-preview-pane hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+  
+  /* Math badge styling */
+  .math-formula {
+    background: rgba(56, 189, 248, 0.1);
+    color: #38bdf8;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: "Cambria Math", "STIXGeneral", "DejaVu Serif", serif;
+    font-size: 14px;
+    display: inline-block;
+    border: 1px solid rgba(56, 189, 248, 0.25);
+  }
+
+  .doc-view-toggle-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+    flex-shrink: 0;
+  }
+
   /* DOC */
   .doc-split {
     flex: 1;
@@ -1571,17 +1632,118 @@ function getActiveDocObject() {
   return { isSub: false, obj: mainSec, mainIdx: mIdx, subIdx: null };
 }
 
+
+
+let docMode = 'split'; // 'split', 'edit', 'preview'
+
+function setDocDisplayMode(mode) {
+  docMode = mode;
+  renderAll();
+}
+
+function parseMarkdownAndMath(text) {
+  if (!text) return '<p style="color:var(--text-muted); font-style:italic;">No content in this section yet.</p>';
+
+  // 1. Convert LaTeX symbols and formulas cleanly
+  let processed = text
+    .replace(/\\varnothing/g, "Ø")
+    .replace(/\\times/g, "×")
+    .replace(/\\rightarrow/g, "→")
+    .replace(/\\checkmark/g, "✓")
+    .replace(/\\mathbf\{([^}]+)\}/g, "<strong>$1</strong>")
+    .replace(/\\text\{([^}]+)\}/g, "$1")
+    .replace(/\\%/g, "%");
+
+  // 2. Wrap LaTeX inline formulas $...$ with clean math container
+  processed = processed.replace(/\$([^$]+)\$/g, function(match, inner) {
+    let cleanInner = inner
+      .replace(/\\varnothing/g, "Ø")
+      .replace(/\\times/g, "×")
+      .replace(/\\text\{([^}]+)\}/g, "$1")
+      .replace(/\\mathbf\{([^}]+)\}/g, "<strong>$1</strong>")
+      .replace(/\\/g, "");
+    return '<span class="math-formula">' + cleanInner + '</span>';
+  });
+
+  // 3. Process Markdown Headings
+  const lines = processed.split('\n');
+  let html = [];
+  let inList = false;
+  let listType = 'ul';
+
+  lines.forEach(line => {
+    let trimmed = line.trim();
+
+    if (trimmed.startsWith('#### ')) {
+      if (inList) { html.push(`</${listType}>`); inList = false; }
+      html.push(`<h4>${trimmed.substring(5)}</h4>`);
+    } else if (trimmed.startsWith('### ')) {
+      if (inList) { html.push(`</${listType}>`); inList = false; }
+      html.push(`<h3>${trimmed.substring(4)}</h3>`);
+    } else if (trimmed.startsWith('## ')) {
+      if (inList) { html.push(`</${listType}>`); inList = false; }
+      html.push(`<h2>${trimmed.substring(3)}</h2>`);
+    } else if (trimmed.startsWith('# ')) {
+      if (inList) { html.push(`</${listType}>`); inList = false; }
+      html.push(`<h1>${trimmed.substring(2)}</h1>`);
+    } else if (trimmed.startsWith('- ') || trimmed.startsWith('• ') || trimmed.startsWith('* ')) {
+      if (!inList || listType !== 'ul') {
+        if (inList) html.push(`</${listType}>`);
+        html.push('<ul>');
+        inList = true;
+        listType = 'ul';
+      }
+      let content = trimmed.replace(/^[-•*]\s+/, '');
+      html.push(`<li>${applyInlineStyles(content)}</li>`);
+    } else if (/^\d+\.\s+/.test(trimmed)) {
+      if (!inList || listType !== 'ol') {
+        if (inList) html.push(`</${listType}>`);
+        html.push('<ol>');
+        inList = true;
+        listType = 'ol';
+      }
+      let content = trimmed.replace(/^\d+\.\s+/, '');
+      html.push(`<li>${applyInlineStyles(content)}</li>`);
+    } else if (trimmed === '---') {
+      if (inList) { html.push(`</${listType}>`); inList = false; }
+      html.push('<hr>');
+    } else if (trimmed === '') {
+      if (inList) { html.push(`</${listType}>`); inList = false; }
+    } else {
+      if (inList) { html.push(`</${listType}>`); inList = false; }
+      html.push(`<p>${applyInlineStyles(line)}</p>`);
+    }
+  });
+
+  if (inList) html.push(`</${listType}>`);
+
+  return html.join('\n');
+}
+
+function applyInlineStyles(str) {
+  return str
+    .replace(/\*\*([^\*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*([^\*]+)\*/g, '<em>$1</em>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>');
+}
+
 function buildDocPanel(isSplit) {
   const panel = document.createElement("div");
   panel.className = "window-panel";
   const activeDoc = getActiveDocObject();
+  const renderedHtml = parseMarkdownAndMath(activeDoc.obj.content);
 
   panel.innerHTML = `
     <div class="window-header">
       <div class="window-title" style="color:var(--doc-color);">
-        <span>📝</span> Technical Engineering Documentation
+        <span>📝</span> Technical Engineering Documentation (Live Markdown & Formulas)
       </div>
       <div class="window-controls">
+        <div class="view-mode-toggle" style="background:var(--bg-card); padding:2px;">
+          <button class="mode-toggle-btn ${docMode === 'split' ? 'active' : ''}" style="font-size:10px; padding:2px 8px;" onclick="setDocDisplayMode('split')">🌓 Split View</button>
+          <button class="mode-toggle-btn ${docMode === 'preview' ? 'active' : ''}" style="font-size:10px; padding:2px 8px;" onclick="setDocDisplayMode('preview')">👁️ Live Formatted</button>
+          <button class="mode-toggle-btn ${docMode === 'edit' ? 'active' : ''}" style="font-size:10px; padding:2px 8px;" onclick="setDocDisplayMode('edit')">✏️ Raw Editor</button>
+        </div>
         ${isSplit ? `<button class="btn-icon btn-icon-danger" style="padding:2px 6px;" onclick="closeToolInSplit('doc')">✕</button>` : ''}
       </div>
     </div>
@@ -1591,14 +1753,18 @@ function buildDocPanel(isSplit) {
       <button class="sym-btn" onclick="addSubDocSection()" title="Add Sub-section">➕ Sub-section</button>
       <button class="sym-btn sym-btn-danger" onclick="deleteActiveDocItem()" title="Delete Section">🗑️ Delete</button>
       <div class="sym-divider"></div>
-      <button class="sym-btn" onclick="insertDocFormat('**', '**')"><strong>B</strong></button>
-      <button class="sym-btn" onclick="insertDocFormat('*', '*')"><em>I</em></button>
+      <button class="sym-btn" onclick="insertDocFormat('**', '**')"><strong>B</strong> Bold</button>
+      <button class="sym-btn" onclick="insertDocFormat('*', '*')"><em>I</em> Italic</button>
       <button class="sym-btn" onclick="insertDocFormat('### ', '')">H3</button>
       <button class="sym-btn" onclick="insertDocFormat('- ', '')">• List</button>
+      <button class="sym-btn" onclick="insertDocFormat('$', '$')">∑ Math</button>
+      <div class="sym-divider"></div>
+      <span style="font-size:11px; color:var(--text-muted);">Auto-renders LaTeX equations (Ø, ×, $, formulas)</span>
     </div>
 
     <div class="window-content">
       <div class="doc-split">
+        <!-- Document Navigator Tree -->
         <div class="doc-tree-sidebar">
           <div class="doc-tree-header">
             <span>Engineering Sections</span>
@@ -1631,15 +1797,49 @@ function buildDocPanel(isSplit) {
           }).join('')}
         </div>
 
+        <!-- Main Display / Editor Container -->
         <div class="doc-edit-area">
           <input type="text" class="doc-title-input" value="${activeDoc.obj.title}" oninput="updateActiveDocTitle(this.value)">
-          <textarea class="doc-textarea" id="doc-main-textarea" oninput="updateActiveDocContent(this.value)">${activeDoc.obj.content}</textarea>
+
+          <div class="doc-split-editor">
+            <!-- Raw Editor Pane -->
+            ${docMode !== 'preview' ? `
+              <div class="doc-pane" style="${docMode === 'edit' ? 'flex:1;' : 'flex:1; border-right:1px solid var(--border); padding-right:12px;'}">
+                <div style="font-size:11px; font-weight:700; color:var(--text-muted); margin-bottom:6px; display:flex; justify-content:space-between;">
+                  <span>MARKDOWN / LATEX SOURCE</span>
+                  <span>Auto-saved</span>
+                </div>
+                <textarea class="doc-textarea" id="doc-main-textarea" oninput="handleDocLiveInput(this.value)" placeholder="Type Markdown, list items, or paste engineering equations here...">${activeDoc.obj.content}</textarea>
+              </div>
+            ` : ''}
+
+            <!-- Live Formatted Preview Pane -->
+            ${docMode !== 'edit' ? `
+              <div class="doc-pane" style="flex:1;">
+                <div style="font-size:11px; font-weight:700; color:var(--accent); margin-bottom:6px;">
+                  <span>LIVE FORMATTED PREVIEW</span>
+                </div>
+                <div class="doc-preview-pane" id="doc-live-preview">
+                  ${renderedHtml}
+                </div>
+              </div>
+            ` : ''}
+          </div>
         </div>
       </div>
     </div>
   `;
   return panel;
 }
+
+function handleDocLiveInput(val) {
+  updateActiveDocContent(val);
+  const preview = document.getElementById("doc-live-preview");
+  if (preview) {
+    preview.innerHTML = parseMarkdownAndMath(val);
+  }
+}
+
 
 function selectDocMain(mIdx) { activeDocSelection.mainIndex = mIdx; activeDocSelection.subIndex = null; renderAll(); }
 function selectDocSub(mIdx, sIdx) { activeDocSelection.mainIndex = mIdx; activeDocSelection.subIndex = sIdx; renderAll(); }
