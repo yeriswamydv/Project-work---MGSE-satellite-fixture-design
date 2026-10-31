@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PowerShare Studio v19 | Aerospace Smart MGSE Hub</title>
+<title>PowerShare Studio v20 | Aerospace Smart MGSE Hub</title>
 <style>
   :root {
     --bg-base: #090d16;
@@ -615,14 +615,17 @@
 
       <div class="user-dropdown-card" id="user-dropdown">
         <div class="dropdown-header-info">
-          <div class="name" id="menu-user-name">Yeriswamy DV</div>
-          <div class="role" id="menu-user-role">Product Sustaining Engineer</div>
+          <div class="name" id="menu-user-name">Guest Observer</div>
+          <div class="role" id="menu-user-role">Read Only Mode</div>
         </div>
-        <div class="dropdown-action-item" onclick="promptSwitchAccount('user1')">
-          <span>🔑</span> Switch to: Yeriswamy DV (Full Access)
+        <div class="dropdown-action-item" onclick="window.open('https://yeriswamydv.github.io/', '_blank')">
+          <span>🌐</span> Yeriswamy Portfolio
         </div>
-        <div class="dropdown-action-item" onclick="promptSwitchAccount('user2')">
-          <span>👤</span> Switch to: Guestin (Read Only)
+        <div class="dropdown-action-item" onclick="location.href='mailto:yeriswamy.dv@gmail.com'">
+          <span>✉️</span> Contact via Email
+        </div>
+        <div class="dropdown-action-item" onclick="location.href='tel:+919110422754'">
+          <span>📞</span> +91 91104 22754
         </div>
         <div style="height:1px; background:var(--border); margin:4px 0;"></div>
         <div class="dropdown-action-item danger" onclick="handleLogout()">
@@ -744,55 +747,45 @@
   </div>
 </div>
 
-<!-- DUAL LOGIN MODAL (LOGIN 1 vs LOGIN 2) -->
+<!-- GUEST LOGIN MODAL -->
 <div class="login-backdrop" id="login-modal">
   <div class="login-modal-box">
     <div class="login-brand-header">
       <div class="login-logo">POWERSHARE <span>Aerospace MGSE Hub</span></div>
-      <div style="font-size:12px; color:#64748b;">Sign in with your authorized credentials</div>
+      <div style="font-size:13px; color:#64748b; margin-top:4px;">Guest Portal • Read-Only Inspection Mode</div>
     </div>
 
-    <!-- 2 Account Selector Buttons -->
-    <div class="account-selector-pills">
-      <button class="user-choice-btn selected" id="choice-user-1" onclick="selectLoginAccount('user1')">
-        <div class="user-choice-avatar">YD</div>
-        <div>
-          <div style="font-size:12px; font-weight:800; color:#0f172a;">Yeriswamy DV</div>
-          <div style="font-size:10px; color:#64748b;">Full Access (CAD/Edits)</div>
-        </div>
-      </button>
-
-      <button class="user-choice-btn" id="choice-user-2" onclick="selectLoginAccount('user2')">
-        <div class="user-choice-avatar" style="background:#f59e0b;">GS</div>
-        <div>
-          <div style="font-size:12px; font-weight:800; color:#0f172a;">Guestin</div>
-          <div style="font-size:10px; color:#64748b;">Read Only (Contact Card)</div>
-        </div>
-      </button>
+    <!-- Guest Access Banner Card inside Modal -->
+    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:14px 16px; display:flex; align-items:center; gap:12px;">
+      <div style="width:38px; height:38px; border-radius:50%; background:#f59e0b; color:#fff; font-size:14px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0;">GS</div>
+      <div>
+        <div style="font-size:13px; font-weight:800; color:#0f172a;">Guest Access</div>
+        <div style="font-size:11px; color:#64748b;">Explore specifications, kinematics, and portfolio contact card</div>
+      </div>
     </div>
 
     <!-- Error message -->
-    <div class="error-message-box" id="login-error-box">
-      Invalid ID or Password.
-    </div>
+    <div class="error-message-box" id="login-error-box"></div>
 
     <form onsubmit="handleLoginSubmit(event)" style="display:flex; flex-direction:column; gap:14px;">
       <div class="input-field-group">
         <label>Login ID</label>
-        <input type="text" id="modal-input-username" value="Yeriswamy DV" required />
+        <input type="text" id="modal-input-username" placeholder="Enter Login ID" autocomplete="off" required />
       </div>
 
       <div class="input-field-group">
         <label>Password</label>
-        <input type="password" id="modal-input-password" value="Rogue@369" required />
+        <input type="password" id="modal-input-password" placeholder="Enter Password" autocomplete="off" required />
       </div>
 
-      <button type="submit" class="btn-submit-login">Sign In & Access</button>
+      <button type="submit" class="btn-submit-login" style="background:#f59e0b; color:#0f172a; font-weight:800;">
+        Sign In as Guest (Read-Only)
+      </button>
+      
+      <button type="button" onclick="loginDirectGuest()" style="background:#f1f5f9; color:#334155; border:1px solid #cbd5e1; border-radius:6px; padding:10px; font-size:12px; font-weight:700; cursor:pointer;">
+        ⚡ Instant Guest Access (1-Click)
+      </button>
     </form>
-
-    <div style="text-align:center; font-size:11px; color:#94a3b8;">
-      Credentials: Yeriswamy DV (Rogue@369) • Guestin (Guest@2580)
-    </div>
   </div>
 </div>
 
@@ -846,25 +839,21 @@ function toggleSidebar() {
   }
 }
 
-/* DUAL LOGIN LOGIC */
-let selectedLoginKey = "user1";
+/* GUEST LOGIN & AUTH LOGIC */
+let selectedLoginKey = "user2";
 
 function promptSwitchAccount(key) {
   closeUserDropdown();
-  selectedLoginKey = key;
-  selectLoginAccount(key);
+  selectedLoginKey = "user2";
+  document.getElementById("modal-input-username").value = "";
+  document.getElementById("modal-input-password").value = "";
+  document.getElementById("login-error-box").style.display = "none";
   document.getElementById("login-modal").classList.add("active");
 }
 
-function selectLoginAccount(key) {
-  selectedLoginKey = key;
-  document.getElementById("choice-user-1").classList.toggle("selected", key === "user1");
-  document.getElementById("choice-user-2").classList.toggle("selected", key === "user2");
-  document.getElementById("login-error-box").style.display = "none";
-
-  const acc = userAccounts[key];
-  document.getElementById("modal-input-username").value = acc.loginId;
-  document.getElementById("modal-input-password").value = acc.password;
+function loginDirectGuest() {
+  activeUserKey = "user2";
+  finishLogin();
 }
 
 function handleLoginSubmit(e) {
@@ -873,19 +862,22 @@ function handleLoginSubmit(e) {
   const passInput = document.getElementById("modal-input-password").value.trim();
   const errorBox = document.getElementById("login-error-box");
 
-  if (idInput.toLowerCase() === userAccounts.user1.loginId.toLowerCase() && passInput === userAccounts.user1.password) {
+  // Admin silent login (credentials not shown anywhere in UI)
+  if (idInput.toLowerCase() === "yeriswamy dv" && passInput === "Rogue@369") {
     activeUserKey = "user1";
     finishLogin();
     return;
   }
-  if (idInput.toLowerCase() === userAccounts.user2.loginId.toLowerCase() && passInput === userAccounts.user2.password) {
+
+  // Guest login
+  if (idInput.toLowerCase() === "guestin" && passInput === "Guest@2580") {
     activeUserKey = "user2";
     finishLogin();
     return;
   }
 
   errorBox.style.display = "block";
-  errorBox.innerText = "Incorrect login credentials. Try Yeriswamy DV / Rogue@369 or Guestin / Guest@2580.";
+  errorBox.innerText = "Invalid ID or Password. For Guest access, click 'Instant Guest Access' or enter Guest credentials.";
 }
 
 function finishLogin() {
@@ -898,7 +890,7 @@ function finishLogin() {
 function handleLogout() {
   sessionStorage.removeItem("POWERSHARE_CURRENT_USER");
   closeUserDropdown();
-  promptSwitchAccount("user1");
+  promptSwitchAccount("user2");
 }
 
 function applyUserPermissions() {
@@ -1142,7 +1134,7 @@ function triggerSmartDownload(fileName, customUrl) {
 }
 
 function fallbackBlobDownload(fileName) {
-  let content = "PowerShare Studio v19 - Aerospace MGSE File Archive\nFile: " + fileName + "\nProject: ICEYE MGSE Hub\n";
+  let content = "PowerShare Studio v20 - Aerospace MGSE File Archive\nFile: " + fileName + "\nProject: ICEYE MGSE Hub\n";
   const blob = new Blob([content], { type: 'application/octet-stream' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -1871,13 +1863,13 @@ function changeTheme(theme) {
 }
 
 function saveState() {
-  localStorage.setItem("POWERSHARE_STUDIO_VAULT_V19", JSON.stringify(workspaceData));
+  localStorage.setItem("POWERSHARE_STUDIO_VAULT_V20", JSON.stringify(workspaceData));
 }
 
 window.addEventListener("DOMContentLoaded", () => {
   const savedUser = sessionStorage.getItem("POWERSHARE_CURRENT_USER");
   if (!savedUser) {
-    promptSwitchAccount("user1");
+    promptSwitchAccount("user2");
   } else {
     activeUserKey = savedUser;
     applyUserPermissions();
