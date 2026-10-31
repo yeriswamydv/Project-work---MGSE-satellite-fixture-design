@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PowerShare Studio v21 | Aerospace Smart MGSE Hub</title>
+<title>PowerShare Studio v22 | Aerospace Smart MGSE Hub</title>
 <style>
   :root {
     --bg-base: #090d16;
@@ -366,6 +366,140 @@
   .tool-item-btn[data-tool="drawings"] .indicator-dot { color: var(--dwg-color); }
   .tool-item-btn[data-tool="drawings"].active-tool .indicator-dot { background: var(--dwg-color); }
 
+  .tool-item-btn[data-tool="contact"] .indicator-dot { color: #38bdf8; }
+  .tool-item-btn[data-tool="contact"].active-tool .indicator-dot { background: #38bdf8; }
+  .active-pill.pill-contact { border-left: 3px solid #38bdf8; }
+
+  /* CONTACT WORKSPACE PANEL */
+  .contact-panel-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: var(--bg-base);
+  }
+
+  .contact-hero-card {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95));
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
+
+  .contact-profile-meta {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .contact-big-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0284c7, #38bdf8);
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.35);
+  }
+
+  .contact-profile-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text-main);
+  }
+
+  .contact-profile-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    max-width: 500px;
+    line-height: 1.5;
+  }
+
+  .contact-grid-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .contact-channel-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 14px;
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .contact-channel-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+  }
+
+  .channel-card-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .channel-icon-wrap {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(56, 189, 248, 0.1);
+    color: var(--accent);
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .channel-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
+  .channel-value { font-size: 14px; font-weight: 700; color: var(--text-main); margin-top: 2px; }
+
+  .channel-action-btn {
+    width: 100%;
+    padding: 9px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg-card-header);
+    color: var(--text-main);
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+    cursor: pointer;
+  }
+  .channel-action-btn:hover {
+    background: var(--accent);
+    color: #090d16;
+    border-color: var(--accent);
+  }
+  .channel-action-btn.linkedin:hover {
+    background: #0a66c2;
+    color: #ffffff;
+    border-color: #0a66c2;
+  }
+
+
   /* CANVAS STAGE */
   .canvas-stage {
     flex: 1;
@@ -699,34 +833,7 @@
   </div>
 </header>
 
-<!-- GUEST MODE CONTACT BANNER (AUTOMATICALLY SHOWN WHEN LOGGED IN AS GUESTIN) -->
-<div class="guest-contact-banner" id="guest-contact-banner">
-  <div>
-    <h4 style="font-size:14px; font-weight:800; display:flex; align-items:center; gap:6px;">
-      <span>👋</span> Welcome! Yeriswamy DV — Engineering Portfolio & Direct Contact
-    </h4>
-    <p style="font-size:11px; opacity:0.9; margin-top:3px;">
-      You are viewing in <strong>Guest Read-Only Mode</strong> (File downloads and modifications are restricted). Reach out directly for complete CAD packages, drawing prints, or technical inquiries:
-    </p>
-  </div>
-  <div class="guest-contact-pills">
-    <a href="https://yeriswamydv.github.io/" target="_blank" class="contact-pill-link" title="Visit Personal Portfolio">
-      <span>🌐</span> yeriswamydv.github.io
-    </a>
-    <a href="https://www.linkedin.com/in/yeriswamydv/" target="_blank" class="contact-pill-link" style="background:rgba(10, 102, 194, 0.4); border-color:#0a66c2;" title="Connect on LinkedIn">
-      <span>💼</span> LinkedIn Profile
-    </a>
-    <a href="mailto:yeriswamy.dv@gmail.com" class="contact-pill-link" title="Send Email">
-      <span>✉️</span> yeriswamy.dv@gmail.com
-    </a>
-    <a href="tel:+917022556720" class="contact-pill-link" title="Call Primary Mobile">
-      <span>📞</span> +91-7022556720
-    </a>
-    <a href="tel:+918660524595" class="contact-pill-link" title="Call Secondary Mobile">
-      <span>📱</span> +91-8660524595
-    </a>
-  </div>
-</div>
+
 
 <div class="workspace-layout">
   <!-- EXPANDABLE / COLLAPSIBLE LEFT SIDEBAR -->
@@ -781,6 +888,14 @@
         </div>
         <span class="indicator-dot"></span>
       </button>
+
+      <button class="tool-item-btn" id="btn-tool-contact" data-tool="contact" onclick="handleToolClick('contact')">
+        <div class="tool-icon-text">
+          <span style="font-size:16px;">📬</span>
+          <span class="tool-label">Contact & Connect</span>
+        </div>
+        <span class="indicator-dot"></span>
+      </button>
     </div>
 
     <!-- Sidebar Bottom Toggle Footer -->
@@ -797,34 +912,7 @@
 </div>
 
 
-<!-- BOTTOM PERMANENT CONTACT SECTION -->
-<div class="bottom-contact-bar" id="bottom-contact-section">
-  <div class="contact-bar-brand">
-    <span style="font-size:16px;">📬</span>
-    <div>
-      <div style="font-size:12px; font-weight:800; color:var(--text-main);">Contact & Engineering Inquiries</div>
-      <div style="font-size:10px; color:var(--text-muted);">Yeriswamy DV • Product Sustaining & Aerospace Mechanical Design</div>
-    </div>
-  </div>
 
-  <div class="contact-bar-links">
-    <a href="https://yeriswamydv.github.io/" target="_blank" class="bar-link-chip" title="View Portfolio">
-      <span>🌐</span> Portfolio
-    </a>
-    <a href="https://www.linkedin.com/in/yeriswamydv/" target="_blank" class="bar-link-chip linkedin-chip" title="Connect on LinkedIn">
-      <span>💼</span> LinkedIn
-    </a>
-    <a href="mailto:yeriswamy.dv@gmail.com" class="bar-link-chip" title="Email Yeriswamy">
-      <span>✉️</span> yeriswamy.dv@gmail.com
-    </a>
-    <a href="tel:+917022556720" class="bar-link-chip" title="Call Primary">
-      <span>📞</span> +91-7022556720
-    </a>
-    <a href="tel:+918660524595" class="bar-link-chip" title="Call Secondary">
-      <span>📱</span> +91-8660524595
-    </a>
-  </div>
-</div>
 
 <!-- BOTTOM TASKBAR -->
 <footer class="bottom-taskbar">
@@ -1006,10 +1094,9 @@ function applyUserPermissions() {
   document.getElementById("menu-user-role").innerText = user.role;
 
   const guestBanner = document.getElementById("guest-contact-banner");
-  if (!user.canDownload) {
-    guestBanner.classList.add("visible");
-  } else {
-    guestBanner.classList.remove("visible");
+  if (guestBanner) {
+    if (!user.canDownload) guestBanner.classList.add("visible");
+    else guestBanner.classList.remove("visible");
   }
 }
 
@@ -1172,7 +1259,7 @@ const defaultDrawingsData = {
 
 let viewMode = 'fullscreen';
 let focusedTool = 'sheet';
-let splitOpenTools = { sheet: true, graph: true, doc: false, ppt: false, vault: false, drawings: false };
+let splitOpenTools = { sheet: true, graph: true, doc: false, ppt: false, vault: false, drawings: false, contact: false };
 
 let isVaultDrawerPinned = true;
 let isDwgDrawerPinned = true;
@@ -1233,7 +1320,7 @@ function triggerSmartDownload(fileName, customUrl) {
 }
 
 function fallbackBlobDownload(fileName) {
-  let content = "PowerShare Studio v21 - Aerospace MGSE File Archive\nFile: " + fileName + "\nProject: ICEYE MGSE Hub\n";
+  let content = "PowerShare Studio v22 - Aerospace MGSE File Archive\nFile: " + fileName + "\nProject: ICEYE MGSE Hub\n";
   const blob = new Blob([content], { type: 'application/octet-stream' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -1882,6 +1969,128 @@ function buildDocPanel(isSplit) {
   return panel;
 }
 
+
+/* ========================================================================= */
+/* PANEL 7: CONTACT & ENGINEERING NETWORK PANEL                             */
+/* ========================================================================= */
+function buildContactPanel(isSplit) {
+  const panel = document.createElement("div");
+  panel.className = "window-panel";
+
+  panel.innerHTML = `
+    <div class="window-header">
+      <div class="window-title" style="color:#38bdf8;">
+        <span>📬</span> Contact & Engineering Network • Yeriswamy DV
+      </div>
+      <div class="window-controls">
+        ${isSplit ? `<button class="btn-icon btn-icon-danger" style="padding:2px 6px;" onclick="closeToolInSplit('contact')">✕</button>` : ''}
+      </div>
+    </div>
+
+    <div class="window-content">
+      <div class="contact-panel-container">
+        <!-- Hero Header Card -->
+        <div class="contact-hero-card">
+          <div class="contact-profile-meta">
+            <div class="contact-big-avatar">YD</div>
+            <div>
+              <div class="contact-profile-title">Yeriswamy DV</div>
+              <div class="contact-profile-sub">
+                Product Sustaining Engineer & Mechanical Design Engineer<br>
+                Specializing in Precision Medical Devices, Mechanism Kinematics & Aerospace Ground Support Equipment (MGSE).
+              </div>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:6px; align-items:flex-end;">
+            <span style="font-size:12px; font-weight:700; color:var(--accent);">📍 Hyderabad, Telangana, India</span>
+            <span style="font-size:11px; color:var(--text-muted);">Available for technical consultations & engineering roles</span>
+          </div>
+        </div>
+
+        <!-- 5 Direct Interactive Channel Cards -->
+        <div class="contact-grid-cards">
+          <!-- 1. Portfolio Website -->
+          <div class="contact-channel-card">
+            <div class="channel-card-top">
+              <div class="channel-icon-wrap" style="background:rgba(56, 189, 248, 0.15); color:#38bdf8;">🌐</div>
+              <div>
+                <div class="channel-label">Official Engineering Portfolio</div>
+                <div class="channel-value">yeriswamydv.github.io</div>
+              </div>
+            </div>
+            <a href="https://yeriswamydv.github.io/" target="_blank" class="channel-action-btn">
+              <span>View Portfolio Live</span> <span>↗</span>
+            </a>
+          </div>
+
+          <!-- 2. LinkedIn -->
+          <div class="contact-channel-card">
+            <div class="channel-card-top">
+              <div class="channel-icon-wrap" style="background:rgba(10, 102, 194, 0.15); color:#0a66c2;">💼</div>
+              <div>
+                <div class="channel-label">Professional Network</div>
+                <div class="channel-value">linkedin.com/in/yeriswamydv</div>
+              </div>
+            </div>
+            <a href="https://www.linkedin.com/in/yeriswamydv/" target="_blank" class="channel-action-btn linkedin">
+              <span>Connect on LinkedIn</span> <span>↗</span>
+            </a>
+          </div>
+
+          <!-- 3. Direct Email -->
+          <div class="contact-channel-card">
+            <div class="channel-card-top">
+              <div class="channel-icon-wrap" style="background:rgba(16, 185, 129, 0.15); color:#10b981;">✉️</div>
+              <div>
+                <div class="channel-label">Direct Email Address</div>
+                <div class="channel-value">yeriswamy.dv@gmail.com</div>
+              </div>
+            </div>
+            <a href="mailto:yeriswamy.dv@gmail.com" class="channel-action-btn">
+              <span>Compose Email</span> <span>↗</span>
+            </a>
+          </div>
+
+          <!-- 4. Primary Mobile Phone -->
+          <div class="contact-channel-card">
+            <div class="channel-card-top">
+              <div class="channel-icon-wrap" style="background:rgba(245, 158, 11, 0.15); color:#f59e0b;">📞</div>
+              <div>
+                <div class="channel-label">Primary Phone / WhatsApp</div>
+                <div class="channel-value">+91-7022556720</div>
+              </div>
+            </div>
+            <a href="tel:+917022556720" class="channel-action-btn">
+              <span>Call Primary Number</span> <span>↗</span>
+            </a>
+          </div>
+
+          <!-- 5. Secondary Mobile Phone -->
+          <div class="contact-channel-card">
+            <div class="channel-card-top">
+              <div class="channel-icon-wrap" style="background:rgba(192, 132, 252, 0.15); color:#c084fc;">📱</div>
+              <div>
+                <div class="channel-label">Alternative Contact Phone</div>
+                <div class="channel-value">+91-8660524595</div>
+              </div>
+            </div>
+            <a href="tel:+918660524595" class="channel-action-btn">
+              <span>Call Secondary Number</span> <span>↗</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Technical Engineering Scope Note -->
+        <div style="background:var(--bg-card); border:1px dashed var(--border); border-radius:10px; padding:18px 22px; font-size:12px; line-height:1.6; color:var(--text-muted);">
+          <strong style="color:var(--text-main);">💡 Engineering Scope & Deliverables:</strong><br>
+          For full CAD assemblies (.sldprt / .sldasm / .step), design history files (DHF), finite element analysis (FEA) reports under ECSS standards, or automated macro workflows, feel free to connect directly via LinkedIn or email.
+        </div>
+      </div>
+    </div>
+  `;
+  return panel;
+}
+
 function parseDocContent(text) {
   if (!text) return '';
   return text.split('\n').map(l => {
@@ -1893,7 +2102,7 @@ function parseDocContent(text) {
 
 /* MASTER RENDERER */
 function renderAll() {
-  ['sheet', 'doc', 'ppt', 'graph', 'vault', 'drawings'].forEach(tool => {
+  ['sheet', 'doc', 'ppt', 'graph', 'vault', 'drawings', 'contact'].forEach(tool => {
     const btn = document.getElementById(`btn-tool-${tool}`);
     if (btn) btn.classList.toggle('active-tool', viewMode === 'fullscreen' ? focusedTool === tool : !!splitOpenTools[tool]);
   });
@@ -1908,11 +2117,13 @@ function renderAll() {
     else if (focusedTool === 'graph') canvas.appendChild(buildGraphPanel(false));
     else if (focusedTool === 'vault') canvas.appendChild(buildVaultPanel(false));
     else if (focusedTool === 'drawings') canvas.appendChild(buildDrawingsPanel(false));
+    else if (focusedTool === 'contact') canvas.appendChild(buildContactPanel(false));
   } else {
     if (splitOpenTools.sheet) canvas.appendChild(buildSheetPanel(true));
     if (splitOpenTools.graph) canvas.appendChild(buildGraphPanel(true));
     if (splitOpenTools.vault) canvas.appendChild(buildVaultPanel(true));
     if (splitOpenTools.drawings) canvas.appendChild(buildDrawingsPanel(true));
+    if (splitOpenTools.contact) canvas.appendChild(buildContactPanel(true));
     if (splitOpenTools.doc) canvas.appendChild(buildDocPanel(true));
     if (splitOpenTools.ppt) canvas.appendChild(buildPptPanel(true));
   }
@@ -1923,8 +2134,8 @@ function renderAll() {
 function renderBottomTaskbar() {
   const container = document.getElementById('active-pills-container');
   container.innerHTML = "";
-  const names = { sheet: "📊 Sheet", doc: "📝 Doc", ppt: "📽️ Slides", graph: "📈 Graphs", vault: "📦 CAD Vault", drawings: "📐 Drawings" };
-  ['sheet', 'doc', 'ppt', 'graph', 'vault', 'drawings'].forEach(k => {
+  const names = { sheet: "📊 Sheet", doc: "📝 Doc", ppt: "📽️ Slides", graph: "📈 Graphs", vault: "📦 CAD Vault", drawings: "📐 Drawings", contact: "📬 Contact" };
+  ['sheet', 'doc', 'ppt', 'graph', 'vault', 'drawings', 'contact'].forEach(k => {
     const pill = document.createElement("div");
     const active = viewMode === 'fullscreen' ? (focusedTool === k) : splitOpenTools[k];
     pill.className = `active-pill ${active ? 'active-focused' : ''}`;
@@ -1962,7 +2173,7 @@ function changeTheme(theme) {
 }
 
 function saveState() {
-  localStorage.setItem("POWERSHARE_STUDIO_VAULT_V21", JSON.stringify(workspaceData));
+  localStorage.setItem("POWERSHARE_STUDIO_VAULT_V22", JSON.stringify(workspaceData));
 }
 
 window.addEventListener("DOMContentLoaded", () => {
