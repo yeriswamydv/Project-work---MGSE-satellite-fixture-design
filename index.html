@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PowerShare Studio v23 | Aerospace Smart MGSE Hub</title>
+<title>PowerShare Studio v24 | Aerospace Smart MGSE Hub</title>
 <style>
   :root {
     --bg-base: #090d16;
@@ -766,24 +766,24 @@
   }
 
   
-  /* INSPECTION WATERMARK OVERLAY */
-  .inspection-watermark-layer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    pointer-events: none;
-    z-index: 10;
-    opacity: 0.05;
-    background-repeat: repeat;
-    background-size: 420px 240px;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='240'><text x='20' y='140' fill='%23ffffff' font-size='14' font-weight='800' font-family='sans-serif' transform='rotate(-25 180 120)' letter-spacing='2'>CONFIDENTIAL • YERISWAMY DV • INSPECTION ONLY</text></svg>");
+
+
+  
+  /* GLOBAL SELECTION & COPY RESTRICTION */
+  *, *::before, *::after {
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+    -webkit-touch-callout: none !important;
   }
 
-  body.theme-light .inspection-watermark-layer {
-    opacity: 0.08;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='240'><text x='20' y='140' fill='%23000000' font-size='14' font-weight='800' font-family='sans-serif' transform='rotate(-25 180 120)' letter-spacing='2'>CONFIDENTIAL • YERISWAMY DV • INSPECTION ONLY</text></svg>");
+  /* Prevent text selection in textarea and preview panes */
+  textarea, input, .doc-textarea, .doc-preview-pane, td, th, p, li, h1, h2, h3, h4, span, div {
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
   }
 
   /* DISABLE SELECT & DRAG ON SENSITIVE CANVAS ELEMENTS */
@@ -947,7 +947,7 @@
 
   <!-- CANVAS STAGE -->
   <main class="canvas-stage mode-fullscreen" id="canvas-stage"></main>
-  <div class="inspection-watermark-layer" id="watermark-layer"></div>
+  
 </div>
 
 
@@ -1359,7 +1359,7 @@ function triggerSmartDownload(fileName, customUrl) {
 }
 
 function fallbackBlobDownload(fileName) {
-  let content = "PowerShare Studio v23 - Aerospace MGSE File Archive\nFile: " + fileName + "\nProject: ICEYE MGSE Hub\n";
+  let content = "PowerShare Studio v24 - Aerospace MGSE File Archive\nFile: " + fileName + "\nProject: ICEYE MGSE Hub\n";
   const blob = new Blob([content], { type: 'application/octet-stream' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -1996,7 +1996,7 @@ function buildDocPanel(isSplit) {
       <div class="doc-split-editor">
         <div class="doc-pane" style="border-right:1px solid var(--border); padding-right:12px;">
           <div style="font-size:10px; font-weight:800; color:var(--text-muted); margin-bottom:6px;">MARKDOWN / LATEX SOURCE</div>
-          <textarea class="doc-textarea" style="flex:1; width:100%; background:transparent; border:none; color:var(--text-main); font-family:inherit; resize:none; outline:none;" id="doc-main-textarea" ${isGuest ? 'readonly' : ''} oninput="workspaceData.docSections[0].content=this.value; renderAll(); saveState();">${workspaceData.docSections[0].content}</textarea>
+          <textarea class="doc-textarea" style="flex:1; width:100%; background:transparent; border:none; color:var(--text-main); font-family:inherit; resize:none; outline:none; user-select:none; -webkit-user-select:none;" id="doc-main-textarea" ${isGuest ? 'readonly onselectstart="return false;" onmousedown="if(!userAccounts[activeUserKey].canDownload) { event.preventDefault(); }"' : ''} oncopy="return false;" oncut="return false;" oninput="workspaceData.docSections[0].content=this.value; renderAll(); saveState();">${workspaceData.docSections[0].content}</textarea>
         </div>
         <div class="doc-pane">
           <div style="font-size:10px; font-weight:800; color:var(--accent); margin-bottom:6px;">FORMATTED REPORT WITH ADJUSTABLE IMAGES</div>
@@ -2212,7 +2212,7 @@ function changeTheme(theme) {
 }
 
 function saveState() {
-  localStorage.setItem("POWERSHARE_STUDIO_VAULT_V23", JSON.stringify(workspaceData));
+  localStorage.setItem("POWERSHARE_STUDIO_VAULT_V24", JSON.stringify(workspaceData));
 }
 
 
@@ -2220,14 +2220,33 @@ function saveState() {
 /* INSPECTION WATERMARK & COPY/RIGHT-CLICK DETERRENT ENGINE                  */
 /* ========================================================================= */
 
-// 1. Right-Click Interception
+// 1. Right-Click & Selection Interception
 document.addEventListener('contextmenu', function(e) {
-  // Allow right click inside form inputs or textareas if needed, otherwise block
-  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-    return;
-  }
+  // Only allow right click inside modal login inputs, block everywhere else
+  if (e.target.closest('#login-modal')) return;
   e.preventDefault();
-  showToast("🔒 Right-click disabled for confidential engineering inspection.");
+  showToast("🔒 Right-click disabled for engineering documentation.");
+});
+
+// Forbid text selection across the document
+document.addEventListener('selectstart', function(e) {
+  if (e.target.closest('#login-modal')) return;
+  if (!userAccounts[activeUserKey].canDownload || e.target.id === 'doc-main-textarea' || e.target.classList.contains('doc-textarea')) {
+    e.preventDefault();
+    return false;
+  }
+});
+
+// Forbid copy / cut events globally
+document.addEventListener('copy', function(e) {
+  if (e.target.closest('#login-modal')) return;
+  e.preventDefault();
+  showToast("🔒 Copying text or data is restricted.");
+});
+
+document.addEventListener('cut', function(e) {
+  if (e.target.closest('#login-modal')) return;
+  e.preventDefault();
 });
 
 // 2. Keyboard Copy, Print, Save & DevTools Interception
