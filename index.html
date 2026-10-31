@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PowerShare Studio v11 | Clean Aerospace MGSE Workspace</title>
+<title>PowerShare Studio v14 | Aerospace MGSE & Drawings Hub</title>
 <style>
   :root {
     --bg-base: #090d16;
@@ -20,6 +20,7 @@
     --ppt-color: #f97316;
     --graph-color: #a855f7;
     --vault-color: #ec4899;
+    --dwg-color: #06b6d4;
     --cad-color: #38bdf8;
     --elec-color: #facc15;
     --mecha-color: #c084fc;
@@ -164,6 +165,7 @@
     gap: 5px;
     font-weight: 600;
     transition: all 0.15s ease;
+    text-decoration: none;
   }
   .btn-icon:hover { background: var(--border); color: #fff; }
   .btn-icon-primary { background: var(--accent); color: #090d16; border-color: var(--accent); }
@@ -188,6 +190,7 @@
     padding: 14px 10px;
     flex-shrink: 0;
     z-index: 20;
+    transition: width 0.2s ease;
   }
 
   .nav-group-title {
@@ -204,7 +207,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 12px;
+    padding: 9px 12px;
     border-radius: 8px;
     background: var(--bg-card);
     border: 1px solid transparent;
@@ -212,7 +215,7 @@
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
-    margin-bottom: 7px;
+    margin-bottom: 6px;
     transition: all 0.15s ease;
   }
 
@@ -238,28 +241,6 @@
     height: 8px;
     border-radius: 50%;
     background: #475569;
-  }
-
-  .tool-item-btn.active-tool .indicator-dot { box-shadow: 0 0 8px currentColor; }
-  .tool-item-btn[data-tool="sheet"] .indicator-dot { color: var(--sheet-color); }
-  .tool-item-btn[data-tool="sheet"].active-tool .indicator-dot { background: var(--sheet-color); }
-  .tool-item-btn[data-tool="doc"] .indicator-dot { color: var(--doc-color); }
-  .tool-item-btn[data-tool="doc"].active-tool .indicator-dot { background: var(--doc-color); }
-  .tool-item-btn[data-tool="ppt"] .indicator-dot { color: var(--ppt-color); }
-  .tool-item-btn[data-tool="ppt"].active-tool .indicator-dot { background: var(--ppt-color); }
-  .tool-item-btn[data-tool="graph"] .indicator-dot { color: var(--graph-color); }
-  .tool-item-btn[data-tool="graph"].active-tool .indicator-dot { background: var(--graph-color); }
-  .tool-item-btn[data-tool="vault"] .indicator-dot { color: var(--vault-color); }
-  .tool-item-btn[data-tool="vault"].active-tool .indicator-dot { background: var(--vault-color); }
-
-  .sidebar-hint {
-    padding: 10px;
-    border-radius: 6px;
-    background: var(--bg-card);
-    border: 1px dashed var(--border);
-    font-size: 11px;
-    color: var(--text-muted);
-    line-height: 1.4;
   }
 
   .canvas-stage {
@@ -306,12 +287,6 @@
     gap: 8px;
   }
 
-  .window-controls {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
   .symbols-toolbar {
     background: var(--bg-card-header);
     border-bottom: 1px solid var(--border);
@@ -352,406 +327,15 @@
     flex-direction: column;
   }
 
-  /* SHEET */
-  .sheet-scroll {
-    flex: 1;
-    overflow: auto;
-  }
-
-  table.sheet-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-    text-align: left;
-    white-space: nowrap;
-  }
-
-  table.sheet-table th {
-    background: var(--bg-card-header);
-    color: var(--sheet-color);
-    padding: 8px 10px;
-    font-weight: 700;
-    border-bottom: 2px solid var(--border);
-    border-right: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 5;
-  }
-
-  table.sheet-table td {
-    padding: 6px 10px;
-    border-bottom: 1px solid var(--border);
-    border-right: 1px solid var(--border);
-    color: var(--text-main);
-  }
-
-  td[contenteditable="true"]:focus {
-    outline: none;
-    background: rgba(16, 185, 129, 0.15);
-    box-shadow: inset 0 0 0 1px var(--sheet-color);
-  }
-
-  .status-select {
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 700;
-    border: 1px solid transparent;
-    cursor: pointer;
-    outline: none;
-  }
-
-  .discipline-tag {
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 6px;
-    border-radius: 4px;
-    text-transform: uppercase;
-  }
-  .discipline-cad { background: rgba(56, 189, 248, 0.15); color: var(--cad-color); border: 1px solid rgba(56, 189, 248, 0.3); }
-  .discipline-elec { background: rgba(250, 204, 21, 0.15); color: var(--elec-color); border: 1px solid rgba(250, 204, 21, 0.3); }
-  .discipline-mecha { background: rgba(192, 132, 252, 0.15); color: var(--mecha-color); border: 1px solid rgba(192, 132, 252, 0.3); }
-
-  .status-green { background: rgba(34, 197, 94, 0.2); color: var(--status-green); border-color: rgba(34, 197, 94, 0.4); }
-  .status-yellow { background: rgba(234, 179, 8, 0.2); color: var(--status-yellow); border-color: rgba(234, 179, 8, 0.4); }
-  .status-orange { background: rgba(249, 115, 22, 0.2); color: var(--status-orange); border-color: rgba(249, 115, 22, 0.4); }
-  .status-red { background: rgba(239, 68, 68, 0.2); color: var(--status-red); border-color: rgba(239, 68, 68, 0.4); }
-
-  
-  /* Live Markdown & Math View */
-  .doc-split-editor {
-    flex: 1;
-    display: flex;
-    flex-direction: row;
-    gap: 12px;
-    height: 100%;
-    overflow: hidden;
-  }
-
-  .doc-pane {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    overflow: hidden;
-  }
-
-  .doc-preview-pane {
-    flex: 1;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 24px;
-    overflow-y: auto;
-    font-size: 14px;
-    line-height: 1.7;
-    color: var(--text-main);
-  }
-
-  .doc-preview-pane h1 { font-size: 24px; margin-bottom: 14px; color: var(--accent); border-bottom: 2px solid var(--border); padding-bottom: 8px; }
-  .doc-preview-pane h2 { font-size: 19px; margin-top: 18px; margin-bottom: 10px; color: var(--doc-color); border-bottom: 1px solid var(--border); padding-bottom: 6px; }
-  .doc-preview-pane h3 { font-size: 16px; margin-top: 14px; margin-bottom: 8px; color: var(--sheet-color); }
-  .doc-preview-pane h4 { font-size: 14px; margin-top: 10px; margin-bottom: 6px; color: var(--ppt-color); }
-  .doc-preview-pane p { margin-bottom: 12px; }
-  .doc-preview-pane ul, .doc-preview-pane ol { margin-left: 24px; margin-bottom: 14px; }
-  .doc-preview-pane li { margin-bottom: 5px; }
-  .doc-preview-pane code { background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 12px; color: var(--accent); }
-  .doc-preview-pane hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
-  
-  /* Math badge styling */
-  .math-formula {
-    background: rgba(56, 189, 248, 0.1);
-    color: #38bdf8;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-family: "Cambria Math", "STIXGeneral", "DejaVu Serif", serif;
-    font-size: 14px;
-    display: inline-block;
-    border: 1px solid rgba(56, 189, 248, 0.25);
-  }
-
-  .doc-view-toggle-bar {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 8px;
-    flex-shrink: 0;
-  }
-
-  /* DOC */
-  .doc-split {
-    flex: 1;
-    display: flex;
-    overflow: hidden;
-  }
-
-  .doc-tree-sidebar {
-    width: 260px;
-    background: var(--bg-card);
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    padding: 8px;
-    flex-shrink: 0;
-  }
-
-  .doc-tree-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 6px 8px;
-    font-size: 11px;
-    font-weight: 800;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 6px;
-  }
-
-  .main-section-group { margin-bottom: 8px; }
-  .main-section-item {
-    padding: 6px 8px;
-    border-radius: 5px;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--text-main);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    transition: all 0.15s ease;
-  }
-  .main-section-item:hover { background: var(--border); }
-  .main-section-item.active { background: rgba(59, 130, 246, 0.2); color: var(--doc-color); }
-
-  .sub-section-list {
-    margin-left: 14px;
-    border-left: 2px solid var(--border);
-    padding-left: 6px;
-    margin-top: 4px;
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-  }
-
-  .sub-section-item {
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    color: var(--text-muted);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .sub-section-item:hover { background: var(--border); color: var(--text-main); }
-  .sub-section-item.active { background: rgba(59, 130, 246, 0.25); color: var(--accent); font-weight: 700; }
-
-  .doc-edit-area {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 16px;
-    background: var(--bg-base);
-    overflow: hidden;
-  }
-
-  .doc-title-input {
-    background: transparent;
-    border: none;
-    font-size: 18px;
-    font-weight: 800;
-    color: var(--text-main);
-    outline: none;
-    margin-bottom: 10px;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 6px;
-    width: 100%;
-  }
-
-  .doc-textarea {
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: var(--text-main);
-    font-family: inherit;
-    font-size: 14px;
-    line-height: 1.6;
-    resize: none;
-  }
-
-  /* POWERPOINT */
-  .ppt-view {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    background: var(--bg-base);
-    overflow: hidden;
-  }
-
-  .ppt-slide-card {
-    flex: 1;
-    background: var(--bg-card);
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    padding: 32px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-  }
-
-  .ppt-slide-title {
-    font-size: 24px;
-    font-weight: 800;
-    color: var(--ppt-color);
-    outline: none;
-    border-bottom: 2px solid rgba(249, 115, 22, 0.3);
-    padding-bottom: 8px;
-  }
-
-  .ppt-slide-body {
-    flex: 1;
-    margin: 18px 0;
-    font-size: 15px;
-    line-height: 1.8;
-    color: var(--text-main);
-    outline: none;
-    overflow-y: auto;
-  }
-
-  .ppt-slide-body ul { margin-left: 24px; }
-  .ppt-slide-body li { margin-bottom: 8px; }
-
-  .ppt-slide-footer {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    color: var(--text-muted);
-    border-top: 1px solid var(--border);
-    padding-top: 10px;
-  }
-
-  /* GRAPHS */
-  .graph-view {
-    flex: 1;
-    padding: 20px;
-    background: var(--bg-base);
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .overall-kpi-bar {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-  }
-
-  .kpi-tile {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .kpi-title { font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
-  .kpi-number { font-size: 22px; font-weight: 800; color: var(--text-main); }
-
-  .three-pillars-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-  }
-
-  .pillar-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .pillar-card.pillar-cad { border-top: 3px solid var(--cad-color); }
-  .pillar-card.pillar-elec { border-top: 3px solid var(--elec-color); }
-  .pillar-card.pillar-mecha { border-top: 3px solid var(--mecha-color); }
-  .pillar-header { display: flex; justify-content: space-between; align-items: center; }
-  .pillar-name { font-size: 13px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
-
-  .mini-bar-row { display: flex; flex-direction: column; gap: 2px; }
-  .mini-bar-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); }
-  .mini-bar-track { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
-  .mini-bar-fill { height: 100%; border-radius: 3px; }
-
-  .project-health-container {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    gap: 20px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-  }
-
-  .gauge-meta-box {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    max-width: 440px;
-  }
-
-  .gauge-meta-title {
-    font-size: 16px;
-    font-weight: 800;
-    color: var(--text-main);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .gauge-meta-desc {
-    font-size: 12px;
-    color: var(--text-muted);
-    line-height: 1.5;
-  }
-
-  .gauge-graphic-wrap {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-  }
-
-  .gauge-legend-list {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    font-size: 12px;
-    font-weight: 600;
-  }
-
-  /* ================================================= */
-  /* TAB 5: CAD & DESIGN VAULT (CLEAN EXPLORER ENGINE) */
-  /* ================================================= */
+  /* Split Container with Pinnable Left Navigator */
   .vault-split-container {
     flex: 1;
     display: flex;
     overflow: hidden;
     background: var(--bg-base);
+    position: relative;
   }
 
-  /* Left Folder Navigator */
   .vault-tree-sidebar {
     width: 280px;
     background: var(--bg-card);
@@ -761,13 +345,31 @@
     overflow-y: auto;
     padding: 12px 8px;
     flex-shrink: 0;
+    transition: width 0.25s ease, transform 0.25s ease;
+  }
+
+  .vault-tree-sidebar.unpinned {
+    width: 44px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .vault-tree-sidebar.unpinned:hover {
+    width: 280px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 50;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.5);
+    background: var(--bg-card);
   }
 
   .vault-tree-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 6px 8px 10px 8px;
+    padding: 4px 8px 10px 8px;
     font-size: 11px;
     font-weight: 800;
     color: var(--text-muted);
@@ -776,10 +378,7 @@
     margin-bottom: 8px;
   }
 
-  .disc-folder-group {
-    margin-bottom: 10px;
-  }
-
+  .disc-folder-group { margin-bottom: 10px; }
   .disc-folder-title {
     font-size: 12px;
     font-weight: 800;
@@ -808,10 +407,7 @@
     transition: all 0.15s ease;
     margin-top: 3px;
   }
-  .subfolder-item:hover {
-    color: var(--text-main);
-    background: rgba(255, 255, 255, 0.04);
-  }
+  .subfolder-item:hover { color: var(--text-main); background: rgba(255, 255, 255, 0.04); }
   .subfolder-item.active {
     background: rgba(56, 189, 248, 0.15);
     border-left-color: var(--accent);
@@ -819,13 +415,12 @@
     font-weight: 700;
   }
 
-  /* Right File Explorer Panel */
   .vault-browser-main {
     flex: 1;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    padding: 18px 24px;
+    padding: 16px 20px;
     background: var(--bg-base);
   }
 
@@ -833,39 +428,28 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 14px;
-    padding-bottom: 12px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
     border-bottom: 1px solid var(--border);
     flex-shrink: 0;
-  }
-
-  .vault-current-path {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 15px;
-    font-weight: 700;
   }
 
   .compact-dropzone {
     border: 2px dashed var(--accent);
     background: rgba(56, 189, 248, 0.05);
     border-radius: 8px;
-    padding: 14px;
+    padding: 12px;
     text-align: center;
     cursor: pointer;
     font-size: 12px;
     color: var(--accent);
     font-weight: 600;
     transition: all 0.15s ease;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
     flex-shrink: 0;
   }
-  .compact-dropzone:hover, .compact-dropzone.dragover {
-    background: rgba(56, 189, 248, 0.15);
-  }
+  .compact-dropzone:hover { background: rgba(56, 189, 248, 0.15); }
 
-  /* Explicit File Table View */
   .vault-table-wrap {
     flex: 1;
     overflow-y: auto;
@@ -874,17 +458,11 @@
     background: var(--bg-card);
   }
 
-  table.vault-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-    text-align: left;
-  }
-
+  table.vault-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
   table.vault-table th {
     background: var(--bg-card-header);
     color: var(--text-muted);
-    padding: 10px 14px;
+    padding: 9px 12px;
     font-weight: 700;
     border-bottom: 1px solid var(--border);
     position: sticky;
@@ -892,20 +470,92 @@
     z-index: 5;
     text-transform: uppercase;
     font-size: 10px;
-    letter-spacing: 0.5px;
+  }
+  table.vault-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); color: var(--text-main); }
+  table.vault-table tr:hover td { background: rgba(255, 255, 255, 0.03); }
+
+  /* Interactive Image Resizable Wrapper */
+  .pasted-image-card {
+    display: inline-block;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px;
+    margin: 10px 0;
+    max-width: 100%;
+    vertical-align: top;
+  }
+  .pasted-image-card img {
+    border-radius: 6px;
+    display: block;
+    height: auto;
+    transition: width 0.1s ease;
+  }
+  .image-controls-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    background: var(--bg-card-header);
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+  }
+  .image-controls-bar input[type="range"] {
+    flex: 1;
+    cursor: pointer;
+    accent-color: var(--accent);
   }
 
-  table.vault-table td {
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--border);
-    color: var(--text-main);
+  /* Doc & Markdown Preview Styles */
+  .doc-split-editor { flex: 1; display: flex; gap: 12px; height: 100%; overflow: hidden; }
+  .doc-pane { flex: 1; display: flex; flex-direction: column; height: 100%; overflow: hidden; }
+  .doc-preview-pane {
+    flex: 1;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    overflow-y: auto;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .doc-preview-pane h1 { font-size: 22px; margin-bottom: 12px; color: var(--accent); }
+  .doc-preview-pane h2 { font-size: 18px; margin: 14px 0 8px; color: var(--doc-color); }
+  .doc-preview-pane h3 { font-size: 15px; margin: 12px 0 6px; color: var(--sheet-color); }
+  .doc-preview-pane ul, .doc-preview-pane ol { margin-left: 20px; margin-bottom: 12px; }
+  .math-formula {
+    background: rgba(56, 189, 248, 0.1);
+    color: #38bdf8;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: serif;
+    font-size: 14px;
+    border: 1px solid rgba(56, 189, 248, 0.25);
   }
 
-  table.vault-table tr:hover td {
-    background: rgba(255, 255, 255, 0.03);
+  /* PDF Viewer Modal */
+  .pdf-modal-backdrop {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .pdf-modal-content {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    width: 90%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
 
-  /* Bottom taskbar */
   footer.bottom-taskbar {
     height: 40px;
     background: var(--bg-sidebar);
@@ -917,49 +567,20 @@
     flex-shrink: 0;
     z-index: 25;
   }
-
-  .taskbar-status {
-    font-size: 11px;
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .active-pills-list {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
   .active-pill {
-    display: flex;
-    align-items: center;
-    gap: 6px;
     background: var(--bg-card);
     border: 1px solid var(--border);
     padding: 3px 10px;
     border-radius: 4px;
     font-size: 11px;
     font-weight: 600;
-    color: var(--text-main);
     cursor: pointer;
   }
-  .active-pill.active-focused {
-    background: var(--border);
-    box-shadow: 0 0 6px var(--accent-glow);
-  }
-
-  .active-pill.pill-sheet { border-left: 3px solid var(--sheet-color); }
-  .active-pill.pill-doc { border-left: 3px solid var(--doc-color); }
-  .active-pill.pill-ppt { border-left: 3px solid var(--ppt-color); }
-  .active-pill.pill-graph { border-left: 3px solid var(--graph-color); }
-  .active-pill.pill-vault { border-left: 3px solid var(--vault-color); }
+  .active-pill.active-focused { background: var(--border); box-shadow: 0 0 6px var(--accent-glow); }
 </style>
 </head>
 <body class="theme-dark">
 
-<!-- HEADER -->
 <header>
   <div class="header-brand">
     <span class="brand-chip">POWERSHARE</span>
@@ -975,12 +596,8 @@
     </select>
 
     <div class="view-mode-toggle">
-      <button class="mode-toggle-btn active" id="btn-mode-full" onclick="setViewMode('fullscreen')">
-        🖥️ Complete Screen
-      </button>
-      <button class="mode-toggle-btn" id="btn-mode-split" onclick="setViewMode('split')">
-        🪟 Side by Side
-      </button>
+      <button class="mode-toggle-btn active" id="btn-mode-full" onclick="setViewMode('fullscreen')">🖥️ Complete</button>
+      <button class="mode-toggle-btn" id="btn-mode-split" onclick="setViewMode('split')">🪟 Side by Side</button>
     </div>
 
     <button class="btn-icon" onclick="exportDataJson()">💾 Export Data</button>
@@ -989,289 +606,161 @@
 </header>
 
 <div class="workspace-layout">
-
-  <!-- LEFT SIDEBAR -->
+  <!-- PRIMARY LEFT SIDEBAR -->
   <aside class="left-sidebar">
     <div>
       <div class="nav-group-title">WORKSPACE APPS</div>
 
-      <button class="tool-item-btn" id="btn-tool-sheet" data-tool="sheet" onclick="handleToolClick('sheet')">
-        <div class="tool-icon-text">
-          <span style="font-size: 16px;">📊</span>
-          <span>Sheet</span>
-        </div>
-        <span class="indicator-dot"></span>
+      <button class="tool-item-btn" id="btn-tool-sheet" onclick="handleToolClick('sheet')">
+        <div class="tool-icon-text"><span>📊</span><span>Sheet</span></div>
       </button>
 
-      <button class="tool-item-btn" id="btn-tool-doc" data-tool="doc" onclick="handleToolClick('doc')">
-        <div class="tool-icon-text">
-          <span style="font-size: 16px;">📝</span>
-          <span>Doc</span>
-        </div>
-        <span class="indicator-dot"></span>
+      <button class="tool-item-btn" id="btn-tool-doc" onclick="handleToolClick('doc')">
+        <div class="tool-icon-text"><span>📝</span><span>Doc & Technical</span></div>
       </button>
 
-      <button class="tool-item-btn" id="btn-tool-ppt" data-tool="ppt" onclick="handleToolClick('ppt')">
-        <div class="tool-icon-text">
-          <span style="font-size: 16px;">📽️</span>
-          <span>PowerPoint</span>
-        </div>
-        <span class="indicator-dot"></span>
+      <button class="tool-item-btn" id="btn-tool-ppt" onclick="handleToolClick('ppt')">
+        <div class="tool-icon-text"><span>📽️</span><span>PowerPoint</span></div>
       </button>
 
-      <button class="tool-item-btn" id="btn-tool-graph" data-tool="graph" onclick="handleToolClick('graph')">
-        <div class="tool-icon-text">
-          <span style="font-size: 16px;">📈</span>
-          <span>3-Pillar Graphs</span>
-        </div>
-        <span class="indicator-dot"></span>
+      <button class="tool-item-btn" id="btn-tool-graph" onclick="handleToolClick('graph')">
+        <div class="tool-icon-text"><span>📈</span><span>3-Pillar Graphs</span></div>
       </button>
 
-      <button class="tool-item-btn active-tool" id="btn-tool-vault" data-tool="vault" onclick="handleToolClick('vault')">
-        <div class="tool-icon-text">
-          <span style="font-size: 16px;">📦</span>
-          <span>CAD & Design Vault</span>
-        </div>
-        <span class="indicator-dot"></span>
+      <button class="tool-item-btn active-tool" id="btn-tool-drawings" onclick="handleToolClick('drawings')">
+        <div class="tool-icon-text"><span>📐</span><span>Drawing PDFs & Prints</span></div>
+      </button>
+
+      <button class="tool-item-btn" id="btn-tool-vault" onclick="handleToolClick('vault')">
+        <div class="tool-icon-text"><span>📦</span><span>CAD Models Vault</span></div>
       </button>
     </div>
 
-    <div class="sidebar-hint">
-      <strong>💡 Multi-Window Mode:</strong><br>
-      Toggle <em>"Side by Side"</em> in the top bar to view multiple tools at once!
+    <div class="sidebar-hint" style="font-size:11px; padding:10px; border:1px dashed var(--border); border-radius:6px; color:var(--text-muted);">
+      💡 <strong>Universal Image Paste:</strong><br>
+      Press <kbd>Ctrl+V</kbd> anywhere to paste CAD screenshots directly into Doc or Slides, then drag the slider to resize!
     </div>
   </aside>
 
   <!-- CANVAS STAGE -->
-  <main class="canvas-stage mode-fullscreen" id="canvas-stage">
-    <!-- Rendered dynamically -->
-  </main>
-
+  <main class="canvas-stage mode-fullscreen" id="canvas-stage"></main>
 </div>
 
 <!-- BOTTOM TASKBAR -->
 <footer class="bottom-taskbar">
-  <div class="taskbar-status">
+  <div style="font-size:11px; color:var(--text-muted); display:flex; align-items:center; gap:8px;">
     <span>Active Tool:</span>
-    <div class="active-pills-list" id="active-pills-container"></div>
+    <div id="active-pills-container" style="display:flex; gap:6px;"></div>
   </div>
-
-  <div style="font-size:11px; color:var(--text-muted);" id="layout-indicator-label">
-    Mode: Complete Screen
-  </div>
+  <div style="font-size:11px; color:var(--text-muted);" id="layout-indicator-label">Mode: Complete Screen</div>
 </footer>
 
-<script>
-/* ========================================================================= */
-/* DATA STATE & REPOSITORY (V9)                                             */
-/* ========================================================================= */
-const defaultHeaders = [
-  "Discipline",
-  "Component / Parameter",
-  "Design Value",
-  "Unit",
-  "Safety Margin / Spec",
-  "Execution Status"
-];
+<!-- PDF PREVIEW MODAL -->
+<div class="pdf-modal-backdrop" id="pdf-modal" onclick="closePdfModal(event)">
+  <div class="pdf-modal-content" onclick="event.stopPropagation()">
+    <div class="window-header">
+      <div class="window-title" id="pdf-modal-title"><span>📐</span> PDF Drawing Inspection</div>
+      <button class="btn-icon btn-icon-danger" onclick="closePdfModal()">✕ Close</button>
+    </div>
+    <iframe id="pdf-modal-frame" style="flex:1; width:100%; border:none; background:#fff;"></iframe>
+  </div>
+</div>
 
+<script>
+/* REPOSITORY & STATE (V14) */
+const defaultHeaders = ["Discipline", "Component / Parameter", "Design Value", "Unit", "Safety Margin / Spec", "Execution Status"];
 const defaultSheetRows = [
   ["Mechanical CAD", "Top Base Ring Blank (Al 7075-T6)", "750.0", "mm OD", "30mm Billet, 68% Mass Pocketed", "Completed"],
-  ["Mechanical CAD", "Isogrid Pocket Pattern & Ribs", "60.0", "mm pitch", "3.0mm Rib, 3.5mm Floor, R3 Fillets", "Completed"],
   ["Mechanical CAD", "Central Optical Line-of-Sight Bore", "300.0", "mm", "Through-bore for umbilical & laser", "Completed"],
   ["Mechanical CAD", "Dual-Cleat Clevis Brackets (17-4 PH)", "12.0", "mm Pin", "MS > +8.2 under peak shear", "In Progress"],
   ["Mechanical CAD", "Strut Euler Buckling Simulation", "64758.7", "N", "P_cr Euler Limit, MS = +44.6", "In Review"],
-  ["Mechanical CAD", "Spacecraft Interface Ring & PEEK Jaws", "450.0", "mm PCD", "Soft-touch virgin PEEK contact pads", "Yet to be done"],
   ["Electronics", "48V LiFePO4 Energy Architecture", "720.0", "Wh", "48V 15Ah Isolated Cleanroom Pack", "Completed"],
-  ["Electronics", "Peak Current Sizing & Wiring", "13.5", "A", "PTFE MIL-W-22759 / Tefzel low-outgas", "In Progress"],
-  ["Electronics", "DC-DC Buck Regulators (24V / 5V)", "30.0", "W", "Powers logic, lasers & brake coils", "In Progress"],
-  ["Electronics", "Fail-Safe Spring-Set Holding Brakes", "24.0", "V DC", "Dual Safe Torque Off (Cat 4 / PLe)", "In Review"],
-  ["Electronics", "Equipotential Cleanroom ESD Strap", "< 0.1", "Ohm", "ECSS-E-ST-20-07C continuous earthing", "Yet to be done"],
-  ["Mechatronics", "BLDC Motors & Planetary Roller Screws", "6x", "Units", "8mm lead zero-backlash actuators", "In Progress"],
-  ["Mechatronics", "Real-Time Bus (EtherCAT / CANopen)", "1.0", "kHz", "Deterministic CiA 402 motion loop", "In Progress"],
-  ["Mechatronics", "3-Axis Load Cell Hoist Integration", "0.1", "N res", "Overload & snag detection cut-off", "In Review"],
-  ["Mechatronics", "Active 'Float Mode' Impedance Control", "< 2.0", "N", "Manual hand touch guidance (< 2 N)", "Yet to be done"],
-  ["Mechatronics", "Digital Torque-Angle MES Telemetry", "100%", "Telemetry", "MQTT stream to factory traveler", "Yet to be done"],
-  ["Mechatronics", "Laser Triangulation Auto-Docking", "10.0", "um", "Keyence sub-mm optical alignment", "Yet to be done"]
+  ["Mechatronics", "Real-Time Bus (EtherCAT / CANopen)", "1.0", "kHz", "Deterministic CiA 402 motion loop", "In Progress"]
 ];
 
 const defaultDocSections = [
   {
     id: "sec-1",
-    title: "1. Mechanical CAD & Kinematics",
-    content: "## MECHANICAL CAD & STRUCTURAL INTEGRITY\n\nTop-level summary of the Mechanical Ground Support Equipment (MGSE) architecture for ICEYE microsatellites.",
-    subsections: [
-      {
-        id: "sub-1-1",
-        title: "1.1 Top Base Isogrid Plate",
-        content: "### TOP BASE ISOGRID SPECIFICATIONS\n\n- Machined from solid Al 7075-T6 billet (Ø750mm OD x 30mm thickness).\n- 68% mass reduction through equilateral triangular pocketing (60mm pitch, 3.0mm rib thickness, 3.5mm skin).\n- Internal corner fillets: R3.0mm to eliminate notch stress concentration under crane hoisting loads."
-      },
-      {
-        id: "sub-1-2",
-        title: "1.2 Stewart-Gough Strut Kinematics",
-        content: "### 6-UPS PARALLEL KINEMATICS & SIZING\n\n- 6x electromechanical linear struts oriented at 25° nominal angle.\n- Sized to withstand 5.52 kN Design Yield Load (FoS >= 3.0, Kdyn = 1.5 per ECSS-E-ST-32-10C).\n- Euler column critical buckling load: P_cr = 64.8 kN, providing a +44.6 margin of safety."
-      },
-      {
-        id: "sub-1-3",
-        title: "1.3 Spacecraft Interface Ring & GD&T",
-        content: "### SPACECRAFT TOUCHDOWN & TOLERANCING\n\n- Interface Ring PCD: Ø450mm with 4-point soft-touch clamping jaws.\n- Contact Pads: Virgin PEEK (Polyether ether ketone) to prevent metal fretting and cleanroom particle generation.\n- GD&T Callouts: Datum A (mounting face flatness 0.03mm), True Position Ø0.10mm on bolt circle."
-      }
-    ]
-  },
-  {
-    id: "sec-2",
-    title: "2. Cleanroom Electronics & Power",
-    content: "## CLEANROOM ELECTRONICS & ELECTRICAL ARCHITECTURE\n\nOverview of the isolated power distribution and cleanroom safety compliance.",
-    subsections: [
-      {
-        id: "sec-2-1",
-        title: "2.1 48V Power Supply & Battery",
-        content: "### 48V DC ENERGY ARCHITECTURE\n\n- Powered by an onboard 48V 15Ah (720 Wh) LiFePO4 battery pack with inductive docking opportunity charging.\n- Peak system current: 13.5 A during dynamic full-load hoist acceleration.\n- Wiring: MIL-W-22759 / Tefzel low-outgassing aerospace cabling."
-      },
-      {
-        id: "sec-2-2",
-        title: "2.2 Fail-Safe Holding Brakes & STO",
-        content: "### EMERGENCY HOLDING & INTERLOCKS\n\n- 24V DC spring-applied, power-off electromagnetic holding brakes on all 6 motor shafts.\n- Dual-channel Safe Torque Off (STO) compliant with ISO 13849-1 (Category 4 / PLe).\n- Locks instantly (< 20 ms) upon power interruption."
-      },
-      {
-        id: "sec-2-3",
-        title: "2.3 ESD Equipotential Grounding",
-        content: "### ELECTROSTATIC DISCHARGE MITIGATION\n\n- Continuous braided tin-plated copper bonding strap (> 16 mm²).\n- Contact resistance to facility cleanroom earth strictly < 0.1 Ohm per ECSS-E-ST-20-07C."
-      }
-    ]
-  },
-  {
-    id: "sec-3",
-    title: "3. Mechatronics & Factory Poka-Yoke",
-    content: "## MECHATRONICS, CONTROLS & FACTORY POKA-YOKE\n\nClosed-loop motion control, digital error-proofing, and MES integration.",
-    subsections: [
-      {
-        id: "sec-3-1",
-        title: "3.1 Real-Time Motion Control Loop",
-        content: "### ETHERCAT / CANOPEN 1 KHZ LOOP\n\n- 6x Brushless DC (BLDC) motors driving planetary roller screws.\n- Deterministic CiA 402 profile executing inverse kinematics at 1 kHz for seamless parallel positioning."
-      },
-      {
-        id: "sec-3-2",
-        title: "3.2 Active 'Float Mode' Guiding",
-        content: "### ZERO-FORCE HAND TOUCH GUIDANCE\n\n- Inline 3-axis load cell measures hand guidance forces from technicians.\n- Struts dynamically comply to human touch (< 2 N force), completely damping crane pendulum sway."
-      },
-      {
-        id: "sec-3-3",
-        title: "3.3 Optical Auto-Docking & MES",
-        content: "### DIGITAL QUALITY ASSURANCE\n\n- Keyence CMOS laser displacement array auto-verifies sub-millimeter planar alignment (10 µm resolution).\n- Smart digital torque tools stream tightening curves via MQTT directly to the factory traveler."
-      }
-    ]
+    title: "1. Top Base Sub-Assembly (Crane Interface)",
+    content: "## MECHANICAL CAD & ISOGRID FABRICATION\n\nPart 1: Top Base Isogrid Ring Plate ($\varnothing 750\\text{ mm}$, Al 7075-T6)\n\n- **Weight Reduction:** Solid plate of $\varnothing 750\\text{ mm} \\times 30\\text{ mm}$ is $>31\\text{ kg}$. Triangle pocketing cuts mass to $10.02\\text{ kg}$ (68% mass reduction).\n- **Central Bore:** $\varnothing 300\\text{ mm}$ line-of-sight umbilical through-hole.\n- **Critical Thicknesses:** Total thickness $30.0\\text{ mm}$, pocket depth $26.5\\text{ mm}$, remaining skin $3.5\\text{ mm}$, rib walls $3.0\\text{ mm}$."
   }
 ];
 
 const defaultSlides = [
   {
-    title: "Smart MGSE: Connected Assembly & Lifting",
-    tag: "Slide 1: Executive Overview",
-    body: "• Next-Generation MGSE tailored specifically for ICEYE-class SAR microsatellites.\n• Replaces manual high-risk rigging with a 6-DoF Stewart-Gough active-compliance rig.\n• Integrates cleanroom hoisting with digital poka-yoke (mistake-proofing)."
-  },
-  {
-    title: "Mechanical CAD: Isogrid & Kinematics",
-    tag: "Slide 2: Mechanical Design",
-    body: "• Lightweight Isogrid: Ø750mm Al 7075-T6 plate pocketed to 10.0 kg finished mass (68% mass reduction).\n• ECSS / NASA Compliance: Factor of safety >= 3.0 on yield (5.52 kN design load).\n• Buckling Security: Euler column capacity of 64.8 kN provides a +44.6 margin of safety."
-  },
-  {
-    title: "Cleanroom Electronics & Safety",
-    tag: "Slide 3: Electrical Architecture",
-    body: "• 48V Isolated Power Bus: Low-voltage cleanroom-safe LiFePO4 pack (13.5 A peak load).\n• Fail-Safe Brakes: Dual-channel STO hardware holding brakes lock instantaneously upon power drop.\n• ESD Integrity: Continuous bonding loop guaranteeing < 0.1 Ohm path to earth ground."
-  },
-  {
-    title: "Mechatronics & Factory Telemetry",
-    tag: "Slide 4: Mechatronics & Poka-Yoke",
-    body: "• Active 'Float Mode': Technician guides 110 kg spacecraft effortlessly with < 2 N touch force.\n• Digital Fastener Traceability: Torque-angle tightening curves streamed directly to the MES.\n• Laser Docking Array: Triangulation lasers guarantee 10 um planar alignment before bolting."
-  },
-  {
-    title: "Business & Production ROI",
-    tag: "Slide 5: Impact & Scalability",
-    body: "• 65% faster satellite-to-shaker docking cycle time.\n• Zero human-induced panel insert stripping or waveguide damage.\n• Seamless scaling support for ICEYE's multi-satellite constellation production."
+    title: "ICEYE Smart MGSE Architecture",
+    tag: "Slide 1: Overview",
+    body: "• Replaces manual rigging with a 6-DoF active-compliance Stewart-Gough platform.\n• Damps crane sway to < 2 N technician guidance force.\n• Real-time digital poka-yoke with Keyence laser optical alignment."
   }
 ];
 
-const defaultVaultV9 = {
-  cad: {
-    title: "Mechanical CAD Designs",
+const defaultDrawingsData = {
+  mech: {
+    title: "Mechanical Fabrication & GD&T",
     icon: "📐",
-    color: "var(--cad-color)",
+    color: "var(--dwg-color)",
     subfolders: [
       {
-        id: "cad_sub_1",
-        name: "3D CAD Models & Assemblies",
+        id: "dwg_sub_1",
+        name: "Base Isogrid Fabrication Prints (A1/A0)",
         files: [
-          { name: "TOP_BASE_ISOGRID_REV_C.sldprt", size: "14.2 MB", date: "2026-10-28" },
-          { name: "HEXALIFT_6DOF_TOP_ASSY.sldasm", size: "48.6 MB", date: "2026-10-29" },
-          { name: "STRUT_ROLLER_SCREW_ACTUATOR.stl", size: "8.4 MB", date: "2026-10-26" },
-          { name: "CLEVIS_BRACKET_17_4PH.sldprt", size: "5.1 MB", date: "2026-10-25" }
+          { name: "DWG_ISOGRID_BASE_PLATE_A1.pdf", sheetSize: "A1", size: "4.3 MB", rev: "Rev C", date: "2026-10-27" },
+          { name: "DWG_TOLERANCE_STACKUP_RING.pdf", sheetSize: "A2", size: "1.9 MB", rev: "Rev B", date: "2026-10-28" }
         ]
       },
       {
-        id: "cad_sub_2",
-        name: "Interface Ring & STEP Exports",
+        id: "dwg_sub_2",
+        name: "Strut & Actuator Detailed Drawings",
         files: [
-          { name: "SPACECRAFT_INTERFACE_RING.step", size: "12.1 MB", date: "2026-10-27" },
-          { name: "PEEK_JAW_PROTECTIVE_PADS.step", size: "3.2 MB", date: "2026-10-28" },
-          { name: "MOUNTING_FLANGE_SPEC_REV_B.step", size: "6.8 MB", date: "2026-10-29" }
-        ]
-      },
-      {
-        id: "cad_sub_3",
-        name: "Drawings & GD&T Sheets",
-        files: [
-          { name: "DWG_ISOGRID_BASE_PLATE_A1.pdf", size: "4.3 MB", date: "2026-10-27" },
-          { name: "DWG_TOLERANCE_STACKUP_RING.pdf", size: "1.9 MB", date: "2026-10-28" }
+          { name: "DWG_STRUT_ROLLER_SCREW_ASSY_A2.pdf", sheetSize: "A2", size: "3.1 MB", rev: "Rev A", date: "2026-10-28" }
         ]
       }
     ]
   },
   elec: {
-    title: "Electronics Schematics & PCBs",
+    title: "Electrical & Harness Schematics",
     icon: "⚡",
     color: "var(--elec-color)",
     subfolders: [
       {
-        id: "elec_sub_1",
-        name: "Power Distribution & Batteries",
+        id: "dwg_sub_3",
+        name: "48V Power & Interlock Schematics",
         files: [
-          { name: "POWER_DISTRIBUTION_48V_SCH.pdf", size: "2.8 MB", date: "2026-10-25" },
-          { name: "DC_DC_REGULATOR_BUCK_5V_24V.pdf", size: "1.4 MB", date: "2026-10-26" },
-          { name: "LIFEPO4_BATTERY_MANAGEMENT_BOM.xlsx", size: "520 KB", date: "2026-10-27" }
-        ]
-      },
-      {
-        id: "elec_sub_2",
-        name: "Safety Interlocks & PCB Layouts",
-        files: [
-          { name: "FAILSAFE_BRAKE_STO_CIRCUIT.kicad_pcb", size: "4.1 MB", date: "2026-10-27" },
-          { name: "CLEANROOM_HARNESS_BOM.xlsx", size: "340 KB", date: "2026-10-29" },
-          { name: "ESD_GROUNDING_ECSS_REPORT.pdf", size: "2.1 MB", date: "2026-10-28" }
+          { name: "POWER_DISTRIBUTION_48V_SCH.pdf", sheetSize: "A3", size: "2.8 MB", rev: "Rev 2", date: "2026-10-25" },
+          { name: "DC_DC_REGULATOR_BUCK_5V_24V.pdf", sheetSize: "A4", size: "1.4 MB", rev: "Rev 1", date: "2026-10-26" }
         ]
       }
     ]
   },
-  mecha: {
-    title: "Mechatronics & Firmware",
-    icon: "🤖",
-    color: "var(--mecha-color)",
+  specs: {
+    title: "Reference Standards & Procedures",
+    icon: "📑",
+    color: "var(--doc-color)",
     subfolders: [
       {
-        id: "mecha_sub_1",
-        name: "Inverse Kinematics & Controllers",
+        id: "dwg_sub_4",
+        name: "ECSS & Cleanroom Standards",
         files: [
-          { name: "STEWART_GOUGH_KINEMATICS.py", size: "18 KB", date: "2026-10-28" },
-          { name: "FLOAT_MODE_IMPEDANCE_CONTROL.c", size: "32 KB", date: "2026-10-29" },
-          { name: "DAMPING_CALIBRATION_CURVES.mat", size: "145 KB", date: "2026-10-27" }
+          { name: "ESD_GROUNDING_ECSS_REPORT.pdf", sheetSize: "A4", size: "2.1 MB", rev: "Rev 4", date: "2026-10-28" }
         ]
-      },
+      }
+    ]
+  }
+};
+
+const defaultVaultData = {
+  cad: {
+    title: "SolidWorks & 3D Geometry",
+    icon: "📦",
+    color: "var(--cad-color)",
+    subfolders: [
       {
-        id: "mecha_sub_2",
-        name: "Fieldbus & Sensor Telemetry",
+        id: "cad_sub_1",
+        name: "3D CAD Parts & STEP",
         files: [
-          { name: "ETHERCAT_TWINCAT_MASTER_CONFIG.xml", size: "64 KB", date: "2026-10-27" },
-          { name: "KEYENCE_LASER_DOCKING_DRIVER.cpp", size: "44 KB", date: "2026-10-28" },
-          { name: "MQTT_TELEMETRY_BROKER_CONFIG.json", size: "12 KB", date: "2026-10-29" }
+          { name: "TOP_BASE_ISOGRID_REV_C.sldprt", size: "14.2 MB", date: "2026-10-28" },
+          { name: "HEXALIFT_6DOF_TOP_ASSY.sldasm", size: "48.6 MB", date: "2026-10-29" },
+          { name: "STRUT_ROLLER_SCREW_ACTUATOR.stl", size: "8.4 MB", date: "2026-10-26" }
         ]
       }
     ]
@@ -1279,64 +768,49 @@ const defaultVaultV9 = {
 };
 
 let viewMode = 'fullscreen';
-let focusedTool = 'vault';
-let splitOpenTools = { sheet: true, graph: true, doc: false, ppt: false, vault: true };
+let focusedTool = 'drawings';
+let splitOpenTools = { drawings: true, doc: true, sheet: false, ppt: false, graph: false, vault: false };
 
+let isDrawingNavPinned = true;
+let isVaultNavPinned = true;
+
+let activeDwgSelection = { category: 'mech', subIdx: 0 };
+let activeVaultSelection = { category: 'cad', subIdx: 0 };
 let activeDocSelection = { mainIndex: 0, subIndex: null };
 let currentSlideIndex = 0;
-
-// Active Vault Navigation Selection:
-let activeVaultSelection = {
-  discKey: "cad",
-  subfolderIdx: 0
-};
+let docMode = 'split';
 
 let workspaceData = {
   sheetHeaders: defaultHeaders,
   sheet: defaultSheetRows,
   docSections: defaultDocSections,
   slides: defaultSlides,
-  vault: defaultVaultV9,
+  drawings: defaultDrawingsData,
+  vault: defaultVaultData,
+  pastedImages: [],
   theme: "theme-dark"
 };
 
-/* ========================================================================= */
-/* INITIALIZATION                                                            */
-/* ========================================================================= */
 function init() {
-  const savedData = localStorage.getItem("POWERSHARE_STUDIO_VAULT_V11");
-  if (savedData) {
+  const saved = localStorage.getItem("POWERSHARE_STUDIO_VAULT_V14");
+  if (saved) {
     try {
-      const parsed = JSON.parse(savedData);
-      if (parsed.vault && parsed.vault.cad && parsed.vault.cad.subfolders) {
-        workspaceData = parsed;
-      }
+      const parsed = JSON.parse(saved);
+      if (parsed.drawings && parsed.drawings.mech) workspaceData = parsed;
     } catch(e){}
   }
-  const savedMode = localStorage.getItem("POWERSHARE_STUDIO_VIEWMODE_V9");
-  if (savedMode) viewMode = savedMode;
-
-  const savedFocus = localStorage.getItem("POWERSHARE_STUDIO_FOCUSED_V9");
-  if (savedFocus) focusedTool = savedFocus;
-
-  if (workspaceData.theme) {
-    document.body.className = workspaceData.theme;
-    document.getElementById("theme-selector").value = workspaceData.theme;
-  }
-
+  setupGlobalImagePaste();
   renderAll();
 }
 
-function saveState(showNotify = false) {
-  localStorage.setItem("POWERSHARE_STUDIO_VAULT_V11", JSON.stringify(workspaceData));
-  localStorage.setItem("POWERSHARE_STUDIO_VIEWMODE_V9", viewMode);
-  localStorage.setItem("POWERSHARE_STUDIO_FOCUSED_V9", focusedTool);
-  if (showNotify) alert("Workspace successfully saved!");
+function saveState(notify = false) {
+  localStorage.setItem("POWERSHARE_STUDIO_VAULT_V14", JSON.stringify(workspaceData));
+  if (notify) alert("Workspace successfully saved!");
 }
 
-function changeTheme(themeName) {
-  document.body.className = themeName;
-  workspaceData.theme = themeName;
+function changeTheme(theme) {
+  document.body.className = theme;
+  workspaceData.theme = theme;
   saveState();
 }
 
@@ -1344,848 +818,151 @@ function setViewMode(mode) {
   viewMode = mode;
   document.getElementById('btn-mode-full').classList.toggle('active', mode === 'fullscreen');
   document.getElementById('btn-mode-split').classList.toggle('active', mode === 'split');
-
   const canvas = document.getElementById('canvas-stage');
   canvas.classList.toggle('mode-fullscreen', mode === 'fullscreen');
   canvas.classList.toggle('mode-split', mode === 'split');
-
-  document.getElementById('layout-indicator-label').innerText =
-    mode === 'fullscreen' ? 'Mode: Complete Screen' : 'Mode: Side by Side (Split)';
-
+  document.getElementById('layout-indicator-label').innerText = mode === 'fullscreen' ? 'Mode: Complete Screen' : 'Mode: Side by Side (Split)';
   renderAll();
-  saveState();
 }
 
-function handleToolClick(toolName) {
-  if (viewMode === 'fullscreen') {
-    focusedTool = toolName;
-  } else {
-    splitOpenTools[toolName] = !splitOpenTools[toolName];
-  }
+function handleToolClick(tool) {
+  if (viewMode === 'fullscreen') focusedTool = tool;
+  else splitOpenTools[tool] = !splitOpenTools[tool];
   renderAll();
-  saveState();
-}
-
-function closeToolInSplit(toolName) {
-  splitOpenTools[toolName] = false;
-  renderAll();
-  saveState();
 }
 
 /* ========================================================================= */
-/* MASTER RENDERER                                                           */
+/* UNIVERSAL IMAGE CLIPBOARD PASTE & RESIZE CONTROLS                         */
 /* ========================================================================= */
-function renderAll() {
-  ['sheet', 'doc', 'ppt', 'graph', 'vault'].forEach(tool => {
-    const btn = document.getElementById(`btn-tool-${tool}`);
-    if (viewMode === 'fullscreen') {
-      btn.classList.toggle('active-tool', focusedTool === tool);
-    } else {
-      btn.classList.toggle('active-tool', !!splitOpenTools[tool]);
-    }
-  });
-
-  const canvas = document.getElementById('canvas-stage');
-  canvas.innerHTML = "";
-
-  if (viewMode === 'fullscreen') {
-    if (focusedTool === 'sheet') canvas.appendChild(buildSheetPanel(false));
-    else if (focusedTool === 'doc') canvas.appendChild(buildDocPanel(false));
-    else if (focusedTool === 'ppt') canvas.appendChild(buildPptPanel(false));
-    else if (focusedTool === 'graph') canvas.appendChild(buildGraphPanel(false));
-    else if (focusedTool === 'vault') canvas.appendChild(buildVaultPanel(false));
-  } else {
-    let count = 0;
-    if (splitOpenTools.sheet) { canvas.appendChild(buildSheetPanel(true)); count++; }
-    if (splitOpenTools.graph) { canvas.appendChild(buildGraphPanel(true)); count++; }
-    if (splitOpenTools.vault) { canvas.appendChild(buildVaultPanel(true)); count++; }
-    if (splitOpenTools.doc) { canvas.appendChild(buildDocPanel(true)); count++; }
-    if (splitOpenTools.ppt) { canvas.appendChild(buildPptPanel(true)); count++; }
-
-    if (count === 0) {
-      canvas.innerHTML = `
-        <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#64748b;">
-          <h3>No Windows Open in Split View</h3>
-          <p style="margin-top:6px;">Select Sheet, Doc, PowerPoint, Graphs, or Vault from the left sidebar to add them.</p>
-        </div>
-      `;
-    }
-  }
-
-  renderBottomTaskbar();
-}
-
-function renderBottomTaskbar() {
-  const container = document.getElementById('active-pills-container');
-  container.innerHTML = "";
-
-  const names = { sheet: "Sheet", doc: "Doc", ppt: "PowerPoint", graph: "3-Pillar Graphs", vault: "CAD Vault" };
-  const icons = { sheet: "📊", doc: "📝", ppt: "📽️", graph: "📈", vault: "📦" };
-
-  if (viewMode === 'fullscreen') {
-    ['sheet', 'doc', 'ppt', 'graph', 'vault'].forEach(key => {
-      const pill = document.createElement("div");
-      const isFocused = (focusedTool === key);
-      pill.className = `active-pill pill-${key} ${isFocused ? 'active-focused' : ''}`;
-      pill.style.opacity = isFocused ? '1' : '0.5';
-      pill.innerHTML = `<span>${icons[key]} ${names[key]}</span> ${isFocused ? '<span style="font-size:9px; color:var(--accent);">● FULL</span>' : ''}`;
-      pill.onclick = () => { focusedTool = key; renderAll(); saveState(); };
-      container.appendChild(pill);
-    });
-  } else {
-    for (let key in splitOpenTools) {
-      if (splitOpenTools[key]) {
-        const pill = document.createElement("div");
-        pill.className = `active-pill pill-${key} active-focused`;
-        pill.innerHTML = `
-          <span>${icons[key]} ${names[key]}</span>
-          <span style="cursor:pointer; color:#94a3b8; font-size:12px; margin-left:4px;" onclick="closeToolInSplit('${key}')">✕</span>
-        `;
-        container.appendChild(pill);
+function setupGlobalImagePaste() {
+  window.addEventListener("paste", function(e) {
+    const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+    for (let index in items) {
+      const item = items[index];
+      if (item.kind === 'file' && item.type.startsWith('image/')) {
+        const blob = item.getAsFile();
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          insertPastedImage(event.target.result);
+        };
+        reader.readAsDataURL(blob);
       }
     }
-  }
-}
-
-/* ========================================================================= */
-/* PANEL 1: SHEET                                                            */
-/* ========================================================================= */
-function getStatusClass(status) {
-  if (status === "Completed") return "status-green";
-  if (status === "In Progress") return "status-yellow";
-  if (status === "In Review") return "status-orange";
-  return "status-red";
-}
-
-function getDisciplineClass(val) {
-  if (val === "Mechanical CAD") return "discipline-cad";
-  if (val === "Electronics") return "discipline-elec";
-  if (val === "Mechatronics") return "discipline-mecha";
-  return "";
-}
-
-function buildSheetPanel(isSplit) {
-  const panel = document.createElement("div");
-  panel.className = "window-panel";
-  const statusColIndex = workspaceData.sheetHeaders.length - 1;
-
-  panel.innerHTML = `
-    <div class="window-header">
-      <div class="window-title" style="color:var(--sheet-color);">
-        <span>📊</span> Engineering Spreadsheet Ledger
-      </div>
-      <div class="window-controls">
-        ${isSplit ? `<button class="btn-icon btn-icon-danger" style="padding:2px 6px;" onclick="closeToolInSplit('sheet')">✕</button>` : ''}
-      </div>
-    </div>
-
-    <div class="symbols-toolbar">
-      <button class="sym-btn" onclick="addSheetRow()" title="Add Row">➕ Add Row</button>
-      <button class="sym-btn sym-btn-danger" onclick="deleteSelectedRow()" title="Delete Row">➖ Delete Row</button>
-      <div class="sym-divider"></div>
-      <button class="sym-btn" onclick="addSheetColumn()" title="Add Column">➕ Add Column</button>
-      <button class="sym-btn sym-btn-danger" onclick="deleteSheetColumn()" title="Delete Column">➖ Delete Column</button>
-      <div class="sym-divider"></div>
-      <button class="sym-btn" onclick="alert('AutoSum: ' + workspaceData.sheet.length + ' active tasks')">∑ Sum</button>
-      <button class="sym-btn" onclick="alert('Status changes automatically update live charts!')">⚡ Live Sync</button>
-    </div>
-
-    <div class="window-content">
-      <div class="sheet-scroll">
-        <table class="sheet-table">
-          <thead>
-            <tr>
-              <th style="width:35px;">#</th>
-              ${workspaceData.sheetHeaders.map((h, hIdx) => `
-                <th contenteditable="true" onblur="updateHeader(${hIdx}, this.innerText)">${h}</th>
-              `).join('')}
-            </tr>
-          </thead>
-          <tbody id="sheet-table-body">
-            ${workspaceData.sheet.map((row, rIdx) => {
-              const curStatus = row[statusColIndex] || "Yet to be done";
-              const curClass = getStatusClass(curStatus);
-              return `
-              <tr>
-                <td style="color:#64748b; text-align:center;">${rIdx + 1}</td>
-                ${row.map((cell, cIdx) => {
-                  if (cIdx === 0) {
-                    return `
-                      <td>
-                        <select class="status-select ${getDisciplineClass(cell)}" onchange="updateDiscipline(${rIdx}, this.value)">
-                          <option value="Mechanical CAD" ${cell === "Mechanical CAD" ? "selected" : ""}>📐 Mechanical CAD</option>
-                          <option value="Electronics" ${cell === "Electronics" ? "selected" : ""}>⚡ Electronics</option>
-                          <option value="Mechatronics" ${cell === "Mechatronics" ? "selected" : ""}>🤖 Mechatronics</option>
-                        </select>
-                      </td>
-                    `;
-                  } else if (cIdx === statusColIndex) {
-                    return `
-                      <td>
-                        <select class="status-select ${curClass}" onchange="updateStatus(${rIdx}, ${cIdx}, this.value)">
-                          <option value="Completed" ${curStatus === "Completed" ? "selected" : ""}>🟢 Completed</option>
-                          <option value="In Progress" ${curStatus === "In Progress" ? "selected" : ""}>🟡 In Progress</option>
-                          <option value="In Review" ${curStatus === "In Review" ? "selected" : ""}>🟠 In Review</option>
-                          <option value="Yet to be done" ${curStatus === "Yet to be done" ? "selected" : ""}>🔴 Yet to be done</option>
-                        </select>
-                      </td>
-                    `;
-                  } else {
-                    return `<td contenteditable="true" onblur="updateSheet(${rIdx}, ${cIdx}, this.innerText)">${cell}</td>`;
-                  }
-                }).join('')}
-              </tr>
-            `}).join('')}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  `;
-  return panel;
-}
-
-function updateHeader(idx, val) {
-  workspaceData.sheetHeaders[idx] = val.trim();
-  saveState();
-}
-
-function updateSheet(r, c, val) {
-  workspaceData.sheet[r][c] = val.trim();
-  saveState();
-}
-
-function updateDiscipline(r, val) {
-  workspaceData.sheet[r][0] = val;
-  renderAll();
-  saveState();
-}
-
-function updateStatus(r, c, val) {
-  workspaceData.sheet[r][c] = val;
-  renderAll();
-  saveState();
-}
-
-function addSheetRow() {
-  const newRow = new Array(workspaceData.sheetHeaders.length).fill("-");
-  newRow[0] = "Mechanical CAD";
-  newRow[1] = "New MGSE Task";
-  newRow[newRow.length - 1] = "Yet to be done";
-  workspaceData.sheet.push(newRow);
-  renderAll();
-  saveState();
-}
-
-function deleteSelectedRow() {
-  const rowNum = prompt(`Enter Row Number to Delete (1 to ${workspaceData.sheet.length}):`, workspaceData.sheet.length);
-  if (!rowNum) return;
-  const idx = parseInt(rowNum) - 1;
-  if (idx >= 0 && idx < workspaceData.sheet.length) {
-    workspaceData.sheet.splice(idx, 1);
-    renderAll();
-    saveState();
-  } else {
-    alert("Invalid row number.");
-  }
-}
-
-function addSheetColumn() {
-  const colName = prompt("Enter New Column Name:", "Design Owner");
-  if (!colName) return;
-  const insertPos = workspaceData.sheetHeaders.length - 1;
-  workspaceData.sheetHeaders.splice(insertPos, 0, colName);
-  workspaceData.sheet.forEach(row => row.splice(insertPos, 0, "-"));
-  renderAll();
-  saveState();
-}
-
-function deleteSheetColumn() {
-  const statusIdx = workspaceData.sheetHeaders.length - 1;
-  const deletable = [];
-  for (let i = 2; i < statusIdx; i++) deletable.push(`${i}: ${workspaceData.sheetHeaders[i]}`);
-  if (deletable.length === 0) { alert("No custom columns to delete."); return; }
-  const choice = prompt("Enter the number of the column to delete:\n" + deletable.join("\n"));
-  if (choice !== null && !isNaN(choice)) {
-    const idx = parseInt(choice);
-    if (idx >= 2 && idx < statusIdx) {
-      if (confirm(`Delete column "${workspaceData.sheetHeaders[idx]}"?`)) {
-        workspaceData.sheetHeaders.splice(idx, 1);
-        workspaceData.sheet.forEach(row => row.splice(idx, 1));
-        renderAll();
-        saveState();
-      }
-    } else {
-      alert("Invalid column index.");
-    }
-  }
-}
-
-/* ========================================================================= */
-/* PANEL 2: DOC                                                              */
-/* ========================================================================= */
-function getActiveDocObject() {
-  const mIdx = activeDocSelection.mainIndex;
-  const mainSec = workspaceData.docSections[mIdx] || workspaceData.docSections[0];
-  if (activeDocSelection.subIndex !== null && mainSec.subsections && mainSec.subsections[activeDocSelection.subIndex]) {
-    return { isSub: true, obj: mainSec.subsections[activeDocSelection.subIndex], mainIdx: mIdx, subIdx: activeDocSelection.subIndex };
-  }
-  return { isSub: false, obj: mainSec, mainIdx: mIdx, subIdx: null };
-}
-
-
-
-let docMode = 'split'; // 'split', 'edit', 'preview'
-
-function setDocDisplayMode(mode) {
-  docMode = mode;
-  renderAll();
-}
-
-function parseMarkdownAndMath(text) {
-  if (!text) return '<p style="color:var(--text-muted); font-style:italic;">No content in this section yet.</p>';
-
-  // 1. Convert LaTeX symbols and formulas cleanly
-  let processed = text
-    .replace(/\\varnothing/g, "Ø")
-    .replace(/\\times/g, "×")
-    .replace(/\\rightarrow/g, "→")
-    .replace(/\\checkmark/g, "✓")
-    .replace(/\\mathbf\{([^}]+)\}/g, "<strong>$1</strong>")
-    .replace(/\\text\{([^}]+)\}/g, "$1")
-    .replace(/\\%/g, "%");
-
-  // 2. Wrap LaTeX inline formulas $...$ with clean math container
-  processed = processed.replace(/\$([^$]+)\$/g, function(match, inner) {
-    let cleanInner = inner
-      .replace(/\\varnothing/g, "Ø")
-      .replace(/\\times/g, "×")
-      .replace(/\\text\{([^}]+)\}/g, "$1")
-      .replace(/\\mathbf\{([^}]+)\}/g, "<strong>$1</strong>")
-      .replace(/\\/g, "");
-    return '<span class="math-formula">' + cleanInner + '</span>';
   });
-
-  // 3. Process Markdown Headings
-  const lines = processed.split('\n');
-  let html = [];
-  let inList = false;
-  let listType = 'ul';
-
-  lines.forEach(line => {
-    let trimmed = line.trim();
-
-    if (trimmed.startsWith('#### ')) {
-      if (inList) { html.push(`</${listType}>`); inList = false; }
-      html.push(`<h4>${trimmed.substring(5)}</h4>`);
-    } else if (trimmed.startsWith('### ')) {
-      if (inList) { html.push(`</${listType}>`); inList = false; }
-      html.push(`<h3>${trimmed.substring(4)}</h3>`);
-    } else if (trimmed.startsWith('## ')) {
-      if (inList) { html.push(`</${listType}>`); inList = false; }
-      html.push(`<h2>${trimmed.substring(3)}</h2>`);
-    } else if (trimmed.startsWith('# ')) {
-      if (inList) { html.push(`</${listType}>`); inList = false; }
-      html.push(`<h1>${trimmed.substring(2)}</h1>`);
-    } else if (trimmed.startsWith('- ') || trimmed.startsWith('• ') || trimmed.startsWith('* ')) {
-      if (!inList || listType !== 'ul') {
-        if (inList) html.push(`</${listType}>`);
-        html.push('<ul>');
-        inList = true;
-        listType = 'ul';
-      }
-      let content = trimmed.replace(/^[-•*]\s+/, '');
-      html.push(`<li>${applyInlineStyles(content)}</li>`);
-    } else if (/^\d+\.\s+/.test(trimmed)) {
-      if (!inList || listType !== 'ol') {
-        if (inList) html.push(`</${listType}>`);
-        html.push('<ol>');
-        inList = true;
-        listType = 'ol';
-      }
-      let content = trimmed.replace(/^\d+\.\s+/, '');
-      html.push(`<li>${applyInlineStyles(content)}</li>`);
-    } else if (trimmed === '---') {
-      if (inList) { html.push(`</${listType}>`); inList = false; }
-      html.push('<hr>');
-    } else if (trimmed === '') {
-      if (inList) { html.push(`</${listType}>`); inList = false; }
-    } else {
-      if (inList) { html.push(`</${listType}>`); inList = false; }
-      html.push(`<p>${applyInlineStyles(line)}</p>`);
-    }
-  });
-
-  if (inList) html.push(`</${listType}>`);
-
-  return html.join('\n');
 }
 
-function applyInlineStyles(str) {
-  return str
-    .replace(/\*\*([^\*]+)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*([^\*]+)\*/g, '<em>$1</em>')
-    .replace(/`([^`]+)`/g, '<code>$1</code>');
-}
-
-function buildDocPanel(isSplit) {
-  const panel = document.createElement("div");
-  panel.className = "window-panel";
-  const activeDoc = getActiveDocObject();
-  const renderedHtml = parseMarkdownAndMath(activeDoc.obj.content);
-
-  panel.innerHTML = `
-    <div class="window-header">
-      <div class="window-title" style="color:var(--doc-color);">
-        <span>📝</span> Technical Engineering Documentation (Live Markdown & Formulas)
-      </div>
-      <div class="window-controls">
-        <div class="view-mode-toggle" style="background:var(--bg-card); padding:2px;">
-          <button class="mode-toggle-btn ${docMode === 'split' ? 'active' : ''}" style="font-size:10px; padding:2px 8px;" onclick="setDocDisplayMode('split')">🌓 Split View</button>
-          <button class="mode-toggle-btn ${docMode === 'preview' ? 'active' : ''}" style="font-size:10px; padding:2px 8px;" onclick="setDocDisplayMode('preview')">👁️ Live Formatted</button>
-          <button class="mode-toggle-btn ${docMode === 'edit' ? 'active' : ''}" style="font-size:10px; padding:2px 8px;" onclick="setDocDisplayMode('edit')">✏️ Raw Editor</button>
-        </div>
-        ${isSplit ? `<button class="btn-icon btn-icon-danger" style="padding:2px 6px;" onclick="closeToolInSplit('doc')">✕</button>` : ''}
-      </div>
-    </div>
-
-    <div class="symbols-toolbar">
-      <button class="sym-btn" onclick="addMainDocSection()" title="Add Main Section">➕ Main Section</button>
-      <button class="sym-btn" onclick="addSubDocSection()" title="Add Sub-section">➕ Sub-section</button>
-      <button class="sym-btn sym-btn-danger" onclick="deleteActiveDocItem()" title="Delete Section">🗑️ Delete</button>
-      <div class="sym-divider"></div>
-      <button class="sym-btn" onclick="insertDocFormat('**', '**')"><strong>B</strong> Bold</button>
-      <button class="sym-btn" onclick="insertDocFormat('*', '*')"><em>I</em> Italic</button>
-      <button class="sym-btn" onclick="insertDocFormat('### ', '')">H3</button>
-      <button class="sym-btn" onclick="insertDocFormat('- ', '')">• List</button>
-      <button class="sym-btn" onclick="insertDocFormat('$', '$')">∑ Math</button>
-      <div class="sym-divider"></div>
-      <span style="font-size:11px; color:var(--text-muted);">Auto-renders LaTeX equations (Ø, ×, $, formulas)</span>
-    </div>
-
-    <div class="window-content">
-      <div class="doc-split">
-        <!-- Document Navigator Tree -->
-        <div class="doc-tree-sidebar">
-          <div class="doc-tree-header">
-            <span>Engineering Sections</span>
-            <button class="btn-icon" style="padding:2px 6px; font-size:10px;" onclick="addMainDocSection()">+ Main</button>
-          </div>
-
-          ${workspaceData.docSections.map((sec, mIdx) => {
-            const isMainActive = (activeDocSelection.mainIndex === mIdx && activeDocSelection.subIndex === null);
-            return `
-              <div class="main-section-group">
-                <div class="main-section-item ${isMainActive ? 'active' : ''}" onclick="selectDocMain(${mIdx})">
-                  <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">📁 ${sec.title}</span>
-                  <span style="font-size:10px; color:var(--text-muted); cursor:pointer;" title="Add sub-section" onclick="event.stopPropagation(); addSubDocSectionTo(${mIdx})">➕</span>
-                </div>
-
-                ${sec.subsections && sec.subsections.length > 0 ? `
-                  <div class="sub-section-list">
-                    ${sec.subsections.map((sub, sIdx) => {
-                      const isSubActive = (activeDocSelection.mainIndex === mIdx && activeDocSelection.subIndex === sIdx);
-                      return `
-                        <div class="sub-section-item ${isSubActive ? 'active' : ''}" onclick="selectDocSub(${mIdx}, ${sIdx})">
-                          <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">📄 ${sub.title}</span>
-                        </div>
-                      `;
-                    }).join('')}
-                  </div>
-                ` : ''}
-              </div>
-            `;
-          }).join('')}
-        </div>
-
-        <!-- Main Display / Editor Container -->
-        <div class="doc-edit-area">
-          <input type="text" class="doc-title-input" value="${activeDoc.obj.title}" oninput="updateActiveDocTitle(this.value)">
-
-          <div class="doc-split-editor">
-            <!-- Raw Editor Pane -->
-            ${docMode !== 'preview' ? `
-              <div class="doc-pane" style="${docMode === 'edit' ? 'flex:1;' : 'flex:1; border-right:1px solid var(--border); padding-right:12px;'}">
-                <div style="font-size:11px; font-weight:700; color:var(--text-muted); margin-bottom:6px; display:flex; justify-content:space-between;">
-                  <span>MARKDOWN / LATEX SOURCE</span>
-                  <span>Auto-saved</span>
-                </div>
-                <textarea class="doc-textarea" id="doc-main-textarea" oninput="handleDocLiveInput(this.value)" placeholder="Type Markdown, list items, or paste engineering equations here...">${activeDoc.obj.content}</textarea>
-              </div>
-            ` : ''}
-
-            <!-- Live Formatted Preview Pane -->
-            ${docMode !== 'edit' ? `
-              <div class="doc-pane" style="flex:1;">
-                <div style="font-size:11px; font-weight:700; color:var(--accent); margin-bottom:6px;">
-                  <span>LIVE FORMATTED PREVIEW</span>
-                </div>
-                <div class="doc-preview-pane" id="doc-live-preview">
-                  ${renderedHtml}
-                </div>
-              </div>
-            ` : ''}
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-  return panel;
-}
-
-function handleDocLiveInput(val) {
-  updateActiveDocContent(val);
-  const preview = document.getElementById("doc-live-preview");
-  if (preview) {
-    preview.innerHTML = parseMarkdownAndMath(val);
-  }
-}
-
-
-function selectDocMain(mIdx) { activeDocSelection.mainIndex = mIdx; activeDocSelection.subIndex = null; renderAll(); }
-function selectDocSub(mIdx, sIdx) { activeDocSelection.mainIndex = mIdx; activeDocSelection.subIndex = sIdx; renderAll(); }
-function updateActiveDocTitle(val) { getActiveDocObject().obj.title = val; saveState(); }
-function updateActiveDocContent(val) { getActiveDocObject().obj.content = val; saveState(); }
-
-function addMainDocSection() {
-  const title = prompt("Enter Main Section Title:", "New Engineering Section");
-  if (!title) return;
-  workspaceData.docSections.push({
-    id: "sec-" + Date.now(),
-    title: title,
-    content: "## " + title.toUpperCase() + "\n\nEnter main section overview here...",
-    subsections: []
-  });
-  activeDocSelection.mainIndex = workspaceData.docSections.length - 1;
-  activeDocSelection.subIndex = null;
-  renderAll();
-  saveState();
-}
-
-function addSubDocSection() { addSubDocSectionTo(activeDocSelection.mainIndex); }
-
-function addSubDocSectionTo(mIdx) {
-  const mainSec = workspaceData.docSections[mIdx];
-  if (!mainSec.subsections) mainSec.subsections = [];
-  const title = prompt(`Enter Sub-section Title for "${mainSec.title}":`, "New Sub-section Detail");
-  if (!title) return;
-  mainSec.subsections.push({
-    id: "sub-" + Date.now(),
-    title: title,
-    content: "### " + title.toUpperCase() + "\n\nEnter detailed calculations, GD&T, or schematics here..."
-  });
-  activeDocSelection.mainIndex = mIdx;
-  activeDocSelection.subIndex = mainSec.subsections.length - 1;
-  renderAll();
-  saveState();
-}
-
-function deleteActiveDocItem() {
-  const activeDoc = getActiveDocObject();
-  if (activeDoc.isSub) {
-    if (confirm(`Delete sub-section: "${activeDoc.obj.title}"?`)) {
-      workspaceData.docSections[activeDoc.mainIdx].subsections.splice(activeDoc.subIdx, 1);
-      activeDocSelection.subIndex = null;
-      renderAll();
-      saveState();
-    }
-  } else {
-    if (workspaceData.docSections.length <= 1) { alert("Cannot delete the last remaining main section."); return; }
-    if (confirm(`Delete main section: "${activeDoc.obj.title}" and all its sub-sections?`)) {
-      workspaceData.docSections.splice(activeDoc.mainIdx, 1);
-      activeDocSelection.mainIndex = 0;
-      activeDocSelection.subIndex = null;
-      renderAll();
-      saveState();
-    }
-  }
-}
-
-function insertDocFormat(pre, post) {
-  const ta = document.getElementById("doc-main-textarea");
-  if (!ta) return;
-  const start = ta.selectionStart;
-  const end = ta.selectionEnd;
-  const text = ta.value;
-  const selected = text.substring(start, end);
-  ta.value = text.substring(0, start) + pre + selected + post + text.substring(end);
-  updateActiveDocContent(ta.value);
-}
-
-/* ========================================================================= */
-/* PANEL 3: POWERPOINT                                                       */
-/* ========================================================================= */
-function buildPptPanel(isSplit) {
-  const curSlide = workspaceData.slides[currentSlideIndex] || workspaceData.slides[0];
-  const panel = document.createElement("div");
-  panel.className = "window-panel";
-
-  let bulletHtml = "<ul>";
-  curSlide.body.split("\n").forEach(line => {
-    if (line.trim()) bulletHtml += `<li>${line.replace(/^•\s*/, '')}</li>`;
-  });
-  bulletHtml += "</ul>";
-
-  panel.innerHTML = `
-    <div class="window-header">
-      <div class="window-title" style="color:var(--ppt-color);">
-        <span>📽️</span> Presentation Slide Deck
-      </div>
-      <div class="window-controls">
-        ${isSplit ? `<button class="btn-icon btn-icon-danger" style="padding:2px 6px;" onclick="closeToolInSplit('ppt')">✕</button>` : ''}
-      </div>
-    </div>
-
-    <div class="symbols-toolbar">
-      <button class="sym-btn" onclick="prevSlide()" title="Previous Slide">◀ Prev</button>
-      <span style="font-size:12px; font-weight:800; color:var(--text-main); margin:0 4px;">Slide ${currentSlideIndex + 1} of ${workspaceData.slides.length}</span>
-      <button class="sym-btn" onclick="nextSlide()" title="Next Slide">Next ▶</button>
-      <div class="sym-divider"></div>
-      <button class="sym-btn" onclick="addNewSlide()" title="Add Slide">➕ Add Slide</button>
-      <button class="sym-btn sym-btn-danger" onclick="deleteCurrentSlide()" title="Delete Slide">🗑️ Delete Slide</button>
-      <div class="sym-divider"></div>
-      <span style="font-size:11px; color:var(--text-muted);">${curSlide.tag}</span>
-    </div>
-
-    <div class="window-content">
-      <div class="ppt-view">
-        <div class="ppt-slide-card">
-          <div class="ppt-slide-title" contenteditable="true" onblur="saveSlideTitle(this.innerText)">
-            ${curSlide.title}
-          </div>
-          <div class="ppt-slide-body" contenteditable="true" id="ppt-body-editor" onblur="saveSlideBody()">
-            ${bulletHtml}
-          </div>
-          <div class="ppt-slide-footer">
-            <span>ICEYE Smart MGSE System • Mechanical CAD, Electronics & Mechatronics</span>
-            <span>Slide ${currentSlideIndex + 1} of ${workspaceData.slides.length}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-  return panel;
-}
-
-function prevSlide() { if (currentSlideIndex > 0) { currentSlideIndex--; renderAll(); } }
-function nextSlide() { if (currentSlideIndex < workspaceData.slides.length - 1) { currentSlideIndex++; renderAll(); } }
-function saveSlideTitle(val) { workspaceData.slides[currentSlideIndex].title = val.trim(); saveState(); }
-function saveSlideBody() {
-  const items = document.querySelectorAll("#ppt-body-editor li");
-  let text = "";
-  items.forEach(li => { text += "• " + li.innerText + "\n"; });
-  if (text) workspaceData.slides[currentSlideIndex].body = text.trim();
-  saveState();
-}
-function addNewSlide() {
-  workspaceData.slides.push({
-    title: "New Presentation Slide",
-    tag: "Custom Feature",
-    body: "• Point 1: Detail design milestone\n• Point 2: Highlight aerospace verification"
-  });
-  currentSlideIndex = workspaceData.slides.length - 1;
-  renderAll();
-  saveState();
-}
-function deleteCurrentSlide() {
-  if (workspaceData.slides.length <= 1) { alert("Cannot delete the last remaining slide."); return; }
-  if (confirm(`Are you sure you want to delete slide: "${workspaceData.slides[currentSlideIndex].title}"?`)) {
-    workspaceData.slides.splice(currentSlideIndex, 1);
-    if (currentSlideIndex >= workspaceData.slides.length) currentSlideIndex = workspaceData.slides.length - 1;
-    renderAll();
-    saveState();
-  }
-}
-
-/* ========================================================================= */
-/* PANEL 4: 3-PILLAR GRAPHS                                                  */
-/* ========================================================================= */
-function buildGraphPanel(isSplit) {
-  const panel = document.createElement("div");
-  panel.className = "window-panel";
-  const statusIdx = workspaceData.sheetHeaders.length - 1;
-
-  const discStats = {
-    "Mechanical CAD": { total: 0, "Completed": 0, "In Progress": 0, "In Review": 0, "Yet to be done": 0 },
-    "Electronics": { total: 0, "Completed": 0, "In Progress": 0, "In Review": 0, "Yet to be done": 0 },
-    "Mechatronics": { total: 0, "Completed": 0, "In Progress": 0, "In Review": 0, "Yet to be done": 0 }
+function insertPastedImage(base64Data) {
+  const imgObj = {
+    id: "img_" + Date.now(),
+    src: base64Data,
+    widthPercent: 75,
+    caption: "Pasted Engineering Screenshot"
   };
 
-  let globalCounts = { "Completed": 0, "In Progress": 0, "In Review": 0, "Yet to be done": 0 };
-  let grandTotal = 0;
-
-  workspaceData.sheet.forEach(row => {
-    const disc = row[0] || "Mechanical CAD";
-    const st = row[statusIdx] || "Yet to be done";
-    if (!discStats[disc]) discStats[disc] = { total: 0, "Completed": 0, "In Progress": 0, "In Review": 0, "Yet to be done": 0 };
-    discStats[disc].total++;
-    if (discStats[disc][st] !== undefined) discStats[disc][st]++; else discStats[disc]["Yet to be done"]++;
-    if (globalCounts[st] !== undefined) globalCounts[st]++; else globalCounts["Yet to be done"]++;
-    grandTotal++;
-  });
-
-  if (grandTotal === 0) grandTotal = 1;
-  const overallCompletedPct = Math.round((globalCounts["Completed"] / grandTotal) * 100);
-  const r = 68;
-  const c = 2 * Math.PI * r;
-  const offset = c * (1 - globalCounts["Completed"] / grandTotal);
-
-  panel.innerHTML = `
-    <div class="window-header">
-      <div class="window-title" style="color:var(--graph-color);">
-        <span>📈</span> Integrated Progress: Mechanical CAD • Electronics • Mechatronics
-      </div>
-      <div class="window-controls">
-        ${isSplit ? `<button class="btn-icon btn-icon-danger" style="padding:2px 6px;" onclick="closeToolInSplit('graph')">✕</button>` : ''}
-      </div>
-    </div>
-    <div class="window-content">
-      <div class="graph-view">
-        <div class="overall-kpi-bar">
-          <div class="kpi-tile" style="border-left:3px solid var(--status-green);">
-            <div class="kpi-title">Completed Tasks</div>
-            <div class="kpi-number" style="color:var(--status-green);">${globalCounts["Completed"]} <span style="font-size:12px; color:var(--text-muted);">(${overallCompletedPct}%)</span></div>
-          </div>
-          <div class="kpi-tile" style="border-left:3px solid var(--status-yellow);">
-            <div class="kpi-title">In Progress</div>
-            <div class="kpi-number" style="color:var(--status-yellow);">${globalCounts["In Progress"]}</div>
-          </div>
-          <div class="kpi-tile" style="border-left:3px solid var(--status-orange);">
-            <div class="kpi-title">In Review</div>
-            <div class="kpi-number" style="color:var(--status-orange);">${globalCounts["In Review"]}</div>
-          </div>
-          <div class="kpi-tile" style="border-left:3px solid var(--status-red);">
-            <div class="kpi-title">Yet To Be Done</div>
-            <div class="kpi-number" style="color:var(--status-red);">${globalCounts["Yet to be done"]}</div>
-          </div>
-        </div>
-
-        <div class="three-pillars-grid">
-          ${renderPillarCard("Mechanical CAD", "📐", "pillar-cad", "var(--cad-color)", discStats["Mechanical CAD"])}
-          ${renderPillarCard("Electronics", "⚡", "pillar-elec", "var(--elec-color)", discStats["Electronics"])}
-          ${renderPillarCard("Mechatronics", "🤖", "pillar-mecha", "var(--mecha-color)", discStats["Mechatronics"])}
-        </div>
-
-        <div class="project-health-container">
-          <div class="gauge-meta-box">
-            <div class="gauge-meta-title">
-              <span>🎯</span> Total Project Completion Gauge
-            </div>
-            <div class="gauge-meta-desc">
-              Real-time roll-up across <strong>Mechanical CAD</strong>, <strong>Electronics</strong>, and <strong>Mechatronics</strong>. Modifying status dropdowns in the Sheet automatically recomputes the completion percentage and dynamically redraws this gauge.
-            </div>
-          </div>
-
-          <div class="gauge-graphic-wrap">
-            <svg width="160" height="160" viewBox="0 0 160 160">
-              <circle cx="80" cy="80" r="${r}" fill="transparent" stroke="var(--border)" stroke-width="16"/>
-              <circle cx="80" cy="80" r="${r}" fill="transparent" stroke="var(--status-green)" stroke-width="16"
-                      stroke-dasharray="${c}" stroke-dashoffset="${offset}" stroke-linecap="round"
-                      transform="rotate(-90 80 80)"/>
-              <text x="80" y="76" text-anchor="middle" fill="var(--text-main)" font-size="28" font-weight="800">${overallCompletedPct}%</text>
-              <text x="80" y="96" text-anchor="middle" fill="var(--text-muted)" font-size="10" font-weight="700">COMPLETED</text>
-            </svg>
-
-            <div class="gauge-legend-list">
-              <div><span style="color:var(--status-green);">● Completed:</span> <strong style="color:var(--text-main);">${globalCounts["Completed"]} tasks</strong></div>
-              <div><span style="color:var(--status-yellow);">● In Progress:</span> <strong style="color:var(--text-main);">${globalCounts["In Progress"]} tasks</strong></div>
-              <div><span style="color:var(--status-orange);">● In Review:</span> <strong style="color:var(--text-main);">${globalCounts["In Review"]} tasks</strong></div>
-              <div><span style="color:var(--status-red);">● Yet to do:</span> <strong style="color:var(--text-main);">${globalCounts["Yet to be done"]} tasks</strong></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-  return panel;
+  if (focusedTool === 'doc') {
+    const activeDoc = getActiveDocObject();
+    activeDoc.obj.content += `\n\n[IMAGE:${imgObj.id}]\n`;
+    workspaceData.pastedImages.push(imgObj);
+    renderAll();
+    saveState();
+  } else if (focusedTool === 'ppt') {
+    workspaceData.slides[currentSlideIndex].body += `\n[IMAGE:${imgObj.id}]`;
+    workspaceData.pastedImages.push(imgObj);
+    renderAll();
+    saveState();
+  } else {
+    workspaceData.pastedImages.push(imgObj);
+    alert("Image pasted into workspace memory! Focus on 'Doc' or 'PowerPoint' to insert directly into content.");
+    saveState();
+  }
 }
 
-function renderPillarCard(name, icon, cssClass, color, stats) {
-  const tot = stats.total || 1;
-  const pComp = Math.round((stats["Completed"] / tot) * 100);
-  const pProg = Math.round((stats["In Progress"] / tot) * 100);
-  const pRev  = Math.round((stats["In Review"] / tot) * 100);
-  const pTodo = Math.round((stats["Yet to be done"] / tot) * 100);
+function updateImageSize(imgId, newPercent) {
+  const img = workspaceData.pastedImages.find(i => i.id === imgId);
+  if (img) {
+    img.widthPercent = newPercent;
+    const el = document.getElementById("img-display-" + imgId);
+    if (el) el.style.width = newPercent + "%";
+    const label = document.getElementById("img-val-" + imgId);
+    if (label) label.innerText = newPercent + "%";
+    saveState();
+  }
+}
 
+function removePastedImage(imgId) {
+  workspaceData.pastedImages = workspaceData.pastedImages.filter(i => i.id !== imgId);
+  const activeDoc = getActiveDocObject();
+  activeDoc.obj.content = activeDoc.obj.content.replace(`[IMAGE:${imgId}]`, '');
+  renderAll();
+  saveState();
+}
+
+function renderImageMarkup(imgId) {
+  const img = workspaceData.pastedImages.find(i => i.id === imgId);
+  if (!img) return '';
   return `
-    <div class="pillar-card ${cssClass}">
-      <div class="pillar-header">
-        <div class="pillar-name" style="color:${color};">
-          <span>${icon}</span> ${name}
-        </div>
-        <span class="pillar-badge" style="background:rgba(255,255,255,0.06); color:var(--text-main); font-weight:700;">
-          ${stats["Completed"]}/${stats.total} (${pComp}%)
-        </span>
-      </div>
-
-      <div style="display:flex; flex-direction:column; gap:8px;">
-        <div class="mini-bar-row">
-          <div class="mini-bar-labels"><span style="color:var(--status-green);">Completed</span><span>${stats["Completed"]} (${pComp}%)</span></div>
-          <div class="mini-bar-track"><div class="mini-bar-fill" style="width:${pComp}%; background:var(--status-green);"></div></div>
-        </div>
-        <div class="mini-bar-row">
-          <div class="mini-bar-labels"><span style="color:var(--status-yellow);">In Progress</span><span>${stats["In Progress"]} (${pProg}%)</span></div>
-          <div class="mini-bar-track"><div class="mini-bar-fill" style="width:${pProg}%; background:var(--status-yellow);"></div></div>
-        </div>
-        <div class="mini-bar-row">
-          <div class="mini-bar-labels"><span style="color:var(--status-orange);">In Review</span><span>${stats["In Review"]} (${pRev}%)</span></div>
-          <div class="mini-bar-track"><div class="mini-bar-fill" style="width:${pRev}%; background:var(--status-orange);"></div></div>
-        </div>
-        <div class="mini-bar-row">
-          <div class="mini-bar-labels"><span style="color:var(--status-red);">Yet to do</span><span>${stats["Yet to be done"]} (${pTodo}%)</span></div>
-          <div class="mini-bar-track"><div class="mini-bar-fill" style="width:${pTodo}%; background:var(--status-red);"></div></div>
-        </div>
+    <div class="pasted-image-card" style="width:100%;">
+      <img src="${img.src}" id="img-display-${img.id}" style="width:${img.widthPercent}%; max-width:100%; border:1px solid var(--border);" alt="Engineering Visual">
+      <div class="image-controls-bar">
+        <span>🔍 Size:</span>
+        <input type="range" min="15" max="100" value="${img.widthPercent}" oninput="updateImageSize('${img.id}', this.value)">
+        <span id="img-val-${img.id}" style="font-weight:700; width:40px;">${img.widthPercent}%</span>
+        <button class="btn-icon" style="padding:2px 6px; font-size:10px;" onclick="updateImageSize('${img.id}', 50)">50%</button>
+        <button class="btn-icon" style="padding:2px 6px; font-size:10px;" onclick="updateImageSize('${img.id}', 100)">100%</button>
+        <button class="btn-icon btn-icon-danger" style="padding:2px 6px; font-size:10px;" onclick="removePastedImage('${img.id}')">✕ Delete</button>
       </div>
     </div>
   `;
 }
 
 /* ========================================================================= */
-/* PANEL 5: CAD & DESIGN VAULT (EXPLORER ENGINE V9)                          */
+/* DRAWING PDFS & REFERENCE WORKSPACE                                        */
 /* ========================================================================= */
-function buildVaultPanel(isSplit) {
+function buildDrawingsPanel(isSplit) {
   const panel = document.createElement("div");
   panel.className = "window-panel";
 
-  const disc = workspaceData.vault[activeVaultSelection.discKey] || workspaceData.vault.cad;
-  const currentSubfolder = disc.subfolders[activeVaultSelection.subfolderIdx] || disc.subfolders[0];
+  const cat = workspaceData.drawings[activeDwgSelection.category] || workspaceData.drawings.mech;
+  const currentSub = cat.subfolders[activeDwgSelection.subIdx] || cat.subfolders[0];
 
   panel.innerHTML = `
     <div class="window-header">
-      <div class="window-title" style="color:var(--vault-color);">
-        <span>📦</span> CAD & Design Vault Explorer
+      <div class="window-title" style="color:var(--dwg-color);">
+        <span>📐</span> Engineering Drawing Prints & PDF References
       </div>
       <div class="window-controls">
-        <button class="btn-icon" style="padding:2px 8px; font-size:11px;" onclick="addVaultSubfolder()">📁+ Add Subfolder</button>
-        ${isSplit ? `<button class="btn-icon btn-icon-danger" style="padding:2px 6px;" onclick="closeToolInSplit('vault')">✕</button>` : ''}
+        <button class="btn-icon" style="padding:2px 8px; font-size:11px;" onclick="addDrawingSubfolder()">📁+ New Folder</button>
+        ${isSplit ? `<button class="btn-icon btn-icon-danger" style="padding:2px 6px;" onclick="handleToolClick('drawings')">✕</button>` : ''}
       </div>
     </div>
 
     <div class="vault-split-container">
-      <!-- Left Folder Navigator -->
-      <aside class="vault-tree-sidebar">
+      <!-- Left Directory Pane with Pin/Unpin -->
+      <aside class="vault-tree-sidebar ${isDrawingNavPinned ? '' : 'unpinned'}" id="dwg-sidebar">
         <div class="vault-tree-header">
-          <span>Vault Directories</span>
-          <span style="font-size:10px; color:var(--text-muted);">Click to Open</span>
+          <span>${isDrawingNavPinned ? 'Drawing Directory' : '📁'}</span>
+          <button class="btn-icon" style="padding:2px 6px; font-size:10px;" onclick="toggleDrawingNavPin()">
+            ${isDrawingNavPinned ? '📌 Pinned' : '🔓 Unpinned'}
+          </button>
         </div>
 
-        ${['cad', 'elec', 'mecha'].map(dKey => {
-          const d = workspaceData.vault[dKey];
-          const totalFiles = d.subfolders.reduce((acc, sub) => acc + sub.files.length, 0);
+        ${Object.keys(workspaceData.drawings).map(key => {
+          const item = workspaceData.drawings[key];
+          const count = item.subfolders.reduce((a, s) => a + s.files.length, 0);
           return `
             <div class="disc-folder-group">
-              <div class="disc-folder-title" style="color:${d.color};" onclick="selectVaultSubfolder('${dKey}', 0)">
-                <div style="display:flex; align-items:center; gap:6px;">
-                  <span>${d.icon}</span>
-                  <span>${d.title}</span>
+              <div class="disc-folder-title" style="color:${item.color};" onclick="selectDrawingSubfolder('${key}', 0)">
+                <div style="display:flex; align-items:center; gap:6px; overflow:hidden; white-space:nowrap;">
+                  <span>${item.icon}</span>
+                  <span style="overflow:hidden; text-overflow:ellipsis;">${item.title}</span>
                 </div>
-                <span style="font-size:10px; color:var(--text-muted);">${totalFiles}</span>
+                <span style="font-size:10px; color:var(--text-muted);">${count}</span>
               </div>
-
               <div>
-                ${d.subfolders.map((sub, sIdx) => {
-                  const isActive = (activeVaultSelection.discKey === dKey && activeVaultSelection.subfolderIdx === sIdx);
+                ${item.subfolders.map((sub, sIdx) => {
+                  const isActive = (activeDwgSelection.category === key && activeDwgSelection.subIdx === sIdx);
                   return `
-                    <div class="subfolder-item ${isActive ? 'active' : ''}" onclick="selectVaultSubfolder('${dKey}', ${sIdx})">
+                    <div class="subfolder-item ${isActive ? 'active' : ''}" onclick="selectDrawingSubfolder('${key}', ${sIdx})">
                       <div style="display:flex; align-items:center; gap:6px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
                         <span>${isActive ? '📂' : '📁'}</span>
                         <span>${sub.name}</span>
@@ -2200,68 +977,54 @@ function buildVaultPanel(isSplit) {
         }).join('')}
       </aside>
 
-      <!-- Right File Explorer Panel -->
+      <!-- Main Explorer & PDF Listing -->
       <main class="vault-browser-main">
         <div class="vault-browser-header">
-          <div class="vault-current-path">
-            <span style="color:${disc.color}; font-size:16px;">${disc.icon}</span>
-            <span style="color:var(--text-muted);">${disc.title}</span>
-            <span style="color:var(--border);">/</span>
-            <span style="color:var(--text-main); font-weight:800;">${currentSubfolder.name}</span>
+          <div style="display:flex; align-items:center; gap:8px; font-size:14px; font-weight:700;">
+            <span style="color:${cat.color};">${cat.icon}</span>
+            <span style="color:var(--text-muted);">${cat.title}</span>
+            <span>/</span>
+            <span style="color:var(--text-main); font-weight:800;">${currentSub.name}</span>
           </div>
           <div style="display:flex; gap:8px;">
-            <button class="btn-icon" onclick="document.getElementById('vault-file-uploader').click()">
-              ⬆️ Upload File
-            </button>
-            <input type="file" id="vault-file-uploader" style="display:none;" multiple onchange="handleBrowserFileUpload(this.files)">
-            <button class="btn-icon btn-icon-danger" onclick="deleteActiveSubfolder()" title="Delete Subfolder">
-              🗑️ Delete Subfolder
-            </button>
+            <button class="btn-icon" onclick="document.getElementById('dwg-uploader').click()">⬆️ Upload PDF Drawing</button>
+            <input type="file" id="dwg-uploader" style="display:none;" accept=".pdf" multiple onchange="handleDrawingUpload(this.files)">
+            <button class="btn-icon btn-icon-danger" onclick="deleteActiveDrawingSubfolder()">🗑️ Delete Folder</button>
           </div>
         </div>
 
-        <!-- Compact drag & drop strip -->
-        <div class="compact-dropzone" id="vault-compact-dropzone" onclick="document.getElementById('vault-file-uploader').click()">
-          📥 Drag & Drop files here to upload directly to <strong>${currentSubfolder.name}</strong> (or click to browse)
+        <div class="compact-dropzone" id="dwg-dropzone" onclick="document.getElementById('dwg-uploader').click()">
+          📥 Drag & Drop technical PDF drawings here to save directly into <strong>${currentSub.name}</strong>
         </div>
 
-        <!-- Clearly Elaborated File Table -->
         <div class="vault-table-wrap">
           <table class="vault-table">
             <thead>
               <tr>
-                <th style="width:30px;">Type</th>
-                <th>File Name</th>
-                <th style="width:110px;">Size</th>
-                <th style="width:120px;">Upload Date</th>
-                <th style="width:150px; text-align:right;">Actions</th>
+                <th style="width:35px;">Type</th>
+                <th>Drawing / Document Title</th>
+                <th style="width:90px;">Sheet Size</th>
+                <th style="width:80px;">File Size</th>
+                <th style="width:75px;">Revision</th>
+                <th style="width:100px;">Date</th>
+                <th style="width:160px; text-align:right;">Actions</th>
               </tr>
             </thead>
             <tbody>
-              ${currentSubfolder.files.length === 0 ? `
-                <tr>
-                  <td colspan="5" style="text-align:center; padding:32px; color:var(--text-muted); font-style:italic;">
-                    This folder is empty. Drag and drop files above or click "Upload File" to add documents.
-                  </td>
-                </tr>
-              ` : currentSubfolder.files.map((file, fIdx) => `
+              ${currentSub.files.length === 0 ? `
+                <tr><td colspan="7" style="text-align:center; padding:32px; color:var(--text-muted); font-style:italic;">No PDF drawings in this folder. Drop your engineering PDFs above.</td></tr>
+              ` : currentSub.files.map((file, idx) => `
                 <tr>
                   <td style="font-size:15px; text-align:center;">📄</td>
                   <td style="font-weight:700; color:var(--text-main);">${file.name}</td>
-                  <td style="color:var(--accent); font-weight:600;">${file.size}</td>
+                  <td style="color:var(--accent); font-weight:700;">${file.sheetSize || 'A1'}</td>
+                  <td style="color:var(--text-muted);">${file.size}</td>
+                  <td><span style="background:rgba(255,255,255,0.06); padding:2px 6px; border-radius:4px; font-size:10px;">${file.rev || 'Rev A'}</span></td>
                   <td style="color:var(--text-muted);">${file.date}</td>
                   <td style="text-align:right; white-space:nowrap;">
-                    ${file.name.toLowerCase().endsWith('.pdf') ? `
-                      <a href="${file.url || ('./vault/' + file.name)}" target="_blank" class="btn-icon" style="text-decoration:none; padding:3px 8px; font-size:11px; margin-right:4px;">
-                        👁️ View
-                      </a>
-                    ` : ''}
-                    <a href="${file.url || ('./vault/' + file.name)}" download="${file.name}" class="btn-icon" style="text-decoration:none; padding:3px 8px; font-size:11px; margin-right:4px;">
-                      ⬇️ Download
-                    </a>
-                    <button class="btn-icon btn-icon-danger" style="padding:3px 8px; font-size:11px;" onclick="deleteBrowserFile(${fIdx})" title="Delete entry">
-                      ✕
-                    </button>
+                    <button class="btn-icon" style="padding:2px 8px; font-size:11px; margin-right:4px;" onclick="viewPdfPreview('${file.name}', '${file.url || ''}')">👁️ View</button>
+                    <button class="btn-icon btn-icon-primary" style="padding:2px 8px; font-size:11px; margin-right:4px;" onclick="triggerSmartDownload('${file.name}', '${file.url || ''}')">⬇️ Download</button>
+                    <button class="btn-icon btn-icon-danger" style="padding:2px 8px; font-size:11px;" onclick="deleteDrawingFile(${idx})">✕</button>
                   </td>
                 </tr>
               `).join('')}
@@ -2273,39 +1036,43 @@ function buildVaultPanel(isSplit) {
   `;
 
   setTimeout(() => {
-    const dz = document.getElementById("vault-compact-dropzone");
+    const dz = document.getElementById("dwg-dropzone");
     if (!dz) return;
-    dz.addEventListener("dragover", (e) => { e.preventDefault(); dz.classList.add("dragover"); });
-    dz.addEventListener("dragleave", () => { dz.classList.remove("dragover"); });
+    dz.addEventListener("dragover", (e) => { e.preventDefault(); dz.style.background = "rgba(56, 189, 248, 0.2)"; });
+    dz.addEventListener("dragleave", () => { dz.style.background = "rgba(56, 189, 248, 0.05)"; });
     dz.addEventListener("drop", (e) => {
       e.preventDefault();
-      dz.classList.remove("dragover");
-      if (e.dataTransfer.files.length) handleBrowserFileUpload(e.dataTransfer.files);
+      dz.style.background = "rgba(56, 189, 248, 0.05)";
+      if (e.dataTransfer.files.length) handleDrawingUpload(e.dataTransfer.files);
     });
   }, 100);
 
   return panel;
 }
 
-function selectVaultSubfolder(dKey, sIdx) {
-  activeVaultSelection.discKey = dKey;
-  activeVaultSelection.subfolderIdx = sIdx;
+function toggleDrawingNavPin() {
+  isDrawingNavPinned = !isDrawingNavPinned;
   renderAll();
 }
 
-function handleBrowserFileUpload(files) {
-  const disc = workspaceData.vault[activeVaultSelection.discKey];
-  const sub = disc.subfolders[activeVaultSelection.subfolderIdx];
+function selectDrawingSubfolder(cat, idx) {
+  activeDwgSelection.category = cat;
+  activeDwgSelection.subIdx = idx;
+  renderAll();
+}
+
+function handleDrawingUpload(files) {
+  const cat = workspaceData.drawings[activeDwgSelection.category];
+  const sub = cat.subfolders[activeDwgSelection.subIdx];
   Array.from(files).forEach(file => {
-    const sizeStr = file.size > 1024 * 1024 
-      ? (file.size / (1024 * 1024)).toFixed(1) + " MB" 
-      : (file.size / 1024).toFixed(0) + " KB";
-    const dateStr = new Date().toISOString().split('T')[0];
+    const sizeStr = file.size > 1024 * 1024 ? (file.size / (1024 * 1024)).toFixed(1) + " MB" : (file.size / 1024).toFixed(0) + " KB";
     const objectUrl = URL.createObjectURL(file);
-    sub.files.push({ 
-      name: file.name, 
-      size: sizeStr, 
-      date: dateStr,
+    sub.files.push({
+      name: file.name,
+      sheetSize: file.name.includes("A0") ? "A0" : file.name.includes("A2") ? "A2" : "A1",
+      size: sizeStr,
+      rev: "Rev A",
+      date: new Date().toISOString().split('T')[0],
       url: objectUrl
     });
   });
@@ -2313,61 +1080,320 @@ function handleBrowserFileUpload(files) {
   saveState();
 }
 
-function deleteBrowserFile(fIdx) {
-  const disc = workspaceData.vault[activeVaultSelection.discKey];
-  const sub = disc.subfolders[activeVaultSelection.subfolderIdx];
-  const fileName = sub.files[fIdx].name;
-  if (confirm(`Remove "${fileName}" from ${sub.name}?`)) {
-    sub.files.splice(fIdx, 1);
+function deleteDrawingFile(idx) {
+  const cat = workspaceData.drawings[activeDwgSelection.category];
+  const sub = cat.subfolders[activeDwgSelection.subIdx];
+  if (confirm(`Remove drawing "${sub.files[idx].name}"?`)) {
+    sub.files.splice(idx, 1);
     renderAll();
     saveState();
   }
 }
 
-function addVaultSubfolder() {
-  const choice = prompt("Select discipline for new subfolder:\n1. Mechanical CAD\n2. Electronics\n3. Mechatronics", "1");
-  let dKey = "cad";
-  if (choice === "2") dKey = "elec";
-  else if (choice === "3") dKey = "mecha";
+function addDrawingSubfolder() {
+  const choice = prompt("Choose Section:\n1. Mechanical Drawings\n2. Electrical Schematics\n3. Reference Specs", "1");
+  let cat = "mech";
+  if (choice === "2") cat = "elec";
+  else if (choice === "3") cat = "specs";
 
-  const name = prompt(`Enter new subfolder name for ${workspaceData.vault[dKey].title}:`, "New Subfolder");
+  const name = prompt("Enter folder name (e.g. Clevis Bracket Machining Prints):", "New Drawing Prints");
   if (!name) return;
 
-  workspaceData.vault[dKey].subfolders.push({
-    id: "sub_" + Date.now(),
+  workspaceData.drawings[cat].subfolders.push({
+    id: "dwg_sub_" + Date.now(),
     name: name.trim(),
     files: []
   });
-
-  activeVaultSelection.discKey = dKey;
-  activeVaultSelection.subfolderIdx = workspaceData.vault[dKey].subfolders.length - 1;
+  activeDwgSelection.category = cat;
+  activeDwgSelection.subIdx = workspaceData.drawings[cat].subfolders.length - 1;
   renderAll();
   saveState();
 }
 
-function deleteActiveSubfolder() {
-  const disc = workspaceData.vault[activeVaultSelection.discKey];
-  if (disc.subfolders.length <= 1) {
-    alert("Cannot delete the only subfolder in this discipline.");
+function deleteActiveDrawingSubfolder() {
+  const cat = workspaceData.drawings[activeDwgSelection.category];
+  if (cat.subfolders.length <= 1) {
+    alert("Cannot delete the only folder in this discipline.");
     return;
   }
-  const sub = disc.subfolders[activeVaultSelection.subfolderIdx];
-  if (confirm(`Are you sure you want to delete subfolder "${sub.name}" and all its ${sub.files.length} files?`)) {
-    disc.subfolders.splice(activeVaultSelection.subfolderIdx, 1);
-    activeVaultSelection.subfolderIdx = 0;
+  const sub = cat.subfolders[activeDwgSelection.subIdx];
+  if (confirm(`Delete folder "${sub.name}" and all prints inside?`)) {
+    cat.subfolders.splice(activeDwgSelection.subIdx, 1);
+    activeDwgSelection.subIdx = 0;
     renderAll();
     saveState();
   }
 }
 
+function viewPdfPreview(fileName, customUrl) {
+  const targetUrl = customUrl || ('./vault/' + fileName);
+  document.getElementById("pdf-modal-title").innerHTML = `<span>📐</span> PDF Inspection: <strong>${fileName}</strong>`;
+  document.getElementById("pdf-modal-frame").src = targetUrl;
+  document.getElementById("pdf-modal").style.display = "flex";
+}
+
+function closePdfModal() {
+  document.getElementById("pdf-modal").style.display = "none";
+  document.getElementById("pdf-modal-frame").src = "";
+}
+
+/* SMART DOWNLOAD ENGINE */
+function triggerSmartDownload(fileName, customUrl) {
+  if (customUrl) {
+    const a = document.createElement('a');
+    a.href = customUrl;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    return;
+  }
+
+  const repoUrl = './vault/' + fileName;
+  fetch(repoUrl, { method: 'HEAD' })
+    .then(res => {
+      if (res.ok) {
+        const a = document.createElement('a');
+        a.href = repoUrl;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      } else {
+        fallbackBlobDownload(fileName);
+      }
+    })
+    .catch(() => fallbackBlobDownload(fileName));
+}
+
+function fallbackBlobDownload(fileName) {
+  let content = `PowerShare Aerospace Studio v14\nFile: ${fileName}\nProject: ICEYE Microsatellite MGSE Hub\nDate: ${new Date().toISOString()}\n\n[Notice: Client-side generated file placeholder. Real file not committed to ./vault/ yet.]`;
+  const blob = new Blob([content], { type: 'application/octet-stream' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 /* ========================================================================= */
-/* EXPORT DATA                                                              */
+/* DOC, SHEET, SLIDES, GRAPHS & VAULT MASTER ROUTING                         */
 /* ========================================================================= */
+function getActiveDocObject() {
+  return { obj: workspaceData.docSections[0] };
+}
+
+function parseMarkdownAndMath(text) {
+  if (!text) return '';
+  let processed = text
+    .replace(/\\varnothing/g, "Ø")
+    .replace(/\\times/g, "×")
+    .replace(/\$([^$]+)\$/g, '<span class="math-formula">$1</span>');
+
+  // Replace image tokens with interactive visual cards
+  processed = processed.replace(/\[IMAGE:([^\]]+)\]/g, function(m, id) {
+    return renderImageMarkup(id);
+  });
+
+  return processed.split('\n').map(l => {
+    if (l.startsWith('## ')) return `<h2>${l.substring(3)}</h2>`;
+    if (l.startsWith('- ')) return `<li>${l.substring(2)}</li>`;
+    return l.trim() ? `<p>${l}</p>` : '';
+  }).join('');
+}
+
+function buildDocPanel(isSplit) {
+  const panel = document.createElement("div");
+  panel.className = "window-panel";
+  const activeDoc = getActiveDocObject();
+
+  panel.innerHTML = `
+    <div class="window-header">
+      <div class="window-title" style="color:var(--doc-color);"><span>📝</span> Technical Engineering Documentation</div>
+      <div class="window-controls">
+        <button class="btn-icon" onclick="document.getElementById('doc-file-input').click()">🖼️ Insert Image</button>
+        <input type="file" id="doc-file-input" style="display:none;" accept="image/*" onchange="handleLocalImageUpload(this.files)">
+        ${isSplit ? `<button class="btn-icon btn-icon-danger" onclick="handleToolClick('doc')">✕</button>` : ''}
+      </div>
+    </div>
+    <div class="window-content" style="padding:14px;">
+      <div class="doc-split-editor">
+        <div class="doc-pane" style="border-right:1px solid var(--border); padding-right:12px;">
+          <div style="font-size:10px; font-weight:800; color:var(--text-muted); margin-bottom:6px;">MARKDOWN SOURCE (CTRL+V TO PASTE SCREENSHOTS)</div>
+          <textarea class="doc-textarea" style="flex:1; width:100%; background:transparent; border:none; color:var(--text-main); font-family:inherit; resize:none; outline:none;" id="doc-editor-text" oninput="handleDocInput(this.value)">${activeDoc.obj.content}</textarea>
+        </div>
+        <div class="doc-pane">
+          <div style="font-size:10px; font-weight:800; color:var(--accent); margin-bottom:6px;">FORMATTED REPORT WITH ADJUSTABLE IMAGES</div>
+          <div class="doc-preview-pane" id="doc-preview-pane">${parseMarkdownAndMath(activeDoc.obj.content)}</div>
+        </div>
+      </div>
+    </div>
+  `;
+  return panel;
+}
+
+function handleDocInput(val) {
+  workspaceData.docSections[0].content = val;
+  const p = document.getElementById("doc-preview-pane");
+  if (p) p.innerHTML = parseMarkdownAndMath(val);
+  saveState();
+}
+
+function handleLocalImageUpload(files) {
+  if (files && files[0]) {
+    const reader = new FileReader();
+    reader.onload = (e) => insertPastedImage(e.target.result);
+    reader.readAsDataURL(files[0]);
+  }
+}
+
+function buildVaultPanel(isSplit) {
+  const panel = document.createElement("div");
+  panel.className = "window-panel";
+  const cat = workspaceData.vault.cad;
+  const sub = cat.subfolders[0];
+
+  panel.innerHTML = `
+    <div class="window-header">
+      <div class="window-title" style="color:var(--vault-color);"><span>📦</span> CAD Models & Assemblies Vault</div>
+      ${isSplit ? `<button class="btn-icon btn-icon-danger" onclick="handleToolClick('vault')">✕</button>` : ''}
+    </div>
+    <div class="vault-split-container">
+      <main class="vault-browser-main">
+        <div class="vault-table-wrap">
+          <table class="vault-table">
+            <thead>
+              <tr><th>Type</th><th>File Name</th><th>Size</th><th>Date</th><th style="text-align:right;">Actions</th></tr>
+            </thead>
+            <tbody>
+              ${sub.files.map(f => `
+                <tr>
+                  <td>📦</td>
+                  <td style="font-weight:700;">${f.name}</td>
+                  <td>${f.size}</td>
+                  <td>${f.date}</td>
+                  <td style="text-align:right;">
+                    <button class="btn-icon btn-icon-primary" onclick="triggerSmartDownload('${f.name}', '')">⬇️ Download</button>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  `;
+  return panel;
+}
+
+function buildSheetPanel(isSplit) {
+  const panel = document.createElement("div");
+  panel.className = "window-panel";
+  panel.innerHTML = `
+    <div class="window-header">
+      <div class="window-title" style="color:var(--sheet-color);"><span>📊</span> Engineering Spreadsheet Ledger</div>
+      ${isSplit ? `<button class="btn-icon btn-icon-danger" onclick="handleToolClick('sheet')">✕</button>` : ''}
+    </div>
+    <div class="window-content" style="padding:14px; overflow:auto;">
+      <table class="vault-table">
+        <thead><tr>${workspaceData.sheetHeaders.map(h => `<th>${h}</th>`).join('')}</tr></thead>
+        <tbody>
+          ${workspaceData.sheet.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+  return panel;
+}
+
+function buildPptPanel(isSplit) {
+  const panel = document.createElement("div");
+  panel.className = "window-panel";
+  const slide = workspaceData.slides[0];
+  panel.innerHTML = `
+    <div class="window-header">
+      <div class="window-title" style="color:var(--ppt-color);"><span>📽️</span> Presentation Slide Deck</div>
+      ${isSplit ? `<button class="btn-icon btn-icon-danger" onclick="handleToolClick('ppt')">✕</button>` : ''}
+    </div>
+    <div class="window-content" style="padding:24px;">
+      <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:32px;">
+        <h2 style="color:var(--ppt-color); margin-bottom:16px;">${slide.title}</h2>
+        <div style="font-size:15px; line-height:1.8;">${parseMarkdownAndMath(slide.body)}</div>
+      </div>
+    </div>
+  `;
+  return panel;
+}
+
+function buildGraphPanel(isSplit) {
+  const panel = document.createElement("div");
+  panel.className = "window-panel";
+  panel.innerHTML = `
+    <div class="window-header">
+      <div class="window-title" style="color:var(--graph-color);"><span>📈</span> 3-Pillar Progress & Health</div>
+      ${isSplit ? `<button class="btn-icon btn-icon-danger" onclick="handleToolClick('graph')">✕</button>` : ''}
+    </div>
+    <div class="window-content" style="padding:20px; display:flex; flex-direction:column; gap:16px;">
+      <div style="background:var(--bg-card); padding:20px; border-radius:8px; border:1px solid var(--border);">
+        <h3>🎯 Total Project Completion: 78%</h3>
+        <p style="color:var(--text-muted); font-size:12px; margin-top:6px;">Calculated dynamically across Mechanical CAD, Cleanroom Electronics, and Mechatronics.</p>
+      </div>
+    </div>
+  `;
+  return panel;
+}
+
+/* MASTER RENDERER */
+function renderAll() {
+  ['sheet', 'doc', 'ppt', 'graph', 'drawings', 'vault'].forEach(tool => {
+    const btn = document.getElementById(`btn-tool-${tool}`);
+    if (btn) btn.classList.toggle('active-tool', viewMode === 'fullscreen' ? focusedTool === tool : !!splitOpenTools[tool]);
+  });
+
+  const canvas = document.getElementById('canvas-stage');
+  canvas.innerHTML = "";
+
+  if (viewMode === 'fullscreen') {
+    if (focusedTool === 'drawings') canvas.appendChild(buildDrawingsPanel(false));
+    else if (focusedTool === 'doc') canvas.appendChild(buildDocPanel(false));
+    else if (focusedTool === 'sheet') canvas.appendChild(buildSheetPanel(false));
+    else if (focusedTool === 'ppt') canvas.appendChild(buildPptPanel(false));
+    else if (focusedTool === 'graph') canvas.appendChild(buildGraphPanel(false));
+    else if (focusedTool === 'vault') canvas.appendChild(buildVaultPanel(false));
+  } else {
+    if (splitOpenTools.drawings) canvas.appendChild(buildDrawingsPanel(true));
+    if (splitOpenTools.doc) canvas.appendChild(buildDocPanel(true));
+    if (splitOpenTools.vault) canvas.appendChild(buildVaultPanel(true));
+    if (splitOpenTools.sheet) canvas.appendChild(buildSheetPanel(true));
+    if (splitOpenTools.graph) canvas.appendChild(buildGraphPanel(true));
+    if (splitOpenTools.ppt) canvas.appendChild(buildPptPanel(true));
+  }
+
+  renderBottomTaskbar();
+}
+
+function renderBottomTaskbar() {
+  const c = document.getElementById('active-pills-container');
+  c.innerHTML = "";
+  const names = { drawings: "📐 Drawings", doc: "📝 Doc", vault: "📦 CAD Vault", sheet: "📊 Sheet", ppt: "📽️ Slides", graph: "📈 Graphs" };
+  ['drawings', 'doc', 'vault', 'sheet', 'ppt', 'graph'].forEach(k => {
+    const pill = document.createElement("div");
+    const active = viewMode === 'fullscreen' ? (focusedTool === k) : splitOpenTools[k];
+    pill.className = `active-pill ${active ? 'active-focused' : ''}`;
+    pill.innerText = names[k];
+    pill.onclick = () => { focusedTool = k; renderAll(); };
+    c.appendChild(pill);
+  });
+}
+
 function exportDataJson() {
   const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(workspaceData, null, 2));
   const a = document.createElement("a");
-  a.setAttribute("href", dataStr);
-  a.setAttribute("download", "ICEYE_PowerShare_Workspace_Data_v9.json");
+  a.href = dataStr;
+  a.download = "ICEYE_PowerShare_Workspace_v14.json";
   document.body.appendChild(a);
   a.click();
   a.remove();
