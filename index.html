@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PowerShare Studio v30 | Aerospace Smart MGSE Hub</title>
+<title>PowerShare Studio v31 | Aerospace Smart MGSE Hub</title>
 <style>
   :root {
     --bg-base: #090d16;
@@ -21,9 +21,6 @@
     --graph-color: #a855f7;
     --vault-color: #ec4899;
     --dwg-color: #06b6d4;
-    --cad-color: #38bdf8;
-    --elec-color: #facc15;
-    --mecha-color: #c084fc;
     --status-green: #22c55e;
     --status-yellow: #eab308;
     --status-orange: #f97316;
@@ -31,18 +28,6 @@
     --danger: #ef4444;
     --sidebar-width-expanded: 230px;
     --sidebar-width-collapsed: 60px;
-  }
-
-  body.theme-light {
-    --bg-base: #f1f5f9;
-    --bg-sidebar: #ffffff;
-    --bg-card: #ffffff;
-    --bg-card-header: #f8fafc;
-    --border: #cbd5e1;
-    --accent: #0284c7;
-    --accent-glow: rgba(2, 132, 199, 0.2);
-    --text-main: #0f172a;
-    --text-muted: #64748b;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -79,7 +64,6 @@
   .brand-chip { background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 4px; }
   .mode-indicator-badge { font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px; }
   .mode-admin { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); }
-  .mode-guest { background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4); }
 
   .header-actions { display: flex; align-items: center; gap: 10px; }
   .theme-select { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-main); padding: 5px 10px; border-radius: 6px; font-size: 11px; cursor: pointer; }
@@ -142,36 +126,7 @@
   .window-panel { flex: 1; height: 100%; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.25); }
   .window-header { background: var(--bg-card-header); border-bottom: 1px solid var(--border); height: 42px; padding: 0 14px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
   .window-title { font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-  .symbols-toolbar { background: var(--bg-card-header); border-bottom: 1px solid var(--border); padding: 6px 12px; display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
   .window-content { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
-
-  /* SHEET */
-  .sheet-scroll { flex: 1; overflow: auto; }
-  table.sheet-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; white-space: nowrap; }
-  table.sheet-table th { background: var(--bg-card-header); color: var(--sheet-color); padding: 8px 10px; border-bottom: 2px solid var(--border); border-right: 1px solid var(--border); position: sticky; top: 0; z-index: 5; }
-  table.sheet-table td { padding: 6px 10px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); color: var(--text-main); }
-  .status-select { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; border: none; cursor: pointer; outline: none; }
-  .status-green { background: rgba(34, 197, 94, 0.2); color: var(--status-green); }
-  .status-yellow { background: rgba(234, 179, 8, 0.2); color: var(--status-yellow); }
-  .status-orange { background: rgba(249, 115, 22, 0.2); color: var(--status-orange); }
-  .status-red { background: rgba(239, 68, 68, 0.2); color: var(--status-red); }
-
-  /* PPT */
-  .ppt-view { flex: 1; display: flex; flex-direction: column; padding: 20px; background: var(--bg-base); overflow: hidden; }
-  .ppt-slide-card { flex: 1; background: var(--bg-card); border: 2px solid var(--border); border-radius: 12px; padding: 32px; display: flex; flex-direction: column; justify-content: space-between; }
-  .ppt-slide-title { font-size: 24px; font-weight: 800; color: var(--ppt-color); outline: none; border-bottom: 2px solid rgba(249, 115, 22, 0.3); padding-bottom: 8px; }
-  .ppt-slide-body { flex: 1; margin: 18px 0; font-size: 15px; line-height: 1.8; color: var(--text-main); outline: none; overflow-y: auto; }
-  .ppt-slide-body ul { margin-left: 24px; }
-  .ppt-slide-body li { margin-bottom: 8px; }
-  .ppt-slide-footer { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 10px; }
-
-  /* GRAPHS & KPIS */
-  .graph-view { flex: 1; padding: 20px; background: var(--bg-base); overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
-  .overall-kpi-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-  .kpi-tile { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; }
-  .kpi-title { font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
-  .kpi-number { font-size: 22px; font-weight: 800; color: var(--text-main); }
-  .project-health-container { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 22px; display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; gap: 20px; }
 
   /* DOC SECTION (SPLIT VIEW & RAW EDITOR) */
   .doc-split-editor { flex: 1; display: flex; gap: 12px; height: 100%; overflow: hidden; }
@@ -179,7 +134,6 @@
   .doc-preview-pane { flex: 1; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 22px; overflow-y: auto; font-size: 14px; line-height: 1.7; }
   .doc-preview-pane h1 { font-size: 22px; margin-bottom: 12px; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 6px; }
   .doc-preview-pane h2 { font-size: 18px; margin: 16px 0 8px; color: var(--doc-color); }
-  .doc-preview-pane h3 { font-size: 15px; margin: 12px 0 6px; color: var(--sheet-color); }
   .math-formula { background: rgba(56, 189, 248, 0.1); color: #38bdf8; padding: 2px 6px; border-radius: 4px; font-family: serif; border: 1px solid rgba(56, 189, 248, 0.25); }
 
   /* TEXT SELECTION & COPY PERMISSION */
@@ -191,4 +145,323 @@
   .active-pill.active-focused { background: var(--border); box-shadow: 0 0 6px var(--accent-glow); }
 
   /* CONTACT PANEL */
-  .contact-panel-container { flex: 1
+  .contact-panel-container { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 20px; background: var(--bg-base); }
+  .contact-hero-card { background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95)); border: 1px solid var(--border); border-radius: 12px; padding: 24px 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+  .contact-big-avatar { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; font-size: 24px; font-weight: 900; display: flex; align-items: center; justify-content: center; }
+  .contact-grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .contact-channel-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; justify-content: space-between; gap: 14px; }
+  .channel-action-btn { width: 100%; padding: 9px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-card-header); color: var(--text-main); font-size: 12px; font-weight: 700; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; }
+  .channel-action-btn:hover { background: var(--accent); color: #090d16; border-color: var(--accent); }
+</style>
+</head>
+<body class="theme-dark">
+
+<!-- TOP HEADER -->
+<header>
+  <div class="header-left-group">
+    <button class="sidebar-toggle-btn" onclick="toggleSidebar()" title="Toggle Sidebar">☰</button>
+    <div class="header-brand">
+      <span class="brand-chip">POWERSHARE</span>
+      <span>Aerospace Smart MGSE Hub</span>
+    </div>
+    <span class="mode-indicator-badge mode-admin">Full Access</span>
+  </div>
+
+  <div class="header-actions">
+    <select class="theme-select" id="theme-selector" onchange="changeTheme(this.value)">
+      <option value="theme-dark" selected>🌌 Deep Dark (Aerospace)</option>
+      <option value="theme-light">☀️ Cleanroom Light</option>
+    </select>
+
+    <div class="view-mode-toggle">
+      <button class="mode-toggle-btn active" id="btn-mode-full" onclick="setViewMode('fullscreen')">🖥️ Complete</button>
+      <button class="mode-toggle-btn" id="btn-mode-split" onclick="setViewMode('split')">🪟 Split</button>
+    </div>
+
+    <!-- User Profile Dropdown -->
+    <div class="user-profile-menu">
+      <div class="user-pill-btn" onclick="toggleUserDropdown()">
+        <div class="user-avatar-badge">YD</div>
+        <span class="user-pill-name">Yeriswamy DV</span>
+        <span style="font-size:10px; color:#94a3b8;">▼</span>
+      </div>
+
+      <div class="user-dropdown-card" id="user-dropdown">
+        <div class="dropdown-header-info">
+          <div class="name" style="font-weight:800;">Yeriswamy DV</div>
+          <div class="role" style="font-size:11px; color:var(--text-muted);">Product Sustaining Engineer</div>
+        </div>
+        <div class="dropdown-action-item" onclick="window.open('https://yeriswamydv.github.io/', '_blank')">🌐 Yeriswamy Portfolio</div>
+        <div class="dropdown-action-item" onclick="window.open('https://www.linkedin.com/in/yeriswamydv/', '_blank')">💼 LinkedIn Profile</div>
+        <div class="dropdown-action-item" onclick="location.href='mailto:yeriswamy.dv@gmail.com'">✉️ yeriswamy.dv@gmail.com</div>
+        <div class="dropdown-action-item" onclick="location.href='tel:+917022556720'">📞 +91-7022556720</div>
+        <div class="dropdown-action-item" onclick="location.href='tel:+918660524595'">📱 +91-8660524595</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="workspace-layout">
+  <!-- SIDEBAR WITH MY PROJECTS & PROJECT-1 ACCORDION DROPDOWN -->
+  <aside class="left-sidebar" id="app-sidebar">
+    <div>
+      <div class="nav-group-title">My Projects</div>
+
+      <div class="project-folder-group" style="margin-bottom:6px;">
+        <div class="project-folder-header" onclick="toggleProject1Collapse()" style="display:flex; align-items:center; justify-content:space-between; padding:9px 12px; border-radius:8px; background:var(--bg-card); cursor:pointer; font-size:13px; font-weight:700; color:var(--text-main);">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span>📁</span>
+            <span class="tool-label">Project-1 (MGSE)</span>
+          </div>
+          <span class="tool-label" id="project1-chevron" style="font-size:11px; color:var(--text-muted); font-weight:800;">▾</span>
+        </div>
+
+        <div class="project-sub-list" id="project1-sublist" style="margin-left:12px; padding-left:8px; border-left:2px solid var(--border); display:flex; flex-direction:column; gap:4px; margin-top:6px;">
+          <button class="tool-item-btn active-tool" id="btn-tool-sheet" data-tool="sheet" onclick="handleToolClick('sheet')">
+            <div class="tool-icon-text"><span style="font-size:15px;">📊</span><span class="tool-label">Sheet Ledger</span></div>
+            <span class="indicator-dot"></span>
+          </button>
+          <button class="tool-item-btn" id="btn-tool-doc" data-tool="doc" onclick="handleToolClick('doc')">
+            <div class="tool-icon-text"><span style="font-size:15px;">📝</span><span class="tool-label">Doc & Tech Spec</span></div>
+            <span class="indicator-dot"></span>
+          </button>
+          <button class="tool-item-btn" id="btn-tool-ppt" data-tool="ppt" onclick="handleToolClick('ppt')">
+            <div class="tool-icon-text"><span style="font-size:15px;">📽️</span><span class="tool-label">PowerPoint Deck</span></div>
+            <span class="indicator-dot"></span>
+          </button>
+          <button class="tool-item-btn" id="btn-tool-graph" data-tool="graph" onclick="handleToolClick('graph')">
+            <div class="tool-icon-text"><span style="font-size:15px;">📈</span><span class="tool-label">3-Pillar Graphs</span></div>
+            <span class="indicator-dot"></span>
+          </button>
+          <button class="tool-item-btn" id="btn-tool-vault" data-tool="vault" onclick="handleToolClick('vault')">
+            <div class="tool-icon-text"><span style="font-size:15px;">📦</span><span class="tool-label">CAD Models Vault</span></div>
+            <span class="indicator-dot"></span>
+          </button>
+          <button class="tool-item-btn" id="btn-tool-drawings" data-tool="drawings" onclick="handleToolClick('drawings')">
+            <div class="tool-icon-text"><span style="font-size:15px;">📐</span><span class="tool-label">Drawing PDFs & Prints</span></div>
+            <span class="indicator-dot"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Contact & Connect outside Project-1 -->
+      <div style="margin-top: 12px;">
+        <div class="nav-group-title">INFO & REACH OUT</div>
+        <button class="tool-item-btn" id="btn-tool-contact" data-tool="contact" onclick="handleToolClick('contact')">
+          <div class="tool-icon-text"><span style="font-size:16px;">📬</span><span class="tool-label">Contact & Connect</span></div>
+          <span class="indicator-dot"></span>
+        </button>
+      </div>
+    </div>
+
+    <div style="border-top:1px solid var(--border); padding-top:10px;">
+      <button class="tool-item-btn" onclick="toggleSidebar()" style="justify-content:center;">
+        <span id="bottom-toggle-icon">◀</span>
+        <span class="tool-label" style="margin-left:8px;">Close Sidebar</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- CANVAS STAGE -->
+  <main class="canvas-stage mode-fullscreen" id="canvas-stage"></main>
+</div>
+
+<!-- BOTTOM TASKBAR -->
+<footer class="bottom-taskbar">
+  <div style="font-size:11px; color:var(--text-muted); display:flex; align-items:center; gap:8px;">
+    <span>Active Tool:</span>
+    <div id="active-pills-container" style="display:flex; gap:6px;"></div>
+  </div>
+  <div style="font-size:11px; color:var(--text-muted);">Mode: Complete Screen</div>
+</footer>
+
+<script>
+let isSidebarCollapsed = false;
+function toggleSidebar() {
+  isSidebarCollapsed = !isSidebarCollapsed;
+  document.getElementById("app-sidebar").classList.toggle("collapsed", isSidebarCollapsed);
+}
+
+let isProject1Expanded = true;
+function toggleProject1Collapse() {
+  isProject1Expanded = !isProject1Expanded;
+  document.getElementById("project1-sublist").style.display = isProject1Expanded ? "flex" : "none";
+  document.getElementById("project1-chevron").innerText = isProject1Expanded ? "▾" : "▸";
+}
+
+function toggleUserDropdown() {
+  document.getElementById("user-dropdown").classList.toggle("show");
+}
+
+/* WORKSPACE DATA & APP STATE */
+const workspaceData = {
+  sheetHeaders: ["Discipline", "Component / Parameter", "Design Value", "Unit", "Safety Margin", "Status"],
+  sheet: [
+    ["Mechanical CAD", "Top Base Ring Blank (Al 7075-T6)", "750.0", "mm OD", "30mm Billet, 68% Pocketed", "Completed"],
+    ["Mechanical CAD", "Isogrid Pocket Pattern & Ribs", "60.0", "mm pitch", "3.0mm Rib, R3 Fillets", "Completed"],
+    ["Electronics", "48V LiFePO4 Energy Architecture", "720.0", "Wh", "Isolated Cleanroom Pack", "Completed"],
+    ["Mechatronics", "BLDC Motors & Roller Screws", "6x", "Units", "Zero-backlash actuators", "In Progress"]
+  ],
+  docSections: [
+    {
+      title: "1. Mechanical CAD & Kinematics",
+      content: "## MECHANICAL CAD & STRUCTURAL INTEGRITY\n\nTop-level summary of the Mechanical Ground Support Equipment (MGSE) architecture for ICEYE microsatellites.\n\n- Machined from solid Al 7075-T6 billet (Ø750mm OD x 30mm thickness).\n- 68% mass reduction through equilateral triangular pocketing.\n- Critical Euler column buckling capacity: $P_{cr} = 64.8\\text{ kN}$ ($MS = +44.6$)."
+    }
+  ],
+  slides: [
+    { title: "Smart MGSE: Connected Assembly & Lifting", tag: "Slide 1", body: "• Tailored for ICEYE-class SAR microsatellites.\n• 6-DoF Stewart-Gough active-compliance rig.\n• Damps crane sway to < 2 N touch guidance." }
+  ]
+};
+
+let viewMode = 'fullscreen';
+let focusedTool = 'sheet';
+let splitOpenTools = { sheet: true, graph: true, doc: false, ppt: false, vault: false, drawings: false, contact: false };
+let docMode = 'split';
+let activeDocSelection = { mainIndex: 0, subIndex: null };
+let currentSlideIndex = 0;
+
+function handleToolClick(tool) {
+  if (viewMode === 'fullscreen') focusedTool = tool;
+  else splitOpenTools[tool] = !splitOpenTools[tool];
+  renderAll();
+}
+
+function setViewMode(mode) {
+  viewMode = mode;
+  document.getElementById('btn-mode-full').classList.toggle('active', mode === 'fullscreen');
+  document.getElementById('btn-mode-split').classList.toggle('active', mode === 'split');
+  document.getElementById('canvas-stage').classList.toggle('mode-fullscreen', mode === 'fullscreen');
+  document.getElementById('canvas-stage').classList.toggle('mode-split', mode === 'split');
+  renderAll();
+}
+
+function setDocDisplayMode(mode) {
+  docMode = mode;
+  renderAll();
+}
+
+/* RENDERERS */
+function buildSheetPanel(isSplit) {
+  const panel = document.createElement("div");
+  panel.className = "window-panel";
+  panel.innerHTML = `
+    <div class="window-header">
+      <div class="window-title" style="color:var(--sheet-color);"><span>📊</span> Engineering Spreadsheet Ledger</div>
+      ${isSplit ? '<button class="btn-icon btn-icon-danger" onclick="closeToolInSplit(\'sheet\')">✕</button>' : ''}
+    </div>
+    <div class="window-content">
+      <div class="sheet-scroll">
+        <table class="sheet-table">
+          <thead><tr><th>#</th>${workspaceData.sheetHeaders.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
+          <tbody>
+            ${workspaceData.sheet.map((r, i)=>`<tr><td>${i+1}</td>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+  return panel;
+}
+
+function buildDocPanel(isSplit) {
+  const panel = document.createElement("div");
+  panel.className = "window-panel";
+  const sec = workspaceData.docSections[activeDocSelection.mainIndex] || workspaceData.docSections[0];
+
+  panel.innerHTML = `
+    <div class="window-header">
+      <div class="window-title" style="color:var(--doc-color);"><span>📝</span> Technical Engineering Documentation</div>
+      <div class="window-controls" style="display:flex; align-items:center; gap:8px;">
+        <div class="view-mode-toggle" style="background:var(--bg-card); padding:2px;">
+          <button class="mode-toggle-btn ${docMode === 'split' ? 'active' : ''}" onclick="setDocDisplayMode('split')">🌓 Split View</button>
+          <button class="mode-toggle-btn ${docMode === 'preview' ? 'active' : ''}" onclick="setDocDisplayMode('preview')">👁️ Live Formatted</button>
+          <button class="mode-toggle-btn ${docMode === 'edit' ? 'active' : ''}" onclick="setDocDisplayMode('edit')">✏️ Raw Editor</button>
+        </div>
+        ${isSplit ? '<button class="btn-icon btn-icon-danger" onclick="closeToolInSplit(\'doc\')">✕</button>' : ''}
+      </div>
+    </div>
+    <div class="window-content" style="flex:1; display:flex; flex-direction:column; overflow:hidden; padding:0;">
+      <div class="doc-split" style="display:flex; flex:1; overflow:hidden;">
+        <!-- Left Side: Raw Source Box (Select & Copy Enabled) -->
+        ${docMode !== 'preview' ? `
+          <div class="doc-pane" style="${docMode === 'edit' ? 'flex:1;' : 'flex:1; border-right:1px solid var(--border); padding:16px;'}">
+            <div style="font-size:10px; font-weight:700; color:var(--text-muted); margin-bottom:6px;">MARKDOWN / LATEX SOURCE (SELECT & COPY ENABLED)</div>
+            <textarea class="doc-textarea" style="flex:1; width:100%; background:transparent; border:none; color:var(--text-main); font-family:inherit; font-size:13px; line-height:1.6; resize:none; outline:none;" oninput="workspaceData.docSections[activeDocSelection.mainIndex].content=this.value; renderAll();">${sec.content}</textarea>
+          </div>
+        ` : ''}
+        <!-- Right Side: Live Formatted Preview -->
+        ${docMode !== 'edit' ? `
+          <div class="doc-pane" style="flex:1; padding:16px;">
+            <div style="font-size:10px; font-weight:700; color:var(--accent); margin-bottom:6px;">LIVE FORMATTED PREVIEW</div>
+            <div class="doc-preview-pane">
+              <h2>${sec.title}</h2>
+              <p style="margin-top:10px; white-space:pre-wrap;">${sec.content}</p>
+            </div>
+          </div>
+        ` : ''}
+      </div>
+    </div>
+  `;
+  return panel;
+}
+
+function buildPptPanel(isSplit) {
+  const slide = workspaceData.slides[currentSlideIndex];
+  const panel = document.createElement("div");
+  panel.className = "window-panel";
+  panel.innerHTML = `
+    <div class="window-header">
+      <div class="window-title" style="color:var(--ppt-color);"><span>📽️</span> Presentation Slide Deck</div>
+      ${isSplit ? '<button class="btn-icon btn-icon-danger" onclick="closeToolInSplit(\'ppt\')">✕</button>' : ''}
+    </div>
+    <div class="symbols-toolbar">
+      <button class="sym-btn" onclick="if(currentSlideIndex>0){currentSlideIndex--; renderAll();}">◀ Prev</button>
+      <span style="font-size:12px; font-weight:800;">Slide ${currentSlideIndex + 1} of ${workspaceData.slides.length}</span>
+      <button class="sym-btn" onclick="if(currentSlideIndex<workspaceData.slides.length-1){currentSlideIndex++; renderAll();}">Next ▶</button>
+    </div>
+    <div class="window-content">
+      <div class="ppt-view">
+        <div class="ppt-slide-card">
+          <div class="ppt-slide-title" contenteditable="true" onblur="workspaceData.slides[currentSlideIndex].title=this.innerText">${slide.title}</div>
+          <div class="ppt-slide-body" contenteditable="true" onblur="workspaceData.slides[currentSlideIndex].body=this.innerText">${slide.body}</div>
+          <div class="ppt-slide-footer"><span>Project-1 (MGSE) Deck</span><span>Slide ${currentSlideIndex + 1}</span></div>
+        </div>
+      </div>
+    </div>
+  `;
+  return panel;
+}
+
+function buildGraphPanel(isSplit) {
+  const panel = document.createElement("div");
+  panel.className = "window-panel";
+  panel.innerHTML = `
+    <div class="window-header"><div class="window-title" style="color:var(--graph-color);"><span>📈</span> 3-Pillar Graphs & KPIs</div>${isSplit ? '<button class="btn-icon btn-icon-danger" onclick="closeToolInSplit(\'graph\')">✕</button>' : ''}</div>
+    <div class="window-content"><div class="graph-view"><div class="overall-kpi-bar"><div class="kpi-tile"><div class="kpi-title">Completed Tasks</div><div class="kpi-number" style="color:var(--status-green);">2 (50%)</div></div><div class="kpi-tile"><div class="kpi-title">In Progress</div><div class="kpi-number" style="color:var(--status-yellow);">1</div></div></div></div></div>
+  `;
+  return panel;
+}
+
+function buildVaultPanel(isSplit) {
+  const panel = document.createElement("div");
+  panel.className = "window-panel";
+  panel.innerHTML = `
+    <div class="window-header"><div class="window-title" style="color:var(--vault-color);"><span>📦</span> CAD Models Vault Explorer</div>${isSplit ? '<button class="btn-icon btn-icon-danger" onclick="closeToolInSplit(\'vault\')">✕</button>' : ''}</div>
+    <div class="window-content" style="padding:20px; color:var(--text-muted); font-size:13px;">CAD Assemblies: TOP_BASE_ISOGRID_REV_C.sldprt, HEXALIFT_6DOF_TOP_ASSY.sldasm</div>
+  `;
+  return panel;
+}
+
+function buildDrawingsPanel(isSplit) {
+  const panel = document.createElement("div");
+  panel.className = "window-panel";
+  panel.innerHTML = `
+    <div class="window-header"><div class="window-title" style="color:var(--dwg-color);"><span>📐</span> Drawing PDFs & Prints</div>${isSplit ? '<button class="btn-icon btn-icon-danger" onclick="closeToolInSplit(\'drawings\')">✕</button>' : ''}</div>
+    <div class="window-content" style="padding:20px; color:var(--text-muted); font-size:13px;">Fabrication Prints: DWG_ISOGRID_BASE_PLATE_A1.pdf, DWG_TOLERANCE_STACKUP_RING.pdf</div>
+  `;
+  return panel;
+}
+
+function buildContactPanel(isSplit) {
+  const panel = document.createElement("div");
+  panel
