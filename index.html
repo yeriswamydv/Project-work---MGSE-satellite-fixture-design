@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PowerShare Studio v26 | Aerospace Smart MGSE Hub</title>
+<title>PowerShare Studio v28 | Aerospace Smart MGSE Hub</title>
 <style>
   :root {
     --bg-base: #090d16;
@@ -875,65 +875,82 @@
 
 <div class="workspace-layout">
   <!-- EXPANDABLE / COLLAPSIBLE LEFT SIDEBAR -->
-  <aside class="left-sidebar" id="app-sidebar">
+    <aside class="left-sidebar" id="app-sidebar">
     <div>
-      <div class="nav-group-title">WORKSPACE APPS</div>
+      <div class="nav-group-title">My Projects</div>
 
-      <button class="tool-item-btn active-tool" id="btn-tool-sheet" data-tool="sheet" onclick="handleToolClick('sheet')">
-        <div class="tool-icon-text">
-          <span style="font-size:16px;">📊</span>
-          <span class="tool-label">Sheet Ledger</span>
+      <!-- Project-1 Accordion Dropdown -->
+      <div class="project-folder-group" style="margin-bottom:6px;">
+        <div class="project-folder-header" onclick="toggleProject1Collapse()" style="display:flex; align-items:center; justify-content:space-between; padding:9px 12px; border-radius:8px; background:var(--bg-card); cursor:pointer; font-size:13px; font-weight:700; color:var(--text-main); transition:background 0.15s ease;">
+          <div style="display:flex; align-items:center; gap:8px; overflow:hidden;">
+            <span>📁</span>
+            <span class="tool-label" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Project-1 (MGSE)</span>
+          </div>
+          <span class="tool-label" id="project1-chevron" style="font-size:11px; color:var(--text-muted); font-weight:800;">▾</span>
         </div>
-        <span class="indicator-dot"></span>
-      </button>
 
-      <button class="tool-item-btn" id="btn-tool-doc" data-tool="doc" onclick="handleToolClick('doc')">
-        <div class="tool-icon-text">
-          <span style="font-size:16px;">📝</span>
-          <span class="tool-label">Doc & Tech Spec</span>
-        </div>
-        <span class="indicator-dot"></span>
-      </button>
+        <div class="project-sub-list" id="project1-sublist" style="margin-left:12px; padding-left:8px; border-left:2px solid var(--border); display:flex; flex-direction:column; gap:4px; margin-top:6px;">
+          <button class="tool-item-btn active-tool" id="btn-tool-sheet" data-tool="sheet" onclick="handleToolClick('sheet')">
+            <div class="tool-icon-text">
+              <span style="font-size:15px;">📊</span>
+              <span class="tool-label">Sheet Ledger</span>
+            </div>
+            <span class="indicator-dot"></span>
+          </button>
 
-      <button class="tool-item-btn" id="btn-tool-ppt" data-tool="ppt" onclick="handleToolClick('ppt')">
-        <div class="tool-icon-text">
-          <span style="font-size:16px;">📽️</span>
-          <span class="tool-label">PowerPoint Deck</span>
-        </div>
-        <span class="indicator-dot"></span>
-      </button>
+          <button class="tool-item-btn" id="btn-tool-doc" data-tool="doc" onclick="handleToolClick('doc')">
+            <div class="tool-icon-text">
+              <span style="font-size:15px;">📝</span>
+              <span class="tool-label">Doc & Tech Spec</span>
+            </div>
+            <span class="indicator-dot"></span>
+          </button>
 
-      <button class="tool-item-btn" id="btn-tool-graph" data-tool="graph" onclick="handleToolClick('graph')">
-        <div class="tool-icon-text">
-          <span style="font-size:16px;">📈</span>
-          <span class="tool-label">3-Pillar Graphs</span>
-        </div>
-        <span class="indicator-dot"></span>
-      </button>
+          <button class="tool-item-btn" id="btn-tool-ppt" data-tool="ppt" onclick="handleToolClick('ppt')">
+            <div class="tool-icon-text">
+              <span style="font-size:15px;">📽️</span>
+              <span class="tool-label">PowerPoint Deck</span>
+            </div>
+            <span class="indicator-dot"></span>
+          </button>
 
-      <button class="tool-item-btn" id="btn-tool-vault" data-tool="vault" onclick="handleToolClick('vault')">
-        <div class="tool-icon-text">
-          <span style="font-size:16px;">📦</span>
-          <span class="tool-label">CAD Models Vault</span>
-        </div>
-        <span class="indicator-dot"></span>
-      </button>
+          <button class="tool-item-btn" id="btn-tool-graph" data-tool="graph" onclick="handleToolClick('graph')">
+            <div class="tool-icon-text">
+              <span style="font-size:15px;">📈</span>
+              <span class="tool-label">3-Pillar Graphs</span>
+            </div>
+            <span class="indicator-dot"></span>
+          </button>
 
-      <button class="tool-item-btn" id="btn-tool-drawings" data-tool="drawings" onclick="handleToolClick('drawings')">
-        <div class="tool-icon-text">
-          <span style="font-size:16px;">📐</span>
-          <span class="tool-label">Drawing PDFs & Prints</span>
-        </div>
-        <span class="indicator-dot"></span>
-      </button>
+          <button class="tool-item-btn" id="btn-tool-vault" data-tool="vault" onclick="handleToolClick('vault')">
+            <div class="tool-icon-text">
+              <span style="font-size:15px;">📦</span>
+              <span class="tool-label">CAD Models Vault</span>
+            </div>
+            <span class="indicator-dot"></span>
+          </button>
 
-      <button class="tool-item-btn" id="btn-tool-contact" data-tool="contact" onclick="handleToolClick('contact')">
-        <div class="tool-icon-text">
-          <span style="font-size:16px;">📬</span>
-          <span class="tool-label">Contact & Connect</span>
+          <button class="tool-item-btn" id="btn-tool-drawings" data-tool="drawings" onclick="handleToolClick('drawings')">
+            <div class="tool-icon-text">
+              <span style="font-size:15px;">📐</span>
+              <span class="tool-label">Drawing PDFs & Prints</span>
+            </div>
+            <span class="indicator-dot"></span>
+          </button>
         </div>
-        <span class="indicator-dot"></span>
-      </button>
+      </div>
+
+      <!-- Contact & Connect outside Project-1 -->
+      <div style="margin-top: 12px;">
+        <div class="nav-group-title">INFO & REACH OUT</div>
+        <button class="tool-item-btn" id="btn-tool-contact" data-tool="contact" onclick="handleToolClick('contact')">
+          <div class="tool-icon-text">
+            <span style="font-size:16px;">📬</span>
+            <span class="tool-label">Contact & Connect</span>
+          </div>
+          <span class="indicator-dot"></span>
+        </button>
+      </div>
     </div>
 
     <!-- Sidebar Bottom Toggle Footer -->
@@ -944,6 +961,7 @@
       </button>
     </div>
   </aside>
+
 
   <!-- CANVAS STAGE -->
   <main class="canvas-stage mode-fullscreen" id="canvas-stage"></main>
@@ -1180,7 +1198,31 @@ const defaultDocSections = [
   {
     id: "sec-1",
     title: "1. Mechanical CAD & Kinematics",
-    content: "## MECHANICAL CAD & STRUCTURAL INTEGRITY\n\nTop-level summary of the Mechanical Ground Support Equipment (MGSE) architecture for ICEYE microsatellites.\n\n- Machined from solid Al 7075-T6 billet (Ø750mm OD x 30mm thickness).\n- 68% mass reduction through equilateral triangular pocketing.\n- Critical Euler column buckling capacity: $P_{cr} = 64.8\\text{ kN}$ ($MS = +44.6$)."
+    content: "## MECHANICAL CAD & STRUCTURAL INTEGRITY\n\nTop-level summary of the Mechanical Ground Support Equipment (MGSE) architecture for ICEYE microsatellites.\n\n- Machined from solid Al 7075-T6 billet (Ø750mm OD x 30mm thickness).\n- 68% mass reduction through equilateral triangular pocketing.\n- Critical Euler column buckling capacity: $P_{cr} = 64.8\\text{ kN}$ ($MS = +44.6$).",
+    subsections: [
+      {
+        id: "sub-1-1",
+        title: "1.1 Top Base Isogrid Plate",
+        content: "### TOP BASE ISOGRID SPECIFICATIONS\n\n- Machined from solid Al 7075-T6 billet (Ø750mm OD x 30mm thickness).\n- 68% mass reduction through equilateral triangular pocketing (60mm pitch, 3.0mm rib thickness, 3.5mm skin).\n- Internal corner fillets: R3.0mm to eliminate notch stress concentration under crane hoisting loads."
+      },
+      {
+        id: "sub-1-2",
+        title: "1.2 Stewart-Gough Strut Kinematics",
+        content: "### 6-UPS PARALLEL KINEMATICS & SIZING\n\n- 6x electromechanical linear struts oriented at 25° nominal angle.\n- Sized to withstand 5.52 kN Design Yield Load (FoS >= 3.0, Kdyn = 1.5 per ECSS-E-ST-32-10C).\n- Euler column critical buckling load: P_cr = 64.8 kN, providing a +44.6 margin of safety."
+      }
+    ]
+  },
+  {
+    id: "sec-2",
+    title: "2. Cleanroom Electronics & Power",
+    content: "## CLEANROOM ELECTRONICS & ELECTRICAL ARCHITECTURE\n\nOverview of the isolated power distribution and cleanroom safety compliance.",
+    subsections: [
+      {
+        id: "sub-2-1",
+        title: "2.1 48V Power Supply & Battery",
+        content: "### 48V DC ENERGY ARCHITECTURE\n\n- Powered by an onboard 48V 15Ah (720 Wh) LiFePO4 battery pack with inductive docking opportunity charging."
+      }
+    ]
   }
 ];
 
@@ -1359,7 +1401,7 @@ function triggerSmartDownload(fileName, customUrl) {
 }
 
 function fallbackBlobDownload(fileName) {
-  let content = "PowerShare Studio v26 - Aerospace MGSE File Archive\nFile: " + fileName + "\nProject: ICEYE MGSE Hub\n";
+  let content = "PowerShare Studio v28 - Aerospace MGSE File Archive\nFile: " + fileName + "\nProject: ICEYE MGSE Hub\n";
   const blob = new Blob([content], { type: 'application/octet-stream' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -2122,9 +2164,9 @@ function buildDocPanel(isSplit) {
                   <span style="font-size:10px; color:var(--text-muted); cursor:pointer;" title="Add sub-section" onclick="event.stopPropagation(); addSubDocSectionTo(${mIdx})">➕</span>
                 </div>
 
-                ${sec.subsections && sec.subsections.length > 0 ? `
+                ${(sec.subsections || []).length > 0 ? `
                   <div class="sub-section-list" style="margin-left:14px; border-left:2px solid var(--border); padding-left:6px; margin-top:4px; display:flex; flex-direction:column; gap:3px;">
-                    ${sec.subsections.map((sub, sIdx) => {
+                    ${(sec.subsections || []).map((sub, sIdx) => {
                       const isSubActive = (activeDocSelection.mainIndex === mIdx && activeDocSelection.subIndex === sIdx);
                       return `
                         <div class="sub-section-item ${isSubActive ? 'active' : ''}" onclick="selectDocSub(${mIdx}, ${sIdx})" style="padding:4px 8px; border-radius:4px; font-size:11px; color:${isSubActive ? 'var(--accent)' : 'var(--text-muted)'}; cursor:pointer; display:flex; align-items:center; justify-content:space-between; background:${isSubActive ? 'rgba(59, 130, 246, 0.25)' : 'transparent'};">
@@ -2344,7 +2386,7 @@ function changeTheme(theme) {
 }
 
 function saveState() {
-  localStorage.setItem("POWERSHARE_STUDIO_VAULT_V26", JSON.stringify(workspaceData));
+  localStorage.setItem("POWERSHARE_STUDIO_VAULT_V28", JSON.stringify(workspaceData));
 }
 
 
@@ -2422,6 +2464,20 @@ document.addEventListener('dragstart', function(e) {
     e.preventDefault();
   }
 });
+
+
+let isProject1Expanded = true;
+function toggleProject1Collapse() {
+  isProject1Expanded = !isProject1Expanded;
+  const sublist = document.getElementById("project1-sublist");
+  const chevron = document.getElementById("project1-chevron");
+  if (sublist) {
+    sublist.style.display = isProject1Expanded ? "flex" : "none";
+  }
+  if (chevron) {
+    chevron.innerText = isProject1Expanded ? "▾" : "▸";
+  }
+}
 
 window.addEventListener("DOMContentLoaded", () => {
   const savedUser = sessionStorage.getItem("POWERSHARE_CURRENT_USER");
