@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PowerShare Studio v24 | Aerospace Smart MGSE Hub</title>
+<title>PowerShare Studio v26 | Aerospace Smart MGSE Hub</title>
 <style>
   :root {
     --bg-base: #090d16;
@@ -778,12 +778,12 @@
     -webkit-touch-callout: none !important;
   }
 
-  /* Prevent text selection in textarea and preview panes */
-  textarea, input, .doc-textarea, .doc-preview-pane, td, th, p, li, h1, h2, h3, h4, span, div {
-    -webkit-user-select: none !important;
-    -moz-user-select: none !important;
-    -ms-user-select: none !important;
-    user-select: none !important;
+  /* Allow text selection and copying in textarea and document text */
+  textarea, input, .doc-textarea, .doc-preview-pane, td, th, p, li, h1, h2, h3, h4, span {
+    -webkit-user-select: text !important;
+    -moz-user-select: text !important;
+    -ms-user-select: text !important;
+    user-select: text !important;
   }
 
   /* DISABLE SELECT & DRAG ON SENSITIVE CANVAS ELEMENTS */
@@ -1359,7 +1359,7 @@ function triggerSmartDownload(fileName, customUrl) {
 }
 
 function fallbackBlobDownload(fileName) {
-  let content = "PowerShare Studio v24 - Aerospace MGSE File Archive\nFile: " + fileName + "\nProject: ICEYE MGSE Hub\n";
+  let content = "PowerShare Studio v26 - Aerospace MGSE File Archive\nFile: " + fileName + "\nProject: ICEYE MGSE Hub\n";
   const blob = new Blob([content], { type: 'application/octet-stream' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -1864,32 +1864,52 @@ function closePdfModal() {
 }
 
 /* PPT & GRAPH PANELS */
+
+/* ========================================================================= */
+/* PANEL 3: POWERPOINT (FULL SLIDE DECK WITH EDITING & CONTROLS)            */
+/* ========================================================================= */
 function buildPptPanel(isSplit) {
   const curSlide = workspaceData.slides[currentSlideIndex] || workspaceData.slides[0];
   const panel = document.createElement("div");
   panel.className = "window-panel";
+  const isGuest = !userAccounts[activeUserKey].canDownload;
 
   let bulletHtml = "<ul>";
-  curSlide.body.split("\n").forEach(line => {
+  curSlide.body.split('\n').forEach(line => {
     if (line.trim()) bulletHtml += `<li>${line.replace(/^•\s*/, '')}</li>`;
   });
   bulletHtml += "</ul>";
 
   panel.innerHTML = `
     <div class="window-header">
-      <div class="window-title" style="color:var(--ppt-color);"><span>📽️</span> Presentation Slide Deck</div>
-      <div class="window-controls">${isSplit ? `<button class="btn-icon btn-icon-danger" style="padding:2px 6px;" onclick="closeToolInSplit('ppt')">✕</button>` : ''}</div>
+      <div class="window-title" style="color:var(--ppt-color);">
+        <span>📽️</span> Presentation Slide Deck
+      </div>
+      <div class="window-controls">
+        ${isSplit ? `<button class="btn-icon btn-icon-danger" style="padding:2px 6px;" onclick="closeToolInSplit('ppt')">✕</button>` : ''}
+      </div>
     </div>
+
     <div class="symbols-toolbar">
-      <button class="sym-btn" onclick="if(currentSlideIndex>0){currentSlideIndex--; renderAll();}">◀ Prev</button>
+      <button class="sym-btn" onclick="prevSlide()" title="Previous Slide">◀ Prev</button>
       <span style="font-size:12px; font-weight:800; color:var(--text-main); margin:0 4px;">Slide ${currentSlideIndex + 1} of ${workspaceData.slides.length}</span>
-      <button class="sym-btn" onclick="if(currentSlideIndex<workspaceData.slides.length-1){currentSlideIndex++; renderAll();}">Next ▶</button>
+      <button class="sym-btn" onclick="nextSlide()" title="Next Slide">Next ▶</button>
+      <div class="sym-divider"></div>
+      <button class="sym-btn ${isGuest ? 'disabled-read-only' : ''}" onclick="${isGuest ? 'alertGuestBlocked()' : 'addNewSlide()'}" title="Add Slide">➕ Add Slide</button>
+      <button class="sym-btn sym-btn-danger ${isGuest ? 'disabled-read-only' : ''}" onclick="${isGuest ? 'alertGuestBlocked()' : 'deleteCurrentSlide()'}" title="Delete Slide">🗑️ Delete Slide</button>
+      <div class="sym-divider"></div>
+      <span style="font-size:11px; color:var(--text-muted);">${curSlide.tag || ''}</span>
     </div>
+
     <div class="window-content">
       <div class="ppt-view">
         <div class="ppt-slide-card">
-          <div class="ppt-slide-title">${curSlide.title}</div>
-          <div class="ppt-slide-body">${bulletHtml}</div>
+          <div class="ppt-slide-title" ${isGuest ? '' : 'contenteditable="true"'} onblur="saveSlideTitle(this.innerText)">
+            ${curSlide.title}
+          </div>
+          <div class="ppt-slide-body" ${isGuest ? '' : 'contenteditable="true"'} id="ppt-body-editor" onblur="saveSlideBody()">
+            ${bulletHtml}
+          </div>
           <div class="ppt-slide-footer">
             <span>ICEYE Smart MGSE System • Mechanical CAD, Electronics & Mechatronics</span>
             <span>Slide ${currentSlideIndex + 1} of ${workspaceData.slides.length}</span>
@@ -1900,6 +1920,37 @@ function buildPptPanel(isSplit) {
   `;
   return panel;
 }
+
+function prevSlide() { if (currentSlideIndex > 0) { currentSlideIndex--; renderAll(); } }
+function nextSlide() { if (currentSlideIndex < workspaceData.slides.length - 1) { currentSlideIndex++; renderAll(); } }
+function saveSlideTitle(val) { workspaceData.slides[currentSlideIndex].title = val.trim(); saveState(); }
+function saveSlideBody() {
+  const items = document.querySelectorAll("#ppt-body-editor li");
+  let text = "";
+  items.forEach(li => { text += "• " + li.innerText + "\n"; });
+  if (text) workspaceData.slides[currentSlideIndex].body = text.trim();
+  saveState();
+}
+function addNewSlide() {
+  workspaceData.slides.push({
+    title: "New Presentation Slide",
+    tag: "Custom Feature",
+    body: "• Point 1: Detail design milestone\n• Point 2: Highlight aerospace verification"
+  });
+  currentSlideIndex = workspaceData.slides.length - 1;
+  renderAll();
+  saveState();
+}
+function deleteCurrentSlide() {
+  if (workspaceData.slides.length <= 1) { alert("Cannot delete the last remaining slide."); return; }
+  if (confirm(`Delete current slide: "${workspaceData.slides[currentSlideIndex].title}"?`)) {
+    workspaceData.slides.splice(currentSlideIndex, 1);
+    if (currentSlideIndex >= workspaceData.slides.length) currentSlideIndex = workspaceData.slides.length - 1;
+    renderAll();
+    saveState();
+  }
+}
+
 
 function buildGraphPanel(isSplit) {
   const panel = document.createElement("div");
@@ -1978,157 +2029,238 @@ function buildGraphPanel(isSplit) {
 }
 
 /* DOC PANEL */
+
+/* ========================================================================= */
+/* PANEL 2: DOC & TECH SPEC (RESTORED TREE NAV, SPLIT MODES & FORMAT TOOLS)  */
+/* ========================================================================= */
+function getActiveDocObject() {
+  const mIdx = activeDocSelection.mainIndex;
+  const mainSec = workspaceData.docSections[mIdx] || workspaceData.docSections[0];
+  if (activeDocSelection.subIndex !== null && mainSec.subsections && mainSec.subsections[activeDocSelection.subIndex]) {
+    return { isSub: true, obj: mainSec.subsections[activeDocSelection.subIndex], mainIdx: mIdx, subIdx: activeDocSelection.subIndex };
+  }
+  return { isSub: false, obj: mainSec, mainIdx: mIdx, subIdx: null };
+}
+
+function setDocDisplayMode(mode) {
+  docMode = mode;
+  renderAll();
+}
+
+function parseMarkdownAndMath(text) {
+  if (!text) return '<p style="color:var(--text-muted); font-style:italic;">No content in this section yet.</p>';
+
+  let processed = text
+    .replace(/\\varnothing/g, "Ø")
+    .replace(/\\times/g, "×")
+    .replace(/\$([^$]+)\$/g, '<span class="math-formula">$1</span>');
+
+  processed = processed.replace(/\[IMAGE:([^\]]+)\]/g, function(m, id) {
+    return renderImageMarkup(id);
+  });
+
+  return processed.split('\n').map(l => {
+    let trimmed = l.trim();
+    if (trimmed.startsWith('## ')) return `<h2>${trimmed.substring(3)}</h2>`;
+    if (trimmed.startsWith('### ')) return `<h3>${trimmed.substring(4)}</h3>`;
+    if (trimmed.startsWith('- ')) return `<li>${trimmed.substring(2)}</li>`;
+    return trimmed ? `<p>${trimmed}</p>` : '';
+  }).join('\n');
+}
+
 function buildDocPanel(isSplit) {
   const panel = document.createElement("div");
   panel.className = "window-panel";
+  const activeDoc = getActiveDocObject();
+  const renderedHtml = parseMarkdownAndMath(activeDoc.obj.content);
   const isGuest = !userAccounts[activeUserKey].canDownload;
 
   panel.innerHTML = `
     <div class="window-header">
-      <div class="window-title" style="color:var(--doc-color);"><span>📝</span> Technical Engineering Documentation</div>
+      <div class="window-title" style="color:var(--doc-color);">
+        <span>📝</span> Technical Engineering Documentation & Report Hub
+      </div>
       <div class="window-controls">
+        <div class="view-mode-toggle" style="background:var(--bg-card); padding:2px;">
+          <button class="mode-toggle-btn ${docMode === 'split' ? 'active' : ''}" style="font-size:10px; padding:2px 8px;" onclick="setDocDisplayMode('split')">🌓 Split View</button>
+          <button class="mode-toggle-btn ${docMode === 'preview' ? 'active' : ''}" style="font-size:10px; padding:2px 8px;" onclick="setDocDisplayMode('preview')">👁️ Live Formatted</button>
+          <button class="mode-toggle-btn ${docMode === 'edit' ? 'active' : ''}" style="font-size:10px; padding:2px 8px;" onclick="setDocDisplayMode('edit')">✏️ Raw Editor</button>
+        </div>
         <button class="btn-icon ${isGuest ? 'disabled-read-only' : ''}" onclick="${isGuest ? 'alertGuestBlocked()' : 'document.getElementById(\'doc-file-input\').click()'}">🖼️ Insert Image</button>
         <input type="file" id="doc-file-input" style="display:none;" accept="image/*" onchange="handleLocalImageUpload(this.files)">
-        ${isSplit ? `<button class="btn-icon btn-icon-danger" onclick="closeToolInSplit('doc')">✕</button>` : ''}
+        ${isSplit ? `<button class="btn-icon btn-icon-danger" style="padding:2px 6px;" onclick="closeToolInSplit('doc')">✕</button>` : ''}
       </div>
     </div>
-    <div class="window-content" style="padding:14px;">
-      <div class="doc-split-editor">
-        <div class="doc-pane" style="border-right:1px solid var(--border); padding-right:12px;">
-          <div style="font-size:10px; font-weight:800; color:var(--text-muted); margin-bottom:6px;">MARKDOWN / LATEX SOURCE</div>
-          <textarea class="doc-textarea" style="flex:1; width:100%; background:transparent; border:none; color:var(--text-main); font-family:inherit; resize:none; outline:none; user-select:none; -webkit-user-select:none;" id="doc-main-textarea" ${isGuest ? 'readonly onselectstart="return false;" onmousedown="if(!userAccounts[activeUserKey].canDownload) { event.preventDefault(); }"' : ''} oncopy="return false;" oncut="return false;" oninput="workspaceData.docSections[0].content=this.value; renderAll(); saveState();">${workspaceData.docSections[0].content}</textarea>
-        </div>
-        <div class="doc-pane">
-          <div style="font-size:10px; font-weight:800; color:var(--accent); margin-bottom:6px;">FORMATTED REPORT WITH ADJUSTABLE IMAGES</div>
-          <div class="doc-preview-pane">${parseDocContent(workspaceData.docSections[0].content)}</div>
-        </div>
-      </div>
-    </div>
-  `;
-  return panel;
-}
 
-
-/* ========================================================================= */
-/* PANEL 7: CONTACT & ENGINEERING NETWORK PANEL                             */
-/* ========================================================================= */
-function buildContactPanel(isSplit) {
-  const panel = document.createElement("div");
-  panel.className = "window-panel";
-
-  panel.innerHTML = `
-    <div class="window-header">
-      <div class="window-title" style="color:#38bdf8;">
-        <span>📬</span> Contact & Engineering Network • Yeriswamy DV
-      </div>
-      <div class="window-controls">
-        ${isSplit ? `<button class="btn-icon btn-icon-danger" style="padding:2px 6px;" onclick="closeToolInSplit('contact')">✕</button>` : ''}
-      </div>
+    <div class="symbols-toolbar">
+      <button class="sym-btn ${isGuest ? 'disabled-read-only' : ''}" onclick="${isGuest ? 'alertGuestBlocked()' : 'addMainDocSection()'}" title="Add Main Section">➕ Main Section</button>
+      <button class="sym-btn ${isGuest ? 'disabled-read-only' : ''}" onclick="${isGuest ? 'alertGuestBlocked()' : 'addSubDocSection()'}" title="Add Sub-section">➕ Sub-section</button>
+      <button class="sym-btn sym-btn-danger ${isGuest ? 'disabled-read-only' : ''}" onclick="${isGuest ? 'alertGuestBlocked()' : 'deleteActiveDocItem()'}" title="Delete Section">🗑️ Delete</button>
+      <div class="sym-divider"></div>
+      <button class="sym-btn" onclick="insertDocFormat('**', '**')"><strong>B</strong> Bold</button>
+      <button class="sym-btn" onclick="insertDocFormat('*', '*')"><em>I</em> Italic</button>
+      <button class="sym-btn" onclick="insertDocFormat('### ', '')">H3</button>
+      <button class="sym-btn" onclick="insertDocFormat('- ', '')">• List</button>
+      <button class="sym-btn" onclick="insertDocFormat('$', '$')">∑ Math</button>
     </div>
 
     <div class="window-content">
-      <div class="contact-panel-container">
-        <!-- Hero Header Card -->
-        <div class="contact-hero-card">
-          <div class="contact-profile-meta">
-            <div class="contact-big-avatar">YD</div>
-            <div>
-              <div class="contact-profile-title">Yeriswamy DV</div>
-              <div class="contact-profile-sub">
-                Product Sustaining Engineer & Mechanical Design Engineer<br>
-                Specializing in Precision Medical Devices, Mechanism Kinematics & Aerospace Ground Support Equipment (MGSE).
+      <div class="doc-split" style="display:flex; height:100%; overflow:hidden;">
+        <!-- Document Navigator Tree -->
+        <div class="doc-tree-sidebar" style="width:260px; background:var(--bg-card); border-right:1px solid var(--border); display:flex; flex-direction:column; overflow-y:auto; padding:8px; flex-shrink:0;">
+          <div class="doc-tree-header" style="display:flex; justify-content:space-between; align-items:center; padding:6px 8px; font-size:11px; font-weight:800; color:var(--text-muted); text-transform:uppercase; border-bottom:1px solid var(--border); margin-bottom:6px;">
+            <span>Report Sections</span>
+            <button class="btn-icon" style="padding:2px 6px; font-size:10px;" onclick="addMainDocSection()">+ Main</button>
+          </div>
+
+          ${workspaceData.docSections.map((sec, mIdx) => {
+            const isMainActive = (activeDocSelection.mainIndex === mIdx && activeDocSelection.subIndex === null);
+            return `
+              <div class="main-section-group" style="margin-bottom:8px;">
+                <div class="main-section-item ${isMainActive ? 'active' : ''}" onclick="selectDocMain(${mIdx})" style="padding:6px 8px; border-radius:5px; font-size:12px; font-weight:700; color:var(--text-main); cursor:pointer; display:flex; align-items:center; justify-content:space-between; background:${isMainActive ? 'rgba(59, 130, 246, 0.2)' : 'transparent'};">
+                  <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">📁 ${sec.title}</span>
+                  <span style="font-size:10px; color:var(--text-muted); cursor:pointer;" title="Add sub-section" onclick="event.stopPropagation(); addSubDocSectionTo(${mIdx})">➕</span>
+                </div>
+
+                ${sec.subsections && sec.subsections.length > 0 ? `
+                  <div class="sub-section-list" style="margin-left:14px; border-left:2px solid var(--border); padding-left:6px; margin-top:4px; display:flex; flex-direction:column; gap:3px;">
+                    ${sec.subsections.map((sub, sIdx) => {
+                      const isSubActive = (activeDocSelection.mainIndex === mIdx && activeDocSelection.subIndex === sIdx);
+                      return `
+                        <div class="sub-section-item ${isSubActive ? 'active' : ''}" onclick="selectDocSub(${mIdx}, ${sIdx})" style="padding:4px 8px; border-radius:4px; font-size:11px; color:${isSubActive ? 'var(--accent)' : 'var(--text-muted)'}; cursor:pointer; display:flex; align-items:center; justify-content:space-between; background:${isSubActive ? 'rgba(59, 130, 246, 0.25)' : 'transparent'};">
+                          <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">📄 ${sub.title}</span>
+                        </div>
+                      `;
+                    }).join('')}
+                  </div>
+                ` : ''}
               </div>
-            </div>
-          </div>
-          <div style="display:flex; flex-direction:column; gap:6px; align-items:flex-end;">
-            <span style="font-size:12px; font-weight:700; color:var(--accent);">📍 Hyderabad, Telangana, India</span>
-            <span style="font-size:11px; color:var(--text-muted);">Available for technical consultations & engineering roles</span>
-          </div>
+            `;
+          }).join('')}
         </div>
 
-        <!-- 5 Direct Interactive Channel Cards -->
-        <div class="contact-grid-cards">
-          <!-- 1. Portfolio Website -->
-          <div class="contact-channel-card">
-            <div class="channel-card-top">
-              <div class="channel-icon-wrap" style="background:rgba(56, 189, 248, 0.15); color:#38bdf8;">🌐</div>
-              <div>
-                <div class="channel-label">Official Engineering Portfolio</div>
-                <div class="channel-value">yeriswamydv.github.io</div>
-              </div>
-            </div>
-            <a href="https://yeriswamydv.github.io/" target="_blank" class="channel-action-btn">
-              <span>View Portfolio Live</span> <span>↗</span>
-            </a>
-          </div>
+        <!-- Main Display / Editor Container -->
+        <div class="doc-edit-area" style="flex:1; display:flex; flex-direction:column; padding:16px; background:var(--bg-base); overflow:hidden;">
+          <input type="text" class="doc-title-input" value="${activeDoc.obj.title}" ${isGuest ? 'readonly' : ''} oninput="updateActiveDocTitle(this.value)" style="background:transparent; border:none; font-size:18px; font-weight:800; color:var(--text-main); outline:none; margin-bottom:10px; border-bottom:1px solid var(--border); padding-bottom:6px; width:100%;">
 
-          <!-- 2. LinkedIn -->
-          <div class="contact-channel-card">
-            <div class="channel-card-top">
-              <div class="channel-icon-wrap" style="background:rgba(10, 102, 194, 0.15); color:#0a66c2;">💼</div>
-              <div>
-                <div class="channel-label">Professional Network</div>
-                <div class="channel-value">linkedin.com/in/yeriswamydv</div>
+          <div class="doc-split-editor">
+            <!-- Raw Editor Pane -->
+            ${docMode !== 'preview' ? `
+              <div class="doc-pane" style="${docMode === 'edit' ? 'flex:1;' : 'flex:1; border-right:1px solid var(--border); padding-right:12px;'}">
+                <div style="font-size:11px; font-weight:700; color:var(--text-muted); margin-bottom:6px; display:flex; justify-content:space-between;">
+                  <span>MARKDOWN / LATEX SOURCE</span>
+                  <span>Select & Copy Enabled</span>
+                </div>
+                <textarea class="doc-textarea" id="doc-main-textarea" style="flex:1; width:100%; background:transparent; border:none; color:var(--text-main); font-family:inherit; font-size:14px; line-height:1.6; resize:none; outline:none;" oninput="handleDocLiveInput(this.value)">${activeDoc.obj.content}</textarea>
               </div>
-            </div>
-            <a href="https://www.linkedin.com/in/yeriswamydv/" target="_blank" class="channel-action-btn linkedin">
-              <span>Connect on LinkedIn</span> <span>↗</span>
-            </a>
-          </div>
+            ` : ''}
 
-          <!-- 3. Direct Email -->
-          <div class="contact-channel-card">
-            <div class="channel-card-top">
-              <div class="channel-icon-wrap" style="background:rgba(16, 185, 129, 0.15); color:#10b981;">✉️</div>
-              <div>
-                <div class="channel-label">Direct Email Address</div>
-                <div class="channel-value">yeriswamy.dv@gmail.com</div>
+            <!-- Live Formatted Preview Pane -->
+            ${docMode !== 'edit' ? `
+              <div class="doc-pane" style="flex:1;">
+                <div style="font-size:11px; font-weight:700; color:var(--accent); margin-bottom:6px;">
+                  <span>LIVE FORMATTED PREVIEW</span>
+                </div>
+                <div class="doc-preview-pane" id="doc-live-preview">
+                  ${renderedHtml}
+                </div>
               </div>
-            </div>
-            <a href="mailto:yeriswamy.dv@gmail.com" class="channel-action-btn">
-              <span>Compose Email</span> <span>↗</span>
-            </a>
+            ` : ''}
           </div>
-
-          <!-- 4. Primary Mobile Phone -->
-          <div class="contact-channel-card">
-            <div class="channel-card-top">
-              <div class="channel-icon-wrap" style="background:rgba(245, 158, 11, 0.15); color:#f59e0b;">📞</div>
-              <div>
-                <div class="channel-label">Primary Phone / WhatsApp</div>
-                <div class="channel-value">+91-7022556720</div>
-              </div>
-            </div>
-            <a href="tel:+917022556720" class="channel-action-btn">
-              <span>Call Primary Number</span> <span>↗</span>
-            </a>
-          </div>
-
-          <!-- 5. Secondary Mobile Phone -->
-          <div class="contact-channel-card">
-            <div class="channel-card-top">
-              <div class="channel-icon-wrap" style="background:rgba(192, 132, 252, 0.15); color:#c084fc;">📱</div>
-              <div>
-                <div class="channel-label">Alternative Contact Phone</div>
-                <div class="channel-value">+91-8660524595</div>
-              </div>
-            </div>
-            <a href="tel:+918660524595" class="channel-action-btn">
-              <span>Call Secondary Number</span> <span>↗</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- Technical Engineering Scope Note -->
-        <div style="background:var(--bg-card); border:1px dashed var(--border); border-radius:10px; padding:18px 22px; font-size:12px; line-height:1.6; color:var(--text-muted);">
-          <strong style="color:var(--text-main);">💡 Engineering Scope & Deliverables:</strong><br>
-          For full CAD assemblies (.sldprt / .sldasm / .step), design history files (DHF), finite element analysis (FEA) reports under ECSS standards, or automated macro workflows, feel free to connect directly via LinkedIn or email.
         </div>
       </div>
     </div>
   `;
   return panel;
 }
+
+function handleDocLiveInput(val) {
+  updateActiveDocContent(val);
+  const preview = document.getElementById("doc-live-preview");
+  if (preview) {
+    preview.innerHTML = parseMarkdownAndMath(val);
+  }
+}
+
+function selectDocMain(mIdx) { activeDocSelection.mainIndex = mIdx; activeDocSelection.subIndex = null; renderAll(); }
+function selectDocSub(mIdx, sIdx) { activeDocSelection.mainIndex = mIdx; activeDocSelection.subIndex = sIdx; renderAll(); }
+function updateActiveDocTitle(val) { getActiveDocObject().obj.title = val; saveState(); }
+function updateActiveDocContent(val) { getActiveDocObject().obj.content = val; saveState(); }
+
+function addMainDocSection() {
+  const title = prompt("Enter Main Section Title:", "New Engineering Section");
+  if (!title) return;
+  workspaceData.docSections.push({
+    id: "sec-" + Date.now(),
+    title: title,
+    content: "## " + title.toUpperCase() + "\n\nEnter main section overview here...",
+    subsections: []
+  });
+  activeDocSelection.mainIndex = workspaceData.docSections.length - 1;
+  activeDocSelection.subIndex = null;
+  renderAll();
+  saveState();
+}
+
+function addSubDocSection() { addSubDocSectionTo(activeDocSelection.mainIndex); }
+
+function addSubDocSectionTo(mIdx) {
+  const mainSec = workspaceData.docSections[mIdx];
+  if (!mainSec.subsections) mainSec.subsections = [];
+  const title = prompt(`Enter Sub-section Title for "${mainSec.title}":`, "New Sub-section Detail");
+  if (!title) return;
+  mainSec.subsections.push({
+    id: "sub-" + Date.now(),
+    title: title,
+    content: "### " + title.toUpperCase() + "\n\nEnter detailed calculations, GD&T, or schematics here..."
+  });
+  activeDocSelection.mainIndex = mIdx;
+  activeDocSelection.subIndex = mainSec.subsections.length - 1;
+  renderAll();
+  saveState();
+}
+
+function deleteActiveDocItem() {
+  const activeDoc = getActiveDocObject();
+  if (activeDoc.isSub) {
+    if (confirm(`Delete sub-section: "${activeDoc.obj.title}"?`)) {
+      workspaceData.docSections[activeDoc.mainIdx].subsections.splice(activeDoc.subIdx, 1);
+      activeDocSelection.subIndex = null;
+      renderAll();
+      saveState();
+    }
+  } else {
+    if (workspaceData.docSections.length <= 1) { alert("Cannot delete the last remaining main section."); return; }
+    if (confirm(`Delete main section: "${activeDoc.obj.title}" and all its sub-sections?`)) {
+      workspaceData.docSections.splice(activeDoc.mainIdx, 1);
+      activeDocSelection.mainIndex = 0;
+      activeDocSelection.subIndex = null;
+      renderAll();
+      saveState();
+    }
+  }
+}
+
+function insertDocFormat(pre, post) {
+  const ta = document.getElementById("doc-main-textarea");
+  if (!ta) return;
+  const start = ta.selectionStart;
+  const end = ta.selectionEnd;
+  const text = ta.value;
+  const selected = text.substring(start, end);
+  ta.value = text.substring(0, start) + pre + selected + post + text.substring(end);
+  updateActiveDocContent(ta.value);
+  handleDocLiveInput(ta.value);
+}
+
+function handleLocalImageUpload(files) {
+  if (files && files[0]) {
+    const reader = new FileReader();
+    reader.onload = (e) => insertPastedImage(e.target.result);
+    reader.readAsDataURL(files[0]);
+  }
+}
+
 
 function parseDocContent(text) {
   if (!text) return '';
@@ -2212,7 +2344,7 @@ function changeTheme(theme) {
 }
 
 function saveState() {
-  localStorage.setItem("POWERSHARE_STUDIO_VAULT_V24", JSON.stringify(workspaceData));
+  localStorage.setItem("POWERSHARE_STUDIO_VAULT_V26", JSON.stringify(workspaceData));
 }
 
 
