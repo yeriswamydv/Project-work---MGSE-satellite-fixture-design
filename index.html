@@ -1107,5 +1107,135 @@ window.addEventListener("DOMContentLoaded", () => {
   renderAll();
 });
 </script>
+<!-- ===== v33 ADDITIONS ===== -->
+<style>
+.ico{cursor:pointer;font-size:12px;padding:2px 4px;border-radius:4px;opacity:.85}
+.ico:hover{opacity:1;background:var(--border)}
+.ico.dis{opacity:.35;cursor:not-allowed}
+.vault-table td .btn-icon{margin-left:4px}
+#ist-clock{font:700 11px ui-monospace,Consolas,monospace;color:var(--text-muted);border:1px solid var(--border);background:var(--bg-card);padding:5px 9px;border-radius:6px;white-space:nowrap}
+.hdr-flag{display:flex;align-items:center}
+body.guest-mode,body.guest-mode *{-webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none}
+@media print{body.guest-mode{display:none!important}}
+.card-back{position:fixed;inset:0;background:rgba(2,6,23,.65);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:100000}
+.msg-card{position:relative;background:var(--bg-card);color:var(--text-main);border:1px solid var(--accent);box-shadow:0 0 40px var(--accent-glow);border-radius:14px;padding:34px 40px 20px;min-width:320px;max-width:90%;text-align:center}
+.msg-card .x{position:absolute;top:10px;right:12px}
+.msg-main{font-size:20px;font-weight:800}
+.msg-quote{margin-top:18px;padding-top:14px;border-top:1px solid var(--border);font-style:italic;color:var(--accent);font-size:15px}
+.msg-sign{margin-top:14px;text-align:right;font:italic 700 19px 'Segoe Script','Brush Script MT',cursive}
+</style>
+<script>
+(function(){
+const W=window,$=s=>document.querySelector(s),G=()=>!userAccounts[activeUserKey].canDownload;
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const wrap=(n,f)=>{const o=W[n];W[n]=function(...a){return f(o,a)}};
+const block=(...ns)=>ns.forEach(n=>wrap(n,(o,a)=>{if(G()){const e=a.find(x=>x&&x.stopPropagation);if(e)e.stopPropagation();alertGuestBlocked();return}return o(...a)}));
+const toast=t=>{let e=$('#qs-toast');if(!e){e=document.createElement('div');e.id='qs-toast';e.style.cssText='position:fixed;bottom:56px;left:50%;transform:translateX(-50%);background:var(--accent);color:#090d16;font:700 13px sans-serif;padding:8px 16px;border-radius:8px;z-index:100001;display:none';document.body.appendChild(e)}e.textContent=t;e.style.display='block';clearTimeout(e._t);e._t=setTimeout(()=>e.style.display='none',1800)};
+const card=(html,ms,done)=>{const b=document.createElement('div');b.className='card-back';b.innerHTML='<div class="msg-card"><span class="ico x" title="Close">✕</span>'+html+'</div>';document.body.appendChild(b);let f=0;const close=()=>{if(f)return;f=1;b.remove();if(done)done()};b.querySelector('.x').onclick=close;setTimeout(close,ms)};
+const ico=(sym,tip,act,btn,always)=>{const dis=G()&&!always,h='event.stopPropagation();'+(dis?'alertGuestBlocked()':act);return btn?`<button class="btn-icon ${dis?'disabled-read-only':''}" title="${tip}" onclick="${h}">${sym}</button>`:`<span class="ico ${dis?'dis':''}" title="${tip}" onclick="${h}">${sym}</span>`};
+
+/* ---------- GUEST: copy blocking + permissions ---------- */
+block('addNewProject','renameProject','deleteProject','addMainDocSection','addSubDocSection','addSubDocSectionTo','deleteActiveDocItem');
+const inLogin=e=>e.target.closest&&e.target.closest('.login-backdrop');
+['copy','cut','dragstart','contextmenu','selectstart'].forEach(t=>document.addEventListener(t,e=>{if(G()&&!inLogin(e))e.preventDefault()},true));
+document.addEventListener('keydown',e=>{const k=(e.key||'').toLowerCase(),c=e.ctrlKey||e.metaKey;
+ if(G()){if(!inLogin(e)&&((c&&'cxaspu'.includes(k)&&k.length===1)||k==='f12'||(c&&e.shiftKey&&'ijc'.includes(k)&&k.length===1))){e.preventDefault();e.stopPropagation()}}
+ else if(c&&k==='s'){e.preventDefault();quickSave()}},true);
+document.addEventListener('keyup',e=>{if(G()&&e.key==='PrintScreen'){try{navigator.clipboard.writeText(' ')}catch(x){}}});
+const setQs=()=>document.querySelectorAll('[data-qs]').forEach(b=>b.classList.toggle('disabled-read-only',G()));
+wrap('applyUserPermissions',o=>{o();document.body.classList.toggle('guest-mode',G());setQs()});
+wrap('renderAll',o=>{o();if(G())document.querySelectorAll('.doc-textarea').forEach(t=>{t.readOnly=true;const p=t.closest('.doc-pane');if(p)p.style.display='none'})});
+W.changeTheme=t=>{document.body.className=t+(G()?' guest-mode':'')};
+
+/* ---------- WELCOME / THANK YOU ---------- */
+wrap('finishLogin',o=>{o();if(G())card('<div class="msg-main">👋 Welcome to the page for project visit</div>',3000)});
+wrap('handleLogout',o=>{if(!G()){o();return}if($('.card-back'))return;$('#user-dropdown').classList.remove('show');
+ card('<div class="msg-main">🙏 Thank you for visiting. Have a great day!</div><div class="msg-quote">Pressure is Privilege to an Engineer</div><div class="msg-sign">Yeriswamy DV</div>',5000,()=>{o();document.body.classList.remove('guest-mode')})});
+
+/* ---------- CAD VAULT + DRAWINGS (folders, subfolders, files) ---------- */
+const T=k=>k==='cad'?workspaceData.vault:workspaceData.drawings,S=k=>k==='cad'?activeVaultSelection:activeDwgSelection,col={};
+W.fa=function(k,op,d,s,f){
+ const tree=T(k),sel=S(k),F=tree[d],sub=F&&F.subfolders[s],file=sub&&sub.files[f];
+ if(op==='sel'){sel.discKey=d;sel.subfolderIdx=s;renderAll();return}
+ if(op==='tog'){col[k+d]=!col[k+d];renderAll();return}
+ if(op==='view'){$('#pdf-modal-title').innerHTML='<span>📐</span> PDF Inspection: <strong>'+esc(file.name)+'</strong>';$('#pdf-modal-frame').src='./vault/'+encodeURIComponent(file.file||file.name)+(G()?'#toolbar=0&navpanes=0':'');$('#pdf-modal').style.display='flex';return}
+ if(G())return alertGuestBlocked();
+ const ask=(m,v)=>{const r=prompt(m,v);return r&&r.trim()?r.trim():null};
+ if(op==='addF'){const n=ask('Folder name:','New Folder');if(!n)return;const id='f'+Date.now();tree[id]={title:n,icon:'📁',color:'var(--accent)',subfolders:[{id:'s'+Date.now(),name:'General',files:[]}]};sel.discKey=id;sel.subfolderIdx=0}
+ else if(op==='renF'){const n=ask('Rename folder:',F.title);if(!n)return;F.title=n}
+ else if(op==='delF'){if(Object.keys(tree).length<2)return alert('Cannot delete the last folder.');const c=F.subfolders.reduce((a,x)=>a+x.files.length,0);if(!confirm('Delete folder "'+F.title+'" with '+F.subfolders.length+' subfolder(s) and '+c+' file(s)?'))return;delete tree[d];sel.discKey=Object.keys(tree)[0];sel.subfolderIdx=0}
+ else if(op==='addS'){const n=ask('Subfolder name:','New Subfolder');if(!n)return;F.subfolders.push({id:'s'+Date.now(),name:n,files:[]});sel.discKey=d;sel.subfolderIdx=F.subfolders.length-1;col[k+d]=false}
+ else if(op==='renS'){const n=ask('Rename subfolder:',sub.name);if(!n)return;sub.name=n}
+ else if(op==='delS'){if(F.subfolders.length<2)return alert('Cannot delete the last subfolder.');if(!confirm('Delete subfolder "'+sub.name+'" and its '+sub.files.length+' file(s)?'))return;F.subfolders.splice(s,1);sel.discKey=d;sel.subfolderIdx=0}
+ else if(op==='delX'){if(!confirm('Delete "'+file.name+'"?'))return;sub.files.splice(f,1)}
+ else if(op==='renX'){const n=ask('Name:',file.name);if(!n)return;if(!file.file)file.file=file.name;file.name=n;if(k==='dwg'){const sh=ask('Sheet:',file.sheet||'A1');if(sh)file.sheet=sh;const r=ask('Revision:',file.rev||'Rev A');if(r)file.rev=r}}
+ else if(op==='dl'){const a=document.createElement('a');a.href='./vault/'+encodeURIComponent(file.file||file.name);a.download=file.name;document.body.appendChild(a);a.click();a.remove();return}
+ renderAll();
+};
+function build(k,isSplit){
+ const dwg=k==='dwg',tree=T(k),sel=S(k),pin=dwg?'isDwgDrawerPinned':'isVaultDrawerPinned',pinned=dwg?isDwgDrawerPinned:isVaultDrawerPinned;
+ if(!tree[sel.discKey]){sel.discKey=Object.keys(tree)[0];sel.subfolderIdx=0}
+ const D=tree[sel.discKey];if(!D.subfolders[sel.subfolderIdx])sel.subfolderIdx=0;const sub=D.subfolders[sel.subfolderIdx];
+ const A=(op,i)=>"fa('"+k+"','"+op+"','"+sel.discKey+"',"+sel.subfolderIdx+(i===undefined?'':','+i)+")";
+ const p=document.createElement('div');p.className='window-panel';
+ p.innerHTML=`<div class="window-header"><div class="window-title" style="color:var(--${dwg?'dwg':'vault'}-color);"><span>${dwg?'📐':'📦'}</span> ${dwg?'Drawing PDFs & Technical Specifications':'CAD Models Vault Explorer'}</div>${isSplit?`<button class="btn-icon btn-icon-danger" onclick="closeToolInSplit('${dwg?'drawings':'vault'}')">✕</button>`:''}</div>
+ <div class="vault-split-container"><aside class="pinnable-drawer ${pinned?'':'unpinned'}">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><span style="font-weight:800;font-size:10px;color:var(--text-muted);">${dwg?'DRAWINGS':'CAD DIRECTORIES'}</span><span style="display:flex;gap:4px;align-items:center;">${ico('➕','New folder',`fa('${k}','addF')`)}<button class="drawer-pin-btn ${pinned?'is-pinned':''}" onclick="${pin}=!${pin};renderAll();">${pinned?'📌':'🔓'}</button></span></div>
+  ${Object.keys(tree).map(d=>{const F=tree[d];return `<div class="tree-folder-group"><div class="tree-folder-header" style="color:${F.color};" onclick="fa('${k}','tog','${d}')"><span>${F.icon} ${esc(F.title)}</span><span style="display:flex;gap:2px;">${ico('➕','New subfolder',`fa('${k}','addS','${d}')`)}${ico('✏️','Rename',`fa('${k}','renF','${d}')`)}${ico('🗑️','Delete',`fa('${k}','delF','${d}')`)}</span></div>${col[k+d]?'':`<div class="tree-sub-list">${F.subfolders.map((s,i)=>`<div class="subfolder-item ${d===sel.discKey&&i===sel.subfolderIdx?'active':''}" onclick="fa('${k}','sel','${d}',${i})"><span>📂 ${esc(s.name)}</span><span style="display:flex;gap:2px;">${ico('✏️','Rename',`fa('${k}','renS','${d}',${i})`)}${ico('🗑️','Delete',`fa('${k}','delS','${d}',${i})`)}</span></div>`).join('')}</div>`}</div>`}).join('')}
+ </aside>
+ <main class="vault-browser-main"><div class="vault-browser-header"><div style="font-weight:700;">${esc(D.title)} / <strong>${esc(sub.name)}</strong></div>${ico('⬆️','Upload',`document.getElementById('${dwg?'dwg':'vault'}-uploader').click()`,1)}<input type="file" id="${dwg?'dwg':'vault'}-uploader" ${dwg?'accept=".pdf"':''} style="display:none;" multiple onchange="${dwg?'handleDwgFileUpload':'handleBrowserFileUpload'}(this.files)"></div>
+ <div class="vault-table-wrap"><table class="vault-table"><thead><tr><th>Type</th><th>${dwg?'Drawing Title':'File Name'}</th>${dwg?'<th>Sheet</th><th>Revision</th>':'<th>Size</th><th>Date</th>'}<th style="text-align:right;">Actions</th></tr></thead><tbody>
+ ${sub.files.length?sub.files.map((x,i)=>`<tr><td>${dwg?'📄':'📦'}</td><td style="font-weight:700;">${esc(x.name)}</td>${dwg?`<td>${esc(x.sheet||'A1')}</td><td style="color:var(--accent);">${esc(x.rev||'Rev A')}</td>`:`<td style="color:var(--accent);">${esc(x.size)}</td><td>${esc(x.date)}</td>`}<td style="text-align:right;white-space:nowrap;">${dwg?ico('👁️','View',A('view',i),1,1):''}${ico('✏️','Rename',A('renX',i),1)}${ico('⬇️','Download',A('dl',i),1)}${ico('🗑️','Delete',A('delX',i),1)}</td></tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:22px;">Empty folder</td></tr>'}
+ </tbody></table></div></main></div>`;
+ return p;
+}
+W.buildVaultPanel=s=>build('cad',s);W.buildDrawingsPanel=s=>build('dwg',s);
+
+/* ---------- GRAPHS: tiles left, gauge right, pillars, parts list ---------- */
+let gf={d:null,s:null};
+W.setGF=(t,v)=>{if(t==='x')gf={d:null,s:null};else gf[t]=gf[t]===v?null:v;renderAll()};
+const ST=['Completed','In Progress','In Review','Yet to be done'];
+const TL=[['Completed','Completed','var(--status-green)'],['In Progress','In Progress','var(--status-yellow)'],['In Review','In Review','var(--status-orange)'],['Yet to be done','Yet To Do','var(--status-red)']];
+const PC=d=>d==='Mechanical CAD'?['pillar-cad','var(--cad-color)','📐']:d==='Electronics'?['pillar-elec','var(--elec-color)','⚡']:['pillar-mecha','var(--mecha-color)','🤖'];
+W.buildGraphPanel=function(isSplit){
+ const H=workspaceData.sheetHeaders,R=workspaceData.sheet,si=H.length-1,st=r=>ST.includes(r[si])?r[si]:'Yet to be done';
+ const cnt={};ST.forEach(s=>cnt[s]=0);const ds={'Mechanical CAD':{t:0,c:0},'Electronics':{t:0,c:0},'Mechatronics':{t:0,c:0}};
+ R.forEach(r=>{const d=r[0]||'Mechanical CAD';ds[d]=ds[d]||{t:0,c:0};ds[d].t++;cnt[st(r)]++;if(st(r)==='Completed')ds[d].c++});
+ const n=R.length||1,pct=Math.round(cnt['Completed']/n*100),rad=68,c=2*Math.PI*rad,off=c*(1-cnt['Completed']/n);
+ const rows=R.map((r,i)=>[r,i]).filter(([r])=>(!gf.d||r[0]===gf.d)&&(!gf.s||st(r)===gf.s));
+ const p=document.createElement('div');p.className='window-panel';
+ p.innerHTML=`<div class="window-header"><div class="window-title" style="color:var(--graph-color);"><span>📈</span> Integrated Progress Health</div>${isSplit?`<button class="btn-icon btn-icon-danger" onclick="closeToolInSplit('graph')">✕</button>`:''}</div>
+ <div class="window-content"><div class="graph-view">
+ <div style="display:flex;gap:14px;align-items:stretch;flex-wrap:wrap;">
+  <div style="display:flex;flex-direction:column;gap:10px;width:230px;min-width:200px;">${TL.map(([s,l,cl])=>`<div class="kpi-tile" style="border-left:3px solid ${cl};cursor:pointer;flex:1;${gf.s===s?'outline:2px solid '+cl+';':''}" onclick="setGF('s','${s}')"><div class="kpi-title">${l}</div><div class="kpi-number" style="color:${cl};">${cnt[s]}${s==='Completed'?' ('+pct+'%)':''}</div></div>`).join('')}</div>
+  <div class="project-health-container" style="flex:1;min-width:300px;"><div class="gauge-meta-box"><h3>Overall Completion Gauge</h3><p style="color:var(--text-muted);font-size:12px;">Real-time task synchronization across disciplines</p></div>
+   <svg width="160" height="160" viewBox="0 0 160 160"><circle cx="80" cy="80" r="${rad}" fill="transparent" stroke="var(--border)" stroke-width="16"/><circle cx="80" cy="80" r="${rad}" fill="transparent" stroke="var(--status-green)" stroke-width="16" stroke-dasharray="${c}" stroke-dashoffset="${off}" stroke-linecap="round" transform="rotate(-90 80 80)"/><text x="80" y="76" text-anchor="middle" fill="var(--text-main)" font-size="28" font-weight="800">${pct}%</text><text x="80" y="96" text-anchor="middle" fill="var(--text-muted)" font-size="10" font-weight="700">COMPLETE</text></svg></div>
+ </div>
+ <div class="three-pillars-grid">${Object.keys(ds).map(d=>{const x=ds[d],t=x.t||1,pc=Math.round(x.c/t*100),[cl,cv,ic]=PC(d);return `<div class="pillar-card ${cl}" style="cursor:pointer;${gf.d===d?'outline:2px solid '+cv+';':''}" onclick="setGF('d','${d}')"><div class="pillar-header"><div class="pillar-name" style="color:${cv};"><span>${ic}</span> ${esc(d)}</div><span style="font-size:11px;font-weight:800;color:var(--text-muted);">${pc}% Done</span></div><div class="mini-bar-row"><div class="mini-bar-labels"><span>Progress</span><span>${x.c} / ${x.t} Completed</span></div><div class="mini-bar-track"><div class="mini-bar-fill" style="width:${pc}%;background:${cv};"></div></div></div></div>`}).join('')}</div>
+ <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;">🧩 Parts List <span style="font-size:11px;color:var(--text-muted);font-weight:600;">(${rows.length} of ${R.length})${gf.d||gf.s?' • '+esc([gf.d,gf.s].filter(Boolean).join(' · ')):''}</span>${gf.d||gf.s?`<span class="ico" title="Clear filter" onclick="setGF('x')">✕</span>`:''}</div>
+ <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;overflow:auto;max-height:360px;"><table class="sheet-table"><thead><tr><th>#</th>${H.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>
+ ${rows.length?rows.map(([r,i])=>`<tr><td style="color:#64748b;text-align:center;">${i+1}</td>${r.map((cell,ci)=>ci===si?`<td><span class="status-select ${getStatusClass(st(r))}">${esc(st(r))}</span></td>`:`<td>${esc(cell)}</td>`).join('')}</tr>`).join(''):`<tr><td colspan="${H.length+1}" style="text-align:center;color:var(--text-muted);padding:18px;">No parts match this filter</td></tr>`}
+ </tbody></table></div>
+ </div></div>`;
+ return p;
+};
+
+/* ---------- HEADER: IST clock, quicksave, backup, flag ---------- */
+const KEY='POWERSHARE_QUICKSAVE_V1',ha=$('.header-actions'),ts=$('#theme-selector');
+function fixup(){workspaceData.pastedImages=workspaceData.pastedImages||[];currentSlideIndex=0;activeDocSelection={mainIndex:0,subIndex:null}}
+const snap=()=>JSON.stringify({v:1,saved:new Date().toISOString(),theme:document.body.className.replace('guest-mode','').trim(),workspaceData});
+function quickSave(){try{localStorage.setItem(KEY,snap());toast('💾 Saved ✓')}catch(e){alert('Quicksave failed: browser storage is full or blocked. Use 📤 to save a backup file instead.')}}
+function exportBackup(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([snap()],{type:'application/json'}));a.download='powershare-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function importBackup(f){if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);if(!j.workspaceData||!Array.isArray(j.workspaceData.sheet))throw 0;if(!confirm('Replace the current workspace with this backup?'))return;workspaceData=j.workspaceData;fixup();renderAll();toast('📥 Backup restored ✓')}catch(e){alert('Invalid backup file.')}};r.readAsText(f);$('#bk-in').value=''}
+try{const j=JSON.parse(localStorage.getItem(KEY)||'null');if(j&&j.workspaceData&&Array.isArray(j.workspaceData.sheet)){workspaceData=j.workspaceData;fixup();if(j.theme){document.body.className=j.theme;ts.value=j.theme}}}catch(e){}
+const clk=document.createElement('span');clk.id='ist-clock';ha.insertBefore(clk,ts);
+const tick=()=>{const d=new Date(),o={timeZone:'Asia/Kolkata'};clk.textContent=d.toLocaleDateString('en-GB',{...o,weekday:'short',day:'2-digit',month:'short',year:'numeric'})+' • '+d.toLocaleTimeString('en-GB',{...o,hourCycle:'h23'})+' IST'};tick();setInterval(tick,1000);
+[['💾','Quicksave (Ctrl+S)',quickSave],['📤','Export backup file',exportBackup],['📥','Import backup file',()=>$('#bk-in').click()]].forEach(([s,t,fn])=>{const b=document.createElement('button');b.className='btn-icon';b.dataset.qs=1;b.title=t;b.textContent=s;b.onclick=()=>{if(G())return alertGuestBlocked();fn()};ha.insertBefore(b,ts)});
+const bk=document.createElement('input');bk.type='file';bk.id='bk-in';bk.accept='.json';bk.style.display='none';bk.onchange=()=>importBackup(bk.files[0]);document.body.appendChild(bk);setQs();
+let sp='';for(let i=0;i<24;i++){const a=i*Math.PI/12;sp+=`<line x1="15" y1="10" x2="${(15+2.7*Math.cos(a)).toFixed(2)}" y2="${(10+2.7*Math.sin(a)).toFixed(2)}" stroke="#000080" stroke-width=".25"/>`}
+const fl=document.createElement('span');fl.className='hdr-flag';fl.title='India';fl.innerHTML=`<svg width="33" height="22" viewBox="0 0 30 20" role="img" aria-label="India"><rect width="30" height="20" fill="#fff"/><rect width="30" height="6.67" fill="#FF9933"/><rect y="13.33" width="30" height="6.67" fill="#138808"/><circle cx="15" cy="10" r="2.8" fill="none" stroke="#000080" stroke-width=".4"/>${sp}<rect width="30" height="20" fill="none" stroke="#94a3b8" stroke-width=".6"/></svg>`;ha.appendChild(fl);
+})();
+</script>
+
 </body>
 </html>
