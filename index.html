@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PowerShare Studio v28 | Aerospace Smart MGSE Hub</title>
+<title>PowerShare Studio v32 | Aerospace Smart MGSE Hub</title>
 <style>
   :root {
     --bg-base: #090d16;
@@ -77,7 +77,6 @@
     --text-main: #0f172a;
     --text-muted: #334155;
   }
-
   body.theme-light {
     --bg-base: #f1f5f9;
     --bg-sidebar: #ffffff;
@@ -114,36 +113,25 @@
     flex-shrink: 0;
     z-index: 60;
   }
-
   .header-left-group { display: flex; align-items: center; gap: 12px; }
-
   .sidebar-toggle-btn {
-    background: var(--bg-card); border: 1px solid var(--border); color: var(--text-main); width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; transition: all 0.15s ease;
+    background: var(--bg-card); border: 1px solid var(--border); color: var(--text-main); width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px;
   }
   .sidebar-toggle-btn:hover { background: var(--border); }
-
   .header-brand { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 700; }
-  .brand-chip {
-    background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.5px;
-  }
-
+  .brand-chip { background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 4px; }
   .mode-indicator-badge { font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px; }
   .mode-admin { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); }
   .mode-guest { background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4); }
 
   .header-actions { display: flex; align-items: center; gap: 10px; }
-  .theme-select {
-    background: var(--bg-card); border: 1px solid var(--border); color: var(--text-main); padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; outline: none; cursor: pointer;
-  }
-
+  .theme-select { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-main); padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; outline: none; cursor: pointer; }
   .view-mode-toggle { display: flex; background: var(--bg-base); padding: 3px; border-radius: 6px; border: 1px solid var(--border); gap: 3px; }
-  .mode-toggle-btn {
-    background: transparent; border: none; color: var(--text-muted); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 4px; cursor: pointer; transition: all 0.15s ease;
-  }
+  .mode-toggle-btn { background: transparent; border: none; color: var(--text-muted); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 4px; cursor: pointer; }
   .mode-toggle-btn.active { background: var(--accent); color: #090d16; }
 
   .btn-icon {
-    background: var(--bg-card); border: 1px solid var(--border); color: var(--text-main); font-size: 12px; padding: 6px 10px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; font-weight: 600; transition: all 0.15s ease; text-decoration: none;
+    background: var(--bg-card); border: 1px solid var(--border); color: var(--text-main); font-size: 12px; padding: 6px 10px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; font-weight: 600; text-decoration: none;
   }
   .btn-icon:hover { background: var(--border); color: #fff; }
   .btn-icon-primary { background: var(--accent); color: #090d16; border-color: var(--accent); }
@@ -151,116 +139,66 @@
   .btn-icon-danger:hover { background: var(--danger); color: #fff; }
   .btn-icon.disabled-read-only { opacity: 0.45 !important; cursor: not-allowed !important; pointer-events: auto !important; }
 
-  /* USER MENU IN TOP BAR */
+  /* USER MENU */
   .user-profile-menu { position: relative; }
-  .user-pill-btn {
-    display: flex; align-items: center; gap: 8px; background: var(--bg-card); border: 1px solid var(--border); padding: 4px 10px 4px 6px; border-radius: 20px; cursor: pointer;
-  }
-  .user-avatar-badge {
-    width: 26px; height: 26px; border-radius: 50%; background: #2563eb; color: #ffffff; font-weight: 800; font-size: 11px; display: flex; align-items: center; justify-content: center;
-  }
+  .user-pill-btn { display: flex; align-items: center; gap: 8px; background: var(--bg-card); border: 1px solid var(--border); padding: 4px 10px 4px 6px; border-radius: 20px; cursor: pointer; }
+  .user-avatar-badge { width: 26px; height: 26px; border-radius: 50%; background: #2563eb; color: #fff; font-weight: 800; font-size: 11px; display: flex; align-items: center; justify-content: center; }
   .user-pill-name { font-size: 12px; font-weight: 700; color: var(--text-main); }
-
-  .user-dropdown-card {
-    display: none; position: absolute; top: 42px; right: 0; width: 250px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); padding: 8px; z-index: 100;
-  }
+  .user-dropdown-card { display: none; position: absolute; top: 42px; right: 0; width: 250px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); padding: 8px; z-index: 100; }
   .user-dropdown-card.show { display: block; }
   .dropdown-header-info { padding: 8px 10px; border-bottom: 1px solid var(--border); margin-bottom: 6px; }
-  .dropdown-header-info .name { font-size: 13px; font-weight: 800; color: var(--text-main); }
-  .dropdown-header-info .role { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-
-  .dropdown-action-item {
-    display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; color: var(--text-main); cursor: pointer;
-  }
+  .dropdown-action-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; color: var(--text-main); cursor: pointer; }
   .dropdown-action-item:hover { background: var(--border); color: var(--accent); }
   .dropdown-action-item.danger:hover { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
 
-  /* WORKSPACE LAYOUT & SIDEBAR */
+  /* WORKSPACE & SIDEBAR */
   .workspace-layout { flex: 1; display: flex; overflow: hidden; position: relative; }
-
   aside.left-sidebar {
-    width: var(--sidebar-width-expanded); background: var(--bg-sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; justify-content: space-between; padding: 14px 8px; flex-shrink: 0; z-index: 20; transition: width 0.22s cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden;
+    width: var(--sidebar-width-expanded); background: var(--bg-sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; justify-content: space-between; padding: 14px 8px; flex-shrink: 0; z-index: 20; transition: width 0.22s ease; overflow-x: hidden;
   }
   aside.left-sidebar.collapsed { width: var(--sidebar-width-collapsed); }
-
-  .nav-group-title {
-    font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); padding: 0 8px 10px 8px; white-space: nowrap; display: flex; justify-content: space-between; align-items: center;
-  }
+  .nav-group-title { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); padding: 0 8px 10px 8px; white-space: nowrap; display: flex; justify-content: space-between; align-items: center; }
   aside.left-sidebar.collapsed .nav-group-title { display: none; }
 
   .tool-item-btn {
-    width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; border-radius: 8px; background: var(--bg-card); border: 1px solid transparent; color: var(--text-main); font-size: 13px; font-weight: 600; cursor: pointer; margin-bottom: 6px; transition: all 0.15s ease; white-space: nowrap;
+    width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; border-radius: 8px; background: var(--bg-card); border: 1px solid transparent; color: var(--text-main); font-size: 13px; font-weight: 600; cursor: pointer; margin-bottom: 6px; white-space: nowrap;
   }
-  .tool-item-btn:hover { background: var(--border); transform: translateX(2px); }
-  .tool-item-btn.active-tool {
-    border-color: var(--accent); background: rgba(56, 189, 248, 0.15); box-shadow: 0 0 10px var(--accent-glow);
-  }
-
+  .tool-item-btn:hover { background: var(--border); }
+  .tool-item-btn.active-tool { border-color: var(--accent); background: rgba(56, 189, 248, 0.15); box-shadow: 0 0 10px var(--accent-glow); }
   .tool-icon-text { display: flex; align-items: center; gap: 8px; }
   .indicator-dot { width: 8px; height: 8px; border-radius: 50%; background: #475569; }
-
   aside.left-sidebar.collapsed .tool-label, aside.left-sidebar.collapsed .indicator-dot { display: none; }
   aside.left-sidebar.collapsed .tool-item-btn { justify-content: center; padding: 10px 0; }
 
-  .tool-item-btn[data-tool="sheet"] .indicator-dot { background: var(--sheet-color); }
-  .tool-item-btn[data-tool="doc"] .indicator-dot { background: var(--doc-color); }
-  .tool-item-btn[data-tool="ppt"] .indicator-dot { background: var(--ppt-color); }
-  .tool-item-btn[data-tool="graph"] .indicator-dot { background: var(--graph-color); }
-  .tool-item-btn[data-tool="vault"] .indicator-dot { background: var(--vault-color); }
-  .tool-item-btn[data-tool="drawings"] .indicator-dot { background: var(--dwg-color); }
-  .tool-item-btn[data-tool="contact"] .indicator-dot { background: #38bdf8; }
-
   /* CONTACT PANEL */
   .contact-panel-container { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 20px; background: var(--bg-base); }
-  .contact-hero-card {
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95)); border: 1px solid var(--border); border-radius: 12px; padding: 24px 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  }
-  .contact-big-avatar {
-    width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, #0284c7, #38bdf8); color: #ffffff; font-size: 24px; font-weight: 900; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px rgba(56, 189, 248, 0.35);
-  }
+  .contact-hero-card { background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95)); border: 1px solid var(--border); border-radius: 12px; padding: 24px 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+  .contact-big-avatar { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; font-size: 24px; font-weight: 900; display: flex; align-items: center; justify-content: center; }
   .contact-grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
-  .contact-channel-card {
-    background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; justify-content: space-between; gap: 14px;
-  }
-  .channel-action-btn {
-    width: 100%; padding: 9px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-card-header); color: var(--text-main); font-size: 12px; font-weight: 700; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;
-  }
+  .contact-channel-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; justify-content: space-between; gap: 14px; }
+  .channel-action-btn { width: 100%; padding: 9px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-card-header); color: var(--text-main); font-size: 12px; font-weight: 700; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; }
   .channel-action-btn:hover { background: var(--accent); color: #090d16; border-color: var(--accent); }
 
-  /* CANVAS STAGE */
+  /* CANVAS STAGE & WINDOW PANELS */
   .canvas-stage { flex: 1; display: flex; gap: 12px; padding: 12px; background: var(--bg-base); overflow: hidden; }
-  .window-panel {
-    flex: 1; height: 100%; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.25);
-  }
+  .window-panel { flex: 1; height: 100%; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.25); }
   .canvas-stage.mode-split .window-panel { min-width: 520px; }
   .canvas-stage.mode-fullscreen .window-panel { width: 100%; min-width: 100%; }
-
-  .window-header {
-    background: var(--bg-card-header); border-bottom: 1px solid var(--border); height: 42px; padding: 0 14px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
-  }
+  .window-header { background: var(--bg-card-header); border-bottom: 1px solid var(--border); height: 42px; padding: 0 14px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
   .window-title { font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-
-  .symbols-toolbar {
-    background: var(--bg-card-header); border-bottom: 1px solid var(--border); padding: 6px 12px; display: flex; align-items: center; gap: 6px; flex-shrink: 0;
-  }
-  .sym-btn {
-    background: transparent; border: 1px solid var(--border); color: var(--text-main); padding: 4px 8px; border-radius: 5px; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 4px; font-weight: 600;
-  }
+  .symbols-toolbar { background: var(--bg-card-header); border-bottom: 1px solid var(--border); padding: 6px 12px; display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  .sym-btn { background: transparent; border: 1px solid var(--border); color: var(--text-main); padding: 4px 8px; border-radius: 5px; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 4px; font-weight: 600; }
   .sym-btn:hover { background: var(--border); }
   .sym-btn-danger:hover { background: var(--danger); border-color: var(--danger); color: #fff; }
   .sym-divider { width: 1px; height: 18px; background: var(--border); margin: 0 4px; }
-
   .window-content { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
 
   /* SHEET */
   .sheet-scroll { flex: 1; overflow: auto; }
   table.sheet-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; white-space: nowrap; }
-  table.sheet-table th {
-    background: var(--bg-card-header); color: var(--sheet-color); padding: 8px 10px; font-weight: 700; border-bottom: 2px solid var(--border); border-right: 1px solid var(--border); position: sticky; top: 0; z-index: 5;
-  }
+  table.sheet-table th { background: var(--bg-card-header); color: var(--sheet-color); padding: 8px 10px; font-weight: 700; border-bottom: 2px solid var(--border); border-right: 1px solid var(--border); position: sticky; top: 0; z-index: 5; }
   table.sheet-table td { padding: 6px 10px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); color: var(--text-main); }
-  td[contenteditable="true"]:focus { outline: none; background: rgba(16, 185, 129, 0.15); box-shadow: inset 0 0 0 1px var(--sheet-color); }
-  .status-select { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; border: 1px solid transparent; cursor: pointer; outline: none; }
+  .status-select { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; border: none; cursor: pointer; outline: none; }
   .status-green { background: rgba(34, 197, 94, 0.2); color: var(--status-green); }
   .status-yellow { background: rgba(234, 179, 8, 0.2); color: var(--status-yellow); }
   .status-orange { background: rgba(249, 115, 22, 0.2); color: var(--status-orange); }
@@ -268,9 +206,7 @@
 
   /* PPT */
   .ppt-view { flex: 1; display: flex; flex-direction: column; padding: 20px; background: var(--bg-base); overflow: hidden; }
-  .ppt-slide-card {
-    flex: 1; background: var(--bg-card); border: 2px solid var(--border); border-radius: 12px; padding: 32px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-  }
+  .ppt-slide-card { flex: 1; background: var(--bg-card); border: 2px solid var(--border); border-radius: 12px; padding: 32px; display: flex; flex-direction: column; justify-content: space-between; }
   .ppt-slide-title { font-size: 24px; font-weight: 800; color: var(--ppt-color); outline: none; border-bottom: 2px solid rgba(249, 115, 22, 0.3); padding-bottom: 8px; }
   .ppt-slide-body { flex: 1; margin: 18px 0; font-size: 15px; line-height: 1.8; color: var(--text-main); outline: none; overflow-y: auto; }
   .ppt-slide-footer { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 10px; }
@@ -281,19 +217,42 @@
   .kpi-tile { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; }
   .kpi-title { font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
   .kpi-number { font-size: 22px; font-weight: 800; color: var(--text-main); }
+  .three-pillars-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .pillar-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+  .pillar-card.pillar-cad { border-top: 3px solid var(--cad-color); }
+  .pillar-card.pillar-elec { border-top: 3px solid var(--elec-color); }
+  .pillar-card.pillar-mecha { border-top: 3px solid var(--mecha-color); }
+  .pillar-header { display: flex; justify-content: space-between; align-items: center; }
+  .pillar-name { font-size: 13px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+  .mini-bar-row { display: flex; flex-direction: column; gap: 2px; }
+  .mini-bar-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); }
+  .mini-bar-track { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .mini-bar-fill { height: 100%; border-radius: 3px; }
   .project-health-container { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 22px; display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; gap: 20px; }
+  .gauge-meta-box { display: flex; flex-direction: column; gap: 6px; max-width: 440px; }
+  .gauge-graphic-wrap { display: flex; align-items: center; gap: 24px; }
 
-  /* PINNABLE DRAWER (VAULT / DRAWINGS) */
+  /* PINNABLE DRAWER */
   .vault-split-container { flex: 1; display: flex; overflow: hidden; background: var(--bg-base); position: relative; }
   .pinnable-drawer { width: 280px; background: var(--bg-card); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; padding: 12px 8px; flex-shrink: 0; z-index: 15; }
+  .pinnable-drawer.unpinned { width: 48px; padding: 10px 4px; cursor: pointer; }
+  .drawer-pin-btn { background: transparent; border: 1px solid var(--border); color: var(--text-muted); font-size: 10px; padding: 2px 6px; border-radius: 4px; cursor: pointer; font-weight: 700; }
+  .drawer-pin-btn.is-pinned { color: var(--accent); border-color: var(--accent); }
+  .tree-folder-group { margin-bottom: 8px; }
+  .tree-folder-header { font-size: 12px; font-weight: 700; padding: 7px 8px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
+  .tree-folder-header:hover { background: var(--border); }
+  .tree-sub-list { margin-left: 12px; padding-left: 6px; border-left: 2px solid var(--border); display: flex; flex-direction: column; gap: 3px; margin-top: 4px; }
+  .subfolder-item { padding: 6px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
+  .subfolder-item.active { background: rgba(56, 189, 248, 0.15); border-left: 2px solid var(--accent); color: var(--accent); font-weight: 700; }
   .vault-browser-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; padding: 16px 20px; background: var(--bg-base); }
   .vault-browser-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+  .compact-dropzone { border: 2px dashed var(--accent); background: rgba(56, 189, 248, 0.05); border-radius: 8px; padding: 12px; text-align: center; cursor: pointer; font-size: 12px; color: var(--accent); font-weight: 600; margin-bottom: 12px; flex-shrink: 0; }
   .vault-table-wrap { flex: 1; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-card); }
   table.vault-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
   table.vault-table th { background: var(--bg-card-header); color: var(--text-muted); padding: 9px 12px; font-weight: 700; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 5; text-transform: uppercase; font-size: 10px; }
   table.vault-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); color: var(--text-main); }
 
-  /* DOC MARKDOWN & SPLIT VIEW */
+  /* DOC MARKDOWN & PREVIEW */
   .doc-split-editor { flex: 1; display: flex; gap: 12px; height: 100%; overflow: hidden; }
   .doc-pane { flex: 1; display: flex; flex-direction: column; height: 100%; overflow: hidden; }
   .doc-preview-pane { flex: 1; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 22px; overflow-y: auto; font-size: 14px; line-height: 1.7; }
@@ -304,7 +263,7 @@
   .pasted-image-card img { border-radius: 6px; display: block; height: auto; }
   .image-controls-bar { display: flex; align-items: center; gap: 8px; margin-top: 8px; background: var(--bg-card-header); padding: 6px 10px; border-radius: 6px; font-size: 11px; }
 
-  /* COPY & SELECTION PERMISSIONS */
+  /* COPY PERMISSIONS */
   *, *::before, *::after { -webkit-user-select: none; user-select: none; }
   textarea, input, .doc-textarea, .doc-preview-pane, td, th, p, li, h1, h2, h3, h4, span { -webkit-user-select: text !important; user-select: text !important; }
 
@@ -312,12 +271,14 @@
   .active-pill { background: var(--bg-card); border: 1px solid var(--border); padding: 3px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; }
   .active-pill.active-focused { background: var(--border); box-shadow: 0 0 6px var(--accent-glow); }
 
-  /* LOGIN MODAL */
+  /* LOGIN MODAL & PDF MODAL */
   .login-backdrop { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); z-index: 99999; align-items: center; justify-content: center; }
   .login-backdrop.active { display: flex; }
   .login-modal-box { background: #ffffff; color: #0f172a; width: 440px; max-width: 90%; border-radius: 14px; box-shadow: 0 25px 60px rgba(0,0,0,0.4); padding: 32px 28px; display: flex; flex-direction: column; gap: 20px; }
   .btn-submit-login { background: #0284c7; color: #ffffff; border: none; border-radius: 6px; padding: 11px; font-size: 13px; font-weight: 700; cursor: pointer; }
   .error-message-box { background: #fef2f2; border: 1px solid #fecaca; color: #ef4444; padding: 8px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; display: none; }
+  .pdf-modal-backdrop { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+  .pdf-modal-content { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; width: 90%; height: 90%; display: flex; flex-direction: column; overflow: hidden; }
 </style>
 </head>
 <body class="theme-dark">
@@ -374,7 +335,7 @@
 </header>
 
 <div class="workspace-layout">
-  <!-- SIDEBAR WITH DYNAMIC MULTI-PROJECT ACCORDIONS & ADD PROJECT BUTTON -->
+  <!-- SIDEBAR WITH DYNAMIC PROJECTS & ADD PROJECT BUTTON -->
   <aside class="left-sidebar" id="app-sidebar">
     <div style="flex:1; overflow-y:auto; overflow-x:hidden;">
       <div class="nav-group-title">
@@ -382,11 +343,8 @@
         <button class="btn-icon" style="padding:1px 6px; font-size:10px;" onclick="addNewProject()" title="Add New Project">＋ Add Project</button>
       </div>
 
-      <div id="sidebar-projects-container">
-        <!-- Rendered dynamically via renderSidebarProjects() -->
-      </div>
+      <div id="sidebar-projects-container"></div>
 
-      <!-- Contact & Connect outside Projects -->
       <div style="margin-top: 12px;">
         <div class="nav-group-title">INFO & REACH OUT</div>
         <button class="tool-item-btn" id="btn-tool-contact" data-tool="contact" onclick="handleToolClick('contact')">
@@ -417,7 +375,18 @@
   <div style="font-size:11px; color:var(--text-muted);" id="layout-indicator-label">Mode: Complete Screen</div>
 </footer>
 
-<!-- LOGIN AUTH MODAL WITH CREDENTIALS -->
+<!-- PDF MODAL VIEWER -->
+<div class="pdf-modal-backdrop" id="pdf-modal" onclick="closePdfModal(event)">
+  <div class="pdf-modal-content" onclick="event.stopPropagation()">
+    <div class="window-header">
+      <div class="window-title" id="pdf-modal-title"><span>📐</span> PDF Inspection</div>
+      <button class="btn-icon btn-icon-danger" onclick="closePdfModal()">✕ Close</button>
+    </div>
+    <iframe id="pdf-modal-frame" style="flex:1; width:100%; border:none; background:#fff;"></iframe>
+  </div>
+</div>
+
+<!-- LOGIN AUTH MODAL -->
 <div class="login-backdrop" id="login-modal">
   <div class="login-modal-box">
     <div style="text-align:center;">
@@ -441,7 +410,6 @@
 </div>
 
 <script>
-/* DUAL LOGIN CREDENTIALS & PERMISSIONS */
 const userAccounts = {
   user1: { loginId: "Yeriswamy DV", password: "Rogue@369", fullName: "Yeriswamy DV", role: "Product Sustaining Engineer", avatar: "YD", canDownload: true, badgeTitle: "Full Access Mode", badgeClass: "mode-admin" },
   user2: { loginId: "Guestin", password: "Guest@2580", fullName: "Guest Reviewer", role: "Guest Observer (Read Only)", avatar: "GS", canDownload: false, badgeTitle: "Read Only Mode", badgeClass: "mode-guest" }
@@ -490,18 +458,22 @@ function toggleSidebar() {
 function toggleUserDropdown() { document.getElementById("user-dropdown").classList.toggle("show"); }
 window.addEventListener("click", (e) => { if (!e.target.closest(".user-profile-menu")) document.getElementById("user-dropdown").classList.remove("show"); });
 
-/* DYNAMIC MULTI-PROJECT MANAGEMENT ENGINE */
+/* WORKSPACE DATA & MULTI-PROJECT ENGINE */
+const defaultHeaders = ["Discipline", "Component / Parameter", "Design Value", "Unit", "Safety Margin / Spec", "Execution Status"];
+const defaultSheetRows = [
+  ["Mechanical CAD", "Top Base Ring Blank (Al 7075-T6)", "750.0", "mm OD", "30mm Billet, 68% Mass Pocketed", "Completed"],
+  ["Mechanical CAD", "Isogrid Pocket Pattern & Ribs", "60.0", "mm pitch", "3.0mm Rib, 3.5mm Floor, R3 Fillets", "Completed"],
+  ["Mechanical CAD", "Central Optical Line-of-Sight Bore", "300.0", "mm", "Through-bore for umbilical & laser", "Completed"],
+  ["Mechanical CAD", "Dual-Cleat Clevis Brackets (17-4 PH)", "12.0", "mm Pin", "MS > +8.2 under peak shear", "In Progress"],
+  ["Mechanical CAD", "Strut Euler Buckling Simulation", "64758.7", "N", "P_cr Euler Limit, MS = +44.6", "In Review"],
+  ["Electronics", "48V LiFePO4 Energy Architecture", "720.0", "Wh", "48V 15Ah Isolated Cleanroom Pack", "Completed"],
+  ["Mechatronics", "BLDC Motors & Planetary Roller Screws", "6x", "Units", "8mm lead zero-backlash actuators", "In Progress"]
+];
+
 let workspaceData = {
-  projects: [
-    { id: "proj-1", name: "Project-1 (MGSE)", expanded: true }
-  ],
-  sheetHeaders: ["Discipline", "Component / Parameter", "Design Value", "Unit", "Safety Margin", "Status"],
-  sheet: [
-    ["Mechanical CAD", "Top Base Ring Blank (Al 7075-T6)", "750.0", "mm OD", "30mm Billet, 68% Pocketed", "Completed"],
-    ["Mechanical CAD", "Isogrid Pocket Pattern & Ribs", "60.0", "mm pitch", "3.0mm Rib, R3 Fillets", "Completed"],
-    ["Electronics", "48V LiFePO4 Energy Architecture", "720.0", "Wh", "Isolated Cleanroom Pack", "Completed"],
-    ["Mechatronics", "BLDC Motors & Roller Screws", "6x", "Units", "Zero-backlash actuators", "In Progress"]
-  ],
+  projects: [{ id: "proj-1", name: "Project-1 (MGSE)", expanded: true }],
+  sheetHeaders: defaultHeaders,
+  sheet: defaultSheetRows,
   docSections: [
     {
       title: "1. Mechanical CAD & Kinematics",
@@ -509,19 +481,37 @@ let workspaceData = {
     }
   ],
   slides: [
-    { title: "Smart MGSE: Connected Assembly & Lifting", tag: "Slide 1", body: "• Tailored for ICEYE-class SAR microsatellites.\n• 6-DoF Stewart-Gough active-compliance rig.\n• Damps crane sway to < 2 N touch guidance." }
+    { title: "Smart MGSE: Connected Assembly & Lifting", tag: "Slide 1: Executive Overview", body: "• Next-Generation MGSE tailored specifically for ICEYE-class SAR microsatellites.\n• Replaces manual high-risk rigging with a 6-DoF Stewart-Gough active-compliance rig.\n• Damps crane sway to < 2 N touch guidance force." }
   ],
   vault: {
-    cad: { title: "Mechanical CAD Designs", icon: "📐", color: "var(--cad-color)", subfolders: [{ id: "cad_sub_1", name: "3D CAD Models & Assemblies", files: [{ name: "TOP_BASE_ISOGRID_REV_C.sldprt", size: "14.2 MB", date: "2026-10-28" }] }] }
+    cad: {
+      title: "Mechanical CAD Designs", icon: "📐", color: "var(--cad-color)",
+      subfolders: [{ id: "cad_sub_1", name: "3D CAD Models & Assemblies", files: [{ name: "TOP_BASE_ISOGRID_REV_C.sldprt", size: "14.2 MB", date: "2026-10-28" }, { name: "HEXALIFT_6DOF_TOP_ASSY.sldasm", size: "48.6 MB", date: "2026-10-29" }] }]
+    }
   },
   drawings: {
-    mechanical: { title: "Mechanical Fabrication Prints", icon: "📐", color: "var(--cad-color)", subfolders: [{ id: "dwg_mech_1", name: "Base Isogrid Fabrication Prints", files: [{ name: "DWG_ISOGRID_BASE_PLATE_A1.pdf", sheet: "A1 Format", rev: "Rev C", size: "4.3 MB", date: "2026-10-27" }] }] }
+    mechanical: {
+      title: "Mechanical Fabrication Prints", icon: "📐", color: "var(--cad-color)",
+      subfolders: [{ id: "dwg_mech_1", name: "Base Isogrid Fabrication Prints", files: [{ name: "DWG_ISOGRID_BASE_PLATE_A1.pdf", sheet: "A1 Format", rev: "Rev C", size: "4.3 MB", date: "2026-10-27" }] }]
+    }
   },
   pastedImages: [],
   theme: "theme-dark"
 };
 
 let activeProjectId = "proj-1";
+let viewMode = 'fullscreen';
+let focusedTool = 'sheet';
+let splitOpenTools = { sheet: true, graph: true, doc: false, ppt: false, vault: false, drawings: false, contact: false };
+let docMode = 'split';
+let activeDocSelection = { mainIndex: 0, subIndex: null };
+let currentSlideIndex = 0;
+let isVaultDrawerPinned = true;
+let isDwgDrawerPinned = true;
+let activeVaultSelection = { discKey: "cad", subfolderIdx: 0 };
+let activeDwgSelection = { discKey: "mechanical", subfolderIdx: 0 };
+let vaultGroupCollapse = { cad: true };
+let dwgGroupCollapse = { mechanical: true };
 
 function addNewProject() {
   const name = prompt("Enter New Project Name:", "Project-2 (Optical Payload)");
@@ -537,10 +527,7 @@ function renameProject(projId, event) {
   const proj = workspaceData.projects.find(p => p.id === projId);
   if (!proj) return;
   const newName = prompt("Rename Project:", proj.name);
-  if (newName) {
-    proj.name = newName.trim();
-    renderAll();
-  }
+  if (newName) { proj.name = newName.trim(); renderAll(); }
 }
 
 function deleteProject(projId, event) {
@@ -558,13 +545,6 @@ function toggleProjectCollapse(projId) {
   if (proj) { proj.expanded = !proj.expanded; renderAll(); }
 }
 
-let viewMode = 'fullscreen';
-let focusedTool = 'sheet';
-let splitOpenTools = { sheet: true, graph: true, doc: false, ppt: false, vault: false, drawings: false, contact: false };
-let docMode = 'split';
-let activeDocSelection = { mainIndex: 0, subIndex: null };
-let currentSlideIndex = 0;
-
 function handleToolClick(tool) {
   if (viewMode === 'fullscreen') focusedTool = tool;
   else splitOpenTools[tool] = !splitOpenTools[tool];
@@ -580,10 +560,7 @@ function setViewMode(mode) {
   renderAll();
 }
 
-function setDocDisplayMode(mode) {
-  docMode = mode;
-  renderAll();
-}
+function setDocDisplayMode(mode) { docMode = mode; renderAll(); }
 
 /* BUILDERS */
 function buildSheetPanel(isSplit) {
@@ -616,17 +593,10 @@ function buildSheetPanel(isSplit) {
               <tr>
                 <td style="color:#64748b; text-align:center;">${rIdx + 1}</td>
                 ${row.map((cell, cIdx) => {
-                  if (cIdx === statusColIndex) {
-                    return `
-                      <td>
-                        <select class="status-select ${curClass}" ${isGuest ? 'disabled' : ''} onchange="updateStatus(${rIdx}, ${cIdx}, this.value)">
-                          <option value="Completed" ${curStatus === "Completed" ? "selected" : ""}>🟢 Completed</option>
-                          <option value="In Progress" ${curStatus === "In Progress" ? "selected" : ""}>🟡 In Progress</option>
-                          <option value="In Review" ${curStatus === "In Review" ? "selected" : ""}>🟠 In Review</option>
-                          <option value="Yet to be done" ${curStatus === "Yet to be done" ? "selected" : ""}>🔴 Yet to be done</option>
-                        </select>
-                      </td>
-                    `;
+                  if (cIdx === 0) {
+                    return `<td><select class="status-select discipline-${cell==='Mechanical CAD'?'cad':cell==='Electronics'?'elec':'mecha'}" ${isGuest?'disabled':''} onchange="updateDiscipline(${rIdx}, this.value)"><option value="Mechanical CAD" ${cell==='Mechanical CAD'?'selected':''}>📐 CAD</option><option value="Electronics" ${cell==='Electronics'?'selected':''}>⚡ Elec</option><option value="Mechatronics" ${cell==='Mechatronics'?'selected':''}>🤖 Mecha</option></select></td>`;
+                  } else if (cIdx === statusColIndex) {
+                    return `<td><select class="status-select ${curClass}" ${isGuest ? 'disabled' : ''} onchange="updateStatus(${rIdx}, ${cIdx}, this.value)"><option value="Completed" ${curStatus === "Completed" ? "selected" : ""}>🟢 Completed</option><option value="In Progress" ${curStatus === "In Progress" ? "selected" : ""}>🟡 In Progress</option><option value="In Review" ${curStatus === "In Review" ? "selected" : ""}>🟠 In Review</option><option value="Yet to be done" ${curStatus === "Yet to be done" ? "selected" : ""}>🔴 Yet to do</option></select></td>`;
                   } else {
                     return `<td ${isGuest ? '' : 'contenteditable="true"'} onblur="updateSheet(${rIdx}, ${cIdx}, this.innerText)">${cell}</td>`;
                   }
@@ -644,9 +614,11 @@ function buildSheetPanel(isSplit) {
 function alertGuestBlocked() { alert("Action Blocked in Guest Read-Only mode."); }
 function updateHeader(idx, val) { workspaceData.sheetHeaders[idx] = val.trim(); }
 function updateSheet(r, c, val) { workspaceData.sheet[r][c] = val.trim(); }
+function updateDiscipline(r, val) { workspaceData.sheet[r][0] = val; renderAll(); }
 function updateStatus(r, c, val) { workspaceData.sheet[r][c] = val; renderAll(); }
 function addSheetRow() {
   const newRow = new Array(workspaceData.sheetHeaders.length).fill("-");
+  newRow[0] = "Mechanical CAD";
   newRow[1] = "New Parameter";
   newRow[newRow.length - 1] = "Yet to be done";
   workspaceData.sheet.push(newRow);
@@ -671,11 +643,7 @@ function deleteSheetColumn() {
   const choice = prompt("Enter column index to delete (2 to " + (statusIdx - 1) + "):");
   if (choice !== null && !isNaN(choice)) {
     const idx = parseInt(choice);
-    if (idx >= 2 && idx < statusIdx) {
-      workspaceData.sheetHeaders.splice(idx, 1);
-      workspaceData.sheet.forEach(r => r.splice(idx, 1));
-      renderAll();
-    }
+    if (idx >= 2 && idx < statusIdx) { workspaceData.sheetHeaders.splice(idx, 1); workspaceData.sheet.forEach(r => r.splice(idx, 1)); renderAll(); }
   }
 }
 
@@ -689,21 +657,9 @@ function getStatusClass(status) {
 function renderImageMarkup(id) {
   const img = workspaceData.pastedImages.find(i => i.id === id);
   if (!img) return `<span style="color:var(--danger);">[Image not found: ${id}]</span>`;
-  return `
-    <div class="pasted-image-card">
-      <img src="${img.url}" style="width:${img.width || 400}px;" />
-      <div class="image-controls-bar">
-        <span>Resize:</span>
-        <input type="range" min="150" max="800" value="${img.width || 400}" oninput="resizePastedImage('${id}', this.value)" />
-      </div>
-    </div>
-  `;
+  return `<div class="pasted-image-card"><img src="${img.url}" style="width:${img.width || 400}px;" /><div class="image-controls-bar"><span>Resize:</span><input type="range" min="150" max="800" value="${img.width || 400}" oninput="resizePastedImage('${id}', this.value)" /></div></div>`;
 }
-
-function resizePastedImage(id, val) {
-  const img = workspaceData.pastedImages.find(i => i.id === id);
-  if (img) { img.width = parseInt(val); renderAll(); }
-}
+function resizePastedImage(id, val) { const img = workspaceData.pastedImages.find(i => i.id === id); if (img) { img.width = parseInt(val); renderAll(); } }
 
 function getActiveDocObject() {
   const mIdx = activeDocSelection.mainIndex;
@@ -716,7 +672,7 @@ function getActiveDocObject() {
 
 function parseMarkdownAndMath(text) {
   if (!text) return '<p style="color:var(--text-muted); font-style:italic;">No content in this section yet.</p>';
-  let processed = text.replace(/\\varnothing/g, "Ø").replace(/\\times/g, "×").replace(/\$([^$]+)\$/g, '<span class="math-formula">$1</span>');
+  let processed = text.replace(/\\varnothing/g, "Ø").replace(/\\times/g, "×").replace(/\\text\{([^}]+)\}/g, "$1").replace(/\\_/g, "_").replace(/\$([^$]+)\$/g, '<span class="math-formula">$1</span>');
   processed = processed.replace(/\[IMAGE:([^\]]+)\]/g, (m, id) => renderImageMarkup(id));
   return processed.split('\n').map(l => {
     let trimmed = l.trim();
@@ -777,7 +733,7 @@ function buildDocPanel(isSplit) {
           ${docMode !== 'preview' ? `
             <div class="doc-pane" style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
               <div style="font-size:10px; font-weight:700; color:var(--text-muted); margin-bottom:4px;">MARKDOWN / LATEX SOURCE (SELECT & COPY ENABLED)</div>
-              <textarea class="doc-textarea" style="flex:1; width:100%; background:transparent; border:none; color:var(--text-main); font-family:inherit; font-size:13px; line-height:1.6; resize:none; outline:none;" oninput="activeDoc.obj.content=this.value; renderAll()">${activeDoc.obj.content}</textarea>
+              <textarea class="doc-textarea" style="flex:1; width:100%; background:transparent; border:none; color:var(--text-main); font-family:inherit; font-size:13px; line-height:1.6; resize:none; outline:none;" oninput="getActiveDocObject().obj.content=this.value; renderAll()">${activeDoc.obj.content}</textarea>
             </div>` : ''}
           ${docMode !== 'edit' ? `
             <div class="doc-pane" style="flex:1; overflow-y:auto;">
@@ -829,55 +785,109 @@ function buildPptPanel(isSplit) {
   const slide = workspaceData.slides[currentSlideIndex] || workspaceData.slides[0];
   const panel = document.createElement("div");
   panel.className = "window-panel";
+  const isGuest = !userAccounts[activeUserKey].canDownload;
+
   panel.innerHTML = `
     <div class="window-header"><div class="window-title" style="color:var(--ppt-color);"><span>📽️</span> Presentation Deck</div>${isSplit?'<button class="btn-icon btn-icon-danger" onclick="closeToolInSplit(\'ppt\')">✕</button>':''}</div>
     <div class="symbols-toolbar">
       <button class="sym-btn" onclick="if(currentSlideIndex>0){currentSlideIndex--; renderAll();}">◀ Prev</button>
       <span style="font-size:12px; font-weight:800;">Slide ${currentSlideIndex + 1} of ${workspaceData.slides.length}</span>
       <button class="sym-btn" onclick="if(currentSlideIndex<workspaceData.slides.length-1){currentSlideIndex++; renderAll();}">Next ▶</button>
+      <div class="sym-divider"></div>
+      <button class="sym-btn ${isGuest?'disabled-read-only':''}" onclick="${isGuest?'alertGuestBlocked()':'addNewSlide()'}">➕ Add Slide</button>
+      <button class="sym-btn sym-btn-danger ${isGuest?'disabled-read-only':''}" onclick="${isGuest?'alertGuestBlocked()':'deleteCurrentSlide()'}">🗑️ Delete Slide</button>
     </div>
     <div class="window-content"><div class="ppt-view"><div class="ppt-slide-card">
-      <div class="ppt-slide-title" contenteditable="true" onblur="workspaceData.slides[currentSlideIndex].title=this.innerText">${slide.title}</div>
-      <div class="ppt-slide-body" contenteditable="true" onblur="workspaceData.slides[currentSlideIndex].body=this.innerText">${slide.body}</div>
-      <div class="ppt-slide-footer"><span>PowerShare Studio</span><span>Slide ${currentSlideIndex + 1}</span></div>
+      <div class="ppt-slide-title" ${isGuest?'':'contenteditable="true"'} onblur="workspaceData.slides[currentSlideIndex].title=this.innerText">${slide.title}</div>
+      <div class="ppt-slide-body" ${isGuest?'':'contenteditable="true"'} onblur="workspaceData.slides[currentSlideIndex].body=this.innerText">${slide.body}</div>
+      <div class="ppt-slide-footer"><span>PowerShare Studio</span><span>Slide ${currentSlideIndex + 1} of ${workspaceData.slides.length}</span></div>
     </div></div></div>
   `;
   return panel;
 }
 
+function addNewSlide() {
+  workspaceData.slides.push({ title: "New Slide", tag: "Custom", body: "• Bullet 1\n• Bullet 2" });
+  currentSlideIndex = workspaceData.slides.length - 1;
+  renderAll();
+}
+
+function deleteCurrentSlide() {
+  if (workspaceData.slides.length <= 1) { alert("Cannot delete the last remaining slide."); return; }
+  if (confirm("Delete current slide?")) {
+    workspaceData.slides.splice(currentSlideIndex, 1);
+    if (currentSlideIndex >= workspaceData.slides.length) currentSlideIndex = workspaceData.slides.length - 1;
+    renderAll();
+  }
+}
+
 function buildGraphPanel(isSplit) {
   const panel = document.createElement("div");
   panel.className = "window-panel";
-  let counts = { Completed: 0, "In Progress": 0, "In Review": 0, "Yet to be done": 0 };
-  let total = 0;
   const statusIdx = workspaceData.sheetHeaders.length - 1;
-  workspaceData.sheet.forEach(r => {
-    const st = r[statusIdx] || "Yet to be done";
-    if (counts[st] !== undefined) counts[st]++; else counts["Yet to be done"]++;
-    total++;
+
+  const discStats = {
+    "Mechanical CAD": { total: 0, "Completed": 0, "In Progress": 0, "In Review": 0, "Yet to be done": 0 },
+    "Electronics": { total: 0, "Completed": 0, "In Progress": 0, "In Review": 0, "Yet to be done": 0 },
+    "Mechatronics": { total: 0, "Completed": 0, "In Progress": 0, "In Review": 0, "Yet to be done": 0 }
+  };
+  let globalCounts = { "Completed": 0, "In Progress": 0, "In Review": 0, "Yet to be done": 0 };
+  let grandTotal = 0;
+
+  workspaceData.sheet.forEach(row => {
+    const disc = row[0] || "Mechanical CAD";
+    const st = row[statusIdx] || "Yet to be done";
+    if (!discStats[disc]) discStats[disc] = { total: 0, "Completed": 0, "In Progress": 0, "In Review": 0, "Yet to be done": 0 };
+    discStats[disc].total++;
+    if (discStats[disc][st] !== undefined) discStats[disc][st]++; else discStats[disc]["Yet to be done"]++;
+    if (globalCounts[st] !== undefined) globalCounts[st]++; else globalCounts["Yet to be done"]++;
+    grandTotal++;
   });
-  if (total === 0) total = 1;
-  const pct = Math.round((counts["Completed"] / total) * 100);
-  const rCircle = 68, cCircle = 2 * Math.PI * rCircle;
-  const offset = cCircle * (1 - counts["Completed"] / total);
+  if (grandTotal === 0) grandTotal = 1;
+  const overallCompletedPct = Math.round((globalCounts["Completed"] / grandTotal) * 100);
+  const r = 68;
+  const c = 2 * Math.PI * r;
+  const offset = c * (1 - globalCounts["Completed"] / grandTotal);
 
   panel.innerHTML = `
     <div class="window-header"><div class="window-title" style="color:var(--graph-color);"><span>📈</span> Integrated Progress Health</div>${isSplit?'<button class="btn-icon btn-icon-danger" onclick="closeToolInSplit(\'graph\')">✕</button>':''}</div>
     <div class="window-content"><div class="graph-view">
       <div class="overall-kpi-bar">
-        <div class="kpi-tile" style="border-left:3px solid var(--status-green);"><div class="kpi-title">Completed</div><div class="kpi-number" style="color:var(--status-green);">${counts["Completed"]} (${pct}%)</div></div>
-        <div class="kpi-tile" style="border-left:3px solid var(--status-yellow);"><div class="kpi-title">In Progress</div><div class="kpi-number" style="color:var(--status-yellow);">${counts["In Progress"]}</div></div>
-        <div class="kpi-tile" style="border-left:3px solid var(--status-orange);"><div class="kpi-title">In Review</div><div class="kpi-number" style="color:var(--status-orange);">${counts["In Review"]}</div></div>
-        <div class="kpi-tile" style="border-left:3px solid var(--status-red);"><div class="kpi-title">Yet To Do</div><div class="kpi-number" style="color:var(--status-red);">${counts["Yet to be done"]}</div></div>
+        <div class="kpi-tile" style="border-left:3px solid var(--status-green);"><div class="kpi-title">Completed</div><div class="kpi-number" style="color:var(--status-green);">${globalCounts["Completed"]} (${overallCompletedPct}%)</div></div>
+        <div class="kpi-tile" style="border-left:3px solid var(--status-yellow);"><div class="kpi-title">In Progress</div><div class="kpi-number" style="color:var(--status-yellow);">${globalCounts["In Progress"]}</div></div>
+        <div class="kpi-tile" style="border-left:3px solid var(--status-orange);"><div class="kpi-title">In Review</div><div class="kpi-number" style="color:var(--status-orange);">${globalCounts["In Review"]}</div></div>
+        <div class="kpi-tile" style="border-left:3px solid var(--status-red);"><div class="kpi-title">Yet To Do</div><div class="kpi-number" style="color:var(--status-red);">${globalCounts["Yet to be done"]}</div></div>
       </div>
       <div class="project-health-container">
-        <div><h3>Overall Completion Gauge</h3><p style="color:var(--text-muted); font-size:12px;">Real-time task synchronization</p></div>
-        <svg width="160" height="160" viewBox="0 0 160 160">
-          <circle cx="80" cy="80" r="${rCircle}" fill="transparent" stroke="var(--border)" stroke-width="16"/>
-          <circle cx="80" cy="80" r="${rCircle}" fill="transparent" stroke="var(--status-green)" stroke-width="16" stroke-dasharray="${cCircle}" stroke-dashoffset="${offset}" stroke-linecap="round" transform="rotate(-90 80 80)"/>
-          <text x="80" y="76" text-anchor="middle" fill="var(--text-main)" font-size="28" font-weight="800">${pct}%</text>
-          <text x="80" y="96" text-anchor="middle" fill="var(--text-muted)" font-size="10" font-weight="700">COMPLETE</text>
-        </svg>
+        <div class="gauge-meta-box"><h3>Overall Completion Gauge</h3><p style="color:var(--text-muted); font-size:12px;">Real-time task synchronization across disciplines</p></div>
+        <div class="gauge-graphic-wrap">
+          <svg width="160" height="160" viewBox="0 0 160 160">
+            <circle cx="80" cy="80" r="${r}" fill="transparent" stroke="var(--border)" stroke-width="16"/>
+            <circle cx="80" cy="80" r="${r}" fill="transparent" stroke="var(--status-green)" stroke-width="16" stroke-dasharray="${c}" stroke-dashoffset="${offset}" stroke-linecap="round" transform="rotate(-90 80 80)"/>
+            <text x="80" y="76" text-anchor="middle" fill="var(--text-main)" font-size="28" font-weight="800">${overallCompletedPct}%</text>
+            <text x="80" y="96" text-anchor="middle" fill="var(--text-muted)" font-size="10" font-weight="700">COMPLETE</text>
+          </svg>
+        </div>
+      </div>
+      <div class="three-pillars-grid">
+        ${Object.keys(discStats).map(dName => {
+          const stats = discStats[dName];
+          const t = stats.total || 1;
+          const compPct = Math.round((stats["Completed"] / t) * 100);
+          const pillarClass = dName === "Mechanical CAD" ? "pillar-cad" : dName === "Electronics" ? "pillar-elec" : "pillar-mecha";
+          const colorVar = dName === "Mechanical CAD" ? "var(--cad-color)" : dName === "Electronics" ? "var(--elec-color)" : "var(--mecha-color)";
+          return `
+            <div class="pillar-card ${pillarClass}">
+              <div class="pillar-header">
+                <div class="pillar-name" style="color:${colorVar};"><span>${dName==='Mechanical CAD'?'📐':dName==='Electronics'?'⚡':'🤖'}</span> ${dName}</div>
+                <span style="font-size:11px; font-weight:800; color:var(--text-muted);">${compPct}% Done</span>
+              </div>
+              <div class="mini-bar-row">
+                <div class="mini-bar-labels"><span>Progress</span><span>${stats["Completed"]} / ${stats.total} Completed</span></div>
+                <div class="mini-bar-track"><div class="mini-bar-fill" style="width:${compPct}%; background:${colorVar};"></div></div>
+              </div>
+            </div>`;
+        }).join('')}
       </div>
     </div></div>
   `;
@@ -887,22 +897,107 @@ function buildGraphPanel(isSplit) {
 function buildVaultPanel(isSplit) {
   const panel = document.createElement("div");
   panel.className = "window-panel";
+  const disc = workspaceData.vault[activeVaultSelection.discKey] || workspaceData.vault.cad;
+  const currentSub = disc.subfolders[activeVaultSelection.subfolderIdx] || disc.subfolders[0];
+  const isGuest = !userAccounts[activeUserKey].canDownload;
+
   panel.innerHTML = `
     <div class="window-header"><div class="window-title" style="color:var(--vault-color);"><span>📦</span> CAD Models Vault Explorer</div>${isSplit?'<button class="btn-icon btn-icon-danger" onclick="closeToolInSplit(\'vault\')">✕</button>':''}</div>
-    <div class="window-content" style="padding:20px;"><p style="font-size:13px; color:var(--text-muted);">CAD Assemblies: TOP_BASE_ISOGRID_REV_C.sldprt, HEXALIFT_6DOF_TOP_ASSY.sldasm</p></div>
+    <div class="vault-split-container">
+      <aside class="pinnable-drawer ${isVaultDrawerPinned?'':'unpinned'}">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-weight:800; font-size:10px; color:var(--text-muted);">CAD DIRECTORIES</span>
+          <button class="drawer-pin-btn ${isVaultDrawerPinned?'is-pinned':''}" onclick="isVaultDrawerPinned=!isVaultDrawerPinned; renderAll();">${isVaultDrawerPinned?'📌 Pinned':'🔓 Unpin'}</button>
+        </div>
+        ${Object.keys(workspaceData.vault).map(k => {
+          const d = workspaceData.vault[k];
+          return `<div class="tree-folder-group"><div class="tree-folder-header" style="color:${d.color};"><span>${d.icon}</span> <span>${d.title}</span></div></div>`;
+        }).join('')}
+      </aside>
+      <main class="vault-browser-main">
+        <div class="vault-browser-header">
+          <div style="font-weight:700;">${disc.title} / <strong>${currentSub.name}</strong></div>
+          <button class="btn-icon btn-icon-primary ${isGuest?'disabled-read-only':''}" onclick="${isGuest?'alertGuestBlocked()':'document.getElementById(\'vault-uploader\').click()'}">⬆️ Upload CAD Part</button>
+          <input type="file" id="vault-uploader" style="display:none;" multiple onchange="handleBrowserFileUpload(this.files)">
+        </div>
+        <div class="vault-table-wrap">
+          <table class="vault-table">
+            <thead><tr><th>Type</th><th>File Name</th><th>Size</th><th>Date</th><th style="text-align:right;">Actions</th></tr></thead>
+            <tbody>
+              ${currentSub.files.map((f, i)=>`<tr><td>📦</td><td style="font-weight:700;">${f.name}</td><td style="color:var(--accent);">${f.size}</td><td>${f.date}</td><td style="text-align:right;"><button class="btn-icon btn-icon-primary ${isGuest?'disabled-read-only':''}" onclick="triggerSmartDownload('${f.name}')">⬇️ Download</button></td></tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
   `;
   return panel;
+}
+
+function handleBrowserFileUpload(files) {
+  const disc = workspaceData.vault[activeVaultSelection.discKey];
+  const sub = disc.subfolders[activeVaultSelection.subfolderIdx];
+  Array.from(files).forEach(file => {
+    sub.files.push({ name: file.name, size: (file.size/(1024*1024)).toFixed(1)+" MB", date: new Date().toISOString().split('T')[0] });
+  });
+  renderAll();
 }
 
 function buildDrawingsPanel(isSplit) {
   const panel = document.createElement("div");
   panel.className = "window-panel";
+  const disc = workspaceData.drawings[activeDwgSelection.discKey] || workspaceData.drawings.mechanical;
+  const currentSub = disc.subfolders[activeDwgSelection.subfolderIdx] || disc.subfolders[0];
+  const isGuest = !userAccounts[activeUserKey].canDownload;
+
   panel.innerHTML = `
-    <div class="window-header"><div class="window-title" style="color:var(--dwg-color);"><span>📐</span> Drawing PDFs & Prints</div>${isSplit?'<button class="btn-icon btn-icon-danger" onclick="closeToolInSplit(\'drawings\')">✕</button>':''}</div>
-    <div class="window-content" style="padding:20px;"><p style="font-size:13px; color:var(--text-muted);">Fabrication Prints: DWG_ISOGRID_BASE_PLATE_A1.pdf</p></div>
+    <div class="window-header"><div class="window-title" style="color:var(--dwg-color);"><span>📐</span> Drawing PDFs & Technical Specifications</div>${isSplit?'<button class="btn-icon btn-icon-danger" onclick="closeToolInSplit(\'drawings\')">✕</button>':''}</div>
+    <div class="vault-split-container">
+      <aside class="pinnable-drawer ${isDwgDrawerPinned?'':'unpinned'}">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-weight:800; font-size:10px; color:var(--text-muted);">DRAWINGS</span>
+          <button class="drawer-pin-btn ${isDwgDrawerPinned?'is-pinned':''}" onclick="isDwgDrawerPinned=!isDwgDrawerPinned; renderAll();">${isDwgDrawerPinned?'📌 Pinned':'🔓 Unpin'}</button>
+        </div>
+        ${Object.keys(workspaceData.drawings).map(k => {
+          const d = workspaceData.drawings[k];
+          return `<div class="tree-folder-group"><div class="tree-folder-header" style="color:${d.color};"><span>${d.icon}</span> <span>${d.title}</span></div></div>`;
+        }).join('')}
+      </aside>
+      <main class="vault-browser-main">
+        <div class="vault-browser-header">
+          <div style="font-weight:700;">${disc.title} / <strong>${currentSub.name}</strong></div>
+          <button class="btn-icon btn-icon-primary ${isGuest?'disabled-read-only':''}" onclick="${isGuest?'alertGuestBlocked()':'document.getElementById(\'dwg-uploader\').click()'}">⬆️ Upload PDF</button>
+          <input type="file" id="dwg-uploader" accept=".pdf" style="display:none;" multiple onchange="handleDwgFileUpload(this.files)">
+        </div>
+        <div class="vault-table-wrap">
+          <table class="vault-table">
+            <thead><tr><th>Type</th><th>Drawing Title</th><th>Sheet</th><th>Revision</th><th style="text-align:right;">Actions</th></tr></thead>
+            <tbody>
+              ${currentSub.files.map((f, i)=>`<tr><td>📄</td><td style="font-weight:700;">${f.name}</td><td>${f.sheet||'A1'}</td><td style="color:var(--accent);">${f.rev||'Rev A'}</td><td style="text-align:right;"><button class="btn-icon" onclick="openPdfModal('${f.name}')">👁️ View</button><button class="btn-icon btn-icon-primary ${isGuest?'disabled-read-only':''}" onclick="triggerSmartDownload('${f.name}')">⬇️ Download</button></td></tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
   `;
   return panel;
 }
+
+function handleDwgFileUpload(files) {
+  const disc = workspaceData.drawings[activeDwgSelection.discKey];
+  const sub = disc.subfolders[activeDwgSelection.subfolderIdx];
+  Array.from(files).forEach(file => {
+    sub.files.push({ name: file.name, sheet: "A1 Format", rev: "Rev 1.0", size: (file.size/(1024*1024)).toFixed(1)+" MB", date: new Date().toISOString().split('T')[0] });
+  });
+  renderAll();
+}
+
+function openPdfModal(name) {
+  document.getElementById("pdf-modal-title").innerHTML = `<span>📐</span> PDF Inspection: <strong>${name}</strong>`;
+  document.getElementById("pdf-modal-frame").src = './vault/' + name;
+  document.getElementById("pdf-modal").style.display = "flex";
+}
+function closePdfModal() { document.getElementById("pdf-modal").style.display = "none"; document.getElementById("pdf-modal-frame").src = ""; }
 
 function buildContactPanel(isSplit) {
   const panel = document.createElement("div");
@@ -911,12 +1006,14 @@ function buildContactPanel(isSplit) {
     <div class="window-header"><div class="window-title" style="color:#38bdf8;"><span>📬</span> Contact & Engineering Network • Yeriswamy DV</div>${isSplit?'<button class="btn-icon btn-icon-danger" onclick="closeToolInSplit(\'contact\')">✕</button>':''}</div>
     <div class="window-content"><div class="contact-panel-container">
       <div class="contact-hero-card">
-        <div class="contact-profile-meta"><div class="contact-big-avatar">YD</div><div><div class="contact-profile-title">Yeriswamy DV</div><div class="contact-profile-sub">Product Sustaining Engineer • Hyderabad, India</div></div></div>
+        <div class="contact-profile-meta"><div class="contact-big-avatar">YD</div><div><div class="contact-profile-title">Yeriswamy DV</div><div class="contact-profile-sub">Product Sustaining Engineer & Mechanical Design Engineer • Hyderabad, India</div></div></div>
       </div>
       <div class="contact-grid-cards">
-        <div class="contact-channel-card"><div class="channel-card-top"><div class="channel-icon-wrap">🌐</div><div><div class="channel-label">Portfolio</div><div class="channel-value">yeriswamydv.github.io</div></div></div><a href="https://yeriswamydv.github.io/" target="_blank" class="channel-action-btn">View Portfolio ↗</a></div>
-        <div class="contact-channel-card"><div class="channel-card-top"><div class="channel-icon-wrap">💼</div><div><div class="channel-label">LinkedIn</div><div class="channel-value">yeriswamydv</div></div></div><a href="https://www.linkedin.com/in/yeriswamydv/" target="_blank" class="channel-action-btn linkedin">Connect ↗</a></div>
-        <div class="contact-channel-card"><div class="channel-card-top"><div class="channel-icon-wrap">✉️</div><div><div class="channel-label">Email</div><div class="channel-value">yeriswamy.dv@gmail.com</div></div></div><a href="mailto:yeriswamy.dv@gmail.com" class="channel-action-btn">Email ↗</a></div>
+        <div class="contact-channel-card"><div class="channel-card-top"><div class="channel-icon-wrap">🌐</div><div><div class="channel-label">Official Portfolio</div><div class="channel-value">yeriswamydv.github.io</div></div></div><a href="https://yeriswamydv.github.io/" target="_blank" class="channel-action-btn">View Portfolio ↗</a></div>
+        <div class="contact-channel-card"><div class="channel-card-top"><div class="channel-icon-wrap">💼</div><div><div class="channel-label">LinkedIn Profile</div><div class="channel-value">yeriswamydv</div></div></div><a href="https://www.linkedin.com/in/yeriswamydv/" target="_blank" class="channel-action-btn linkedin">Connect ↗</a></div>
+        <div class="contact-channel-card"><div class="channel-card-top"><div class="channel-icon-wrap">✉️</div><div><div class="channel-label">Direct Email</div><div class="channel-value">yeriswamy.dv@gmail.com</div></div></div><a href="mailto:yeriswamy.dv@gmail.com" class="channel-action-btn">Email ↗</a></div>
+        <div class="contact-channel-card"><div class="channel-card-top"><div class="channel-icon-wrap">📞</div><div><div class="channel-label">Mobile / WhatsApp</div><div class="channel-value">+91-7022556720</div></div></div><a href="tel:+917022556720" class="channel-action-btn">Call Primary Number ↗</a></div>
+        <div class="contact-channel-card"><div class="channel-card-top"><div class="channel-icon-wrap">📱</div><div><div class="channel-label">Secondary Contact</div><div class="channel-value">+91-8660524595</div></div></div><a href="tel:+918660524595" class="channel-action-btn">Call Secondary Number ↗</a></div>
       </div>
     </div></div>
   `;
@@ -958,6 +1055,11 @@ function renderSidebarProjects() {
 
 function renderAll() {
   renderSidebarProjects();
+  ['sheet', 'doc', 'ppt', 'graph', 'vault', 'drawings', 'contact'].forEach(t => {
+    const btn = document.getElementById(`btn-tool-${t}`);
+    if (btn) btn.classList.toggle('active-tool', viewMode === 'fullscreen' ? focusedTool === t : !!splitOpenTools[t]);
+  });
+
   const canvas = document.getElementById('canvas-stage');
   canvas.innerHTML = "";
 
