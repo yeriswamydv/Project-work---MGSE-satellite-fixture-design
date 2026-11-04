@@ -397,7 +397,7 @@
     <form onsubmit="handleLoginSubmit(event)" style="display:flex; flex-direction:column; gap:14px;">
       <div style="display:flex; flex-direction:column; gap:6px;">
         <label style="font-size:12px; font-weight:700; color:#334155;">Login ID</label>
-        <input type="text" id="modal-input-username" placeholder="Yeriswamy DV or Guestin" style="padding:10px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:13px;" required />
+        <input type="text" id="modal-input-username" placeholder="Owner email, or Guestin" style="padding:10px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:13px;" required />
       </div>
       <div style="display:flex; flex-direction:column; gap:6px;">
         <label style="font-size:12px; font-weight:700; color:#334155;">Password</label>
@@ -411,8 +411,8 @@
 
 <script>
 const userAccounts = {
-  user1: { loginId: "Yeriswamy DV", password: "Rogue@369", fullName: "Yeriswamy DV", role: "Product Sustaining Engineer", avatar: "YD", canDownload: true, badgeTitle: "Full Access Mode", badgeClass: "mode-admin" },
-  user2: { loginId: "Guestin", password: "Guest@2580", fullName: "Guest Reviewer", role: "Guest Observer (Read Only)", avatar: "GS", canDownload: false, badgeTitle: "Read Only Mode", badgeClass: "mode-guest" }
+  user1: { loginId: "Yeriswamy DV", fullName: "Yeriswamy DV", role: "Product Sustaining Engineer", avatar: "YD", canDownload: true, badgeTitle: "Full Access Mode", badgeClass: "mode-admin" },
+  user2: { loginId: "Guestin", fullName: "Guest Reviewer", role: "Guest Observer (Read Only)", avatar: "GS", canDownload: false, badgeTitle: "Read Only Mode", badgeClass: "mode-guest" }
 };
 let activeUserKey = "user1";
 
@@ -427,8 +427,6 @@ function handleLoginSubmit(e) {
   e.preventDefault();
   const idInput = document.getElementById("modal-input-username").value.trim();
   const passInput = document.getElementById("modal-input-password").value.trim();
-  if (idInput.toLowerCase() === "yeriswamy dv" && passInput === "Rogue@369") { activeUserKey = "user1"; finishLogin(); return; }
-  if (idInput.toLowerCase() === "guestin" && passInput === "Guest@2580") { activeUserKey = "user2"; finishLogin(); return; }
   const eb = document.getElementById("login-error-box"); eb.style.display = "block"; eb.innerText = "Invalid ID or Password.";
 }
 function finishLogin() {
@@ -1223,7 +1221,7 @@ W.buildGraphPanel=function(isSplit){
 const KEY='POWERSHARE_QUICKSAVE_V1',ha=$('.header-actions'),ts=$('#theme-selector');
 function fixup(){workspaceData.pastedImages=workspaceData.pastedImages||[];currentSlideIndex=0;activeDocSelection={mainIndex:0,subIndex:null}}
 const snap=()=>JSON.stringify({v:1,saved:new Date().toISOString(),theme:document.body.className.replace('guest-mode','').trim(),workspaceData});
-function quickSave(){try{localStorage.setItem(KEY,snap());lastStr=cur();toast('💾 Saved ✓')}catch(e){alert('Quicksave failed: browser storage is full or blocked. Use 📤 to save a backup file instead.')}}
+function quickSave(){try{localStorage.setItem(KEY,snap());lastStr=cur();if(W.FB&&FB.owner)FB.save(JSON.stringify(workspaceData)).then(()=>toast('☁️ Saved to cloud ✓')).catch(x=>alert('Cloud save failed: '+(x.message||x)));else toast('💾 Saved on this device ✓')}catch(e){alert('Quicksave failed: browser storage is full or blocked. Use 📤 to save a backup file instead.')}}
 function exportBackup(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([snap()],{type:'application/json'}));a.download='powershare-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function importBackup(f){if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);if(!j.workspaceData||!Array.isArray(j.workspaceData.sheet))throw 0;if(!confirm('Replace the current workspace with this backup?'))return;workspaceData=j.workspaceData;fixup();renderAll();toast('📥 Backup restored ✓')}catch(e){alert('Invalid backup file.')}};r.readAsText(f);$('#bk-in').value=''}
 try{const j=JSON.parse(localStorage.getItem(KEY)||'null');if(j&&j.workspaceData&&Array.isArray(j.workspaceData.sheet)){workspaceData=j.workspaceData;fixup();if(j.theme){document.body.className=j.theme;ts.value=j.theme}}}catch(e){}
@@ -1234,7 +1232,11 @@ const bk=document.createElement('input');bk.type='file';bk.id='bk-in';bk.accept=
 const cur=()=>JSON.stringify(workspaceData)+document.body.className.replace('guest-mode','').trim();let lastStr=cur(),tm;
 const setDot=(c,t)=>{const d=$('#sv-dot');if(d){d.style.background=c;d.title=t}};
 $('[data-qs]').insertAdjacentHTML('beforeend','<span id="sv-dot" title="Live auto-save on" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--status-green);margin-left:4px;"></span>');
-function autoSave(){if(G())return;let x;try{x=cur()}catch(e){return}if(x===lastStr)return;try{localStorage.setItem(KEY,snap());lastStr=x;setDot('var(--status-green)','Auto-saved '+new Date().toLocaleTimeString('en-GB',{timeZone:'Asia/Kolkata',hourCycle:'h23'})+' IST')}catch(e){setDot('var(--status-red)','Auto-save failed: browser storage is full. Use the backup file option.')}}
+function autoSave(){if(G())return;let x;try{x=cur()}catch(e){return}if(x===lastStr)return;
+ let ok=true;try{localStorage.setItem(KEY,snap())}catch(e){ok=false}
+ lastStr=x;const tt=new Date().toLocaleTimeString('en-GB',{timeZone:'Asia/Kolkata',hourCycle:'h23'})+' IST';
+ if(W.FB&&FB.owner){FB.save(JSON.stringify(workspaceData)).then(()=>setDot('var(--status-green)','Synced to cloud '+tt)).catch(e=>{lastStr='';setDot('var(--status-red)','Cloud save failed: '+(e.message||e))})}
+ else setDot(ok?'var(--status-yellow)':'var(--status-red)',ok?'Saved on this device only (not signed in to the cloud)':'Auto-save failed: browser storage is full')}
 const sched=()=>{if(G())return;clearTimeout(tm);tm=setTimeout(autoSave,700)};
 ['input','change','focusout','click','keyup'].forEach(t=>document.addEventListener(t,sched,true));
 setInterval(autoSave,5000);document.addEventListener('visibilitychange',()=>{if(document.hidden)autoSave()});addEventListener('pagehide',autoSave);
@@ -1265,10 +1267,38 @@ document.addEventListener('paste',e=>{const t=e.target;if(!t||!t.classList||!t.c
  const md='\n'+fx(rows[0])+'\n| '+Array(w).fill('---').join(' | ')+' |\n'+rows.slice(1).map(fx).join('\n')+'\n';
  e.preventDefault();const a=t.selectionStart,z=t.selectionEnd;t.value=t.value.slice(0,a)+md+t.value.slice(z);t.selectionStart=t.selectionEnd=a+md.length;t.dispatchEvent(new Event('input',{bubbles:true}));
 },true);
+W.handleLoginSubmit=async function(e){e.preventDefault();
+ const id=$('#modal-input-username').value.trim(),pw=$('#modal-input-password').value,eb=$('#login-error-box');
+ const fail=m=>{eb.style.display='block';eb.innerText=m};
+ if(id.toLowerCase()==='guestin'){activeUserKey='user2';finishLogin();return}
+ if(!id.includes('@'))return fail('Owner: sign in with your email address. Guests: type Guestin or use Instant Guest Access.');
+ if(!W.FB)return fail('Cloud sign-in is still loading. Try again in a moment.');
+ try{await FB.login(id,pw);activeUserKey='user1';finishLogin()}catch(x){fail('Sign-in failed. Check your email and password.')}};
+wrap('handleLogout',o=>{if(!G()&&W.FB)FB.logout().catch(()=>{});o()});
+addEventListener('fb-auth',e=>{if(!e.detail&&sessionStorage.getItem('POWERSHARE_CURRENT_USER')==='user1')W.handleLogout()});
+let got=false;
+addEventListener('fb-data',e=>{const j=e.detail;if(!j)return;if(!G()&&got)return;got=true;
+ if(j===JSON.stringify(workspaceData))return;
+ try{const d=JSON.parse(j);if(!d||!Array.isArray(d.sheet))return;
+  if(!G()&&!localStorage.getItem('POWERSHARE_LOCAL_BACKUP')){const q=localStorage.getItem(KEY);if(q)localStorage.setItem('POWERSHARE_LOCAL_BACKUP',q)}
+  workspaceData=d;workspaceData.pastedImages=workspaceData.pastedImages||[];if(currentSlideIndex>=(d.slides||[]).length)currentSlideIndex=0;lastStr=cur();renderAll()}catch(x){}});
 let sp='';for(let i=0;i<24;i++){const a=i*Math.PI/12;sp+=`<line x1="15" y1="10" x2="${(15+2.7*Math.cos(a)).toFixed(2)}" y2="${(10+2.7*Math.sin(a)).toFixed(2)}" stroke="#000080" stroke-width=".25"/>`}
 const fl=document.createElement('span');fl.className='hdr-flag';fl.title='India';fl.innerHTML=`<svg width="33" height="22" viewBox="0 0 30 20" role="img" aria-label="India"><rect width="30" height="20" fill="#fff"/><rect width="30" height="6.67" fill="#FF9933"/><rect y="13.33" width="30" height="6.67" fill="#138808"/><circle cx="15" cy="10" r="2.8" fill="none" stroke="#000080" stroke-width=".4"/>${sp}<rect width="30" height="20" fill="none" stroke="#94a3b8" stroke-width=".6"/></svg>`;ha.appendChild(fl);
 })();
 </script>
 
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getFirestore,doc,onSnapshot,setDoc} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+const app=initializeApp({apiKey:"AIzaSyBm1IH0fIXRfV45_pKjF_BD_9tu0lhttZs",authDomain:"mgse-hub.firebaseapp.com",projectId:"mgse-hub",storageBucket:"mgse-hub.firebasestorage.app",messagingSenderId:"301872543500",appId:"1:301872543500:web:600725bab6a91725c3bb29"});
+const db=getFirestore(app),auth=getAuth(app),ref=doc(db,"workspace","main");
+window.FB={owner:false,
+ login:(e,p)=>signInWithEmailAndPassword(auth,e,p),
+ logout:()=>signOut(auth),
+ save:j=>{if(new Blob([j]).size>1000000)return Promise.reject(new Error("Data is too large for one cloud document (large pasted images?)"));return setDoc(ref,{json:j,updated:Date.now()})}};
+onAuthStateChanged(auth,u=>{FB.owner=!!u;window.dispatchEvent(new CustomEvent("fb-auth",{detail:!!u}))});
+onSnapshot(ref,s=>{if(s.exists()&&!s.metadata.hasPendingWrites)window.dispatchEvent(new CustomEvent("fb-data",{detail:s.data().json}))},e=>console.warn("Cloud read failed",e));
+</script>
 </body>
 </html>
