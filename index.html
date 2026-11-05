@@ -1045,6 +1045,7 @@ function renderSidebarProjects() {
             <button class="tool-item-btn ${focusedTool==='graph'?'active-tool':''}" onclick="handleToolClick('graph')"><div class="tool-icon-text"><span>📈</span><span class="tool-label">3-Pillar Graphs</span></div><span class="indicator-dot" style="background:var(--graph-color);"></span></button>
             <button class="tool-item-btn ${focusedTool==='vault'?'active-tool':''}" onclick="handleToolClick('vault')"><div class="tool-icon-text"><span>📦</span><span class="tool-label">CAD Models Vault</span></div><span class="indicator-dot" style="background:var(--vault-color);"></span></button>
             <button class="tool-item-btn ${focusedTool==='drawings'?'active-tool':''}" onclick="handleToolClick('drawings')"><div class="tool-icon-text"><span>📐</span><span class="tool-label">Drawing PDFs & Prints</span></div><span class="indicator-dot" style="background:var(--dwg-color);"></span></button>
+            ${userAccounts[activeUserKey].canDownload?`<button class="tool-item-btn ${focusedTool==='design'?'active-tool':''}" onclick="handleToolClick('design')"><div class="tool-icon-text"><span>🧬</span><span class="tool-label">Design Data Code</span></div><span class="indicator-dot" style="background:var(--doc-color);"></span></button>`:''}
           </div>
         ` : ''}
       </div>`;
@@ -1113,6 +1114,21 @@ window.addEventListener("DOMContentLoaded", () => {
 .vault-table td .btn-icon{margin-left:4px}
 #ist-clock{font:700 11px ui-monospace,Consolas,monospace;color:var(--text-muted);border:1px solid var(--border);background:var(--bg-card);padding:5px 9px;border-radius:6px;white-space:nowrap}
 .hdr-flag{display:flex;align-items:center}
+footer.bottom-taskbar{display:none!important}
+body.guest-mode input{-webkit-user-select:text!important;user-select:text!important}
+.doc-nav{display:flex;gap:6px;padding:8px 12px;border-bottom:1px solid var(--border);background:var(--bg-card);overflow-x:auto;flex:0 0 auto}
+.doc-nav-sub{background:transparent;padding-top:6px;padding-bottom:6px}
+.doc-tab{padding:6px 12px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
+.doc-tab.on{background:rgba(59,130,246,.25);border-color:var(--accent);color:var(--accent)}
+.doc-nav-sub .doc-tab{font-size:11px;font-weight:600}
+.doc-nav-lbl{font-size:10px;color:var(--text-muted);align-self:center;white-space:nowrap}
+.doc-preview-pane p{margin:0 0 6px}
+.pp-stage{position:relative;aspect-ratio:16/9;background:#fff;color:#111;container-type:inline-size;overflow:hidden}
+.pp-el{position:absolute;box-sizing:border-box}.pp-el.sel{outline:2px solid #3b82f6}
+.pp-t{width:100%;height:100%;white-space:pre-wrap;outline:none;overflow:hidden;line-height:1.25}
+.pp-mv{position:absolute;left:2px;top:2px;background:#3b82f6;color:#fff;font-size:11px;padding:0 4px;cursor:move;border-radius:3px;z-index:3;touch-action:none}
+.pp-h{position:absolute;width:11px;height:11px;background:#3b82f6;border:1px solid #fff;z-index:3;touch-action:none}
+.pp-h.nw{left:-6px;top:-6px;cursor:nwse-resize}.pp-h.ne{right:-6px;top:-6px;cursor:nesw-resize}.pp-h.sw{left:-6px;bottom:-6px;cursor:nesw-resize}.pp-h.se{right:-6px;bottom:-6px;cursor:nwse-resize}
 .doc-table{border-collapse:collapse;width:100%;font-size:12px;margin:8px 0}.doc-table th,.doc-table td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top}.doc-table th{background:var(--bg-card);color:var(--accent)}
 body.guest-mode,body.guest-mode *{-webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none}
 @media print{body.guest-mode{display:none!important}}
@@ -1153,11 +1169,13 @@ wrap('handleLogout',o=>{if(!G()){o();return}if($('.card-back'))return;$('#user-d
 
 /* ---------- CAD VAULT + DRAWINGS (folders, subfolders, files) ---------- */
 const T=k=>k==='cad'?workspaceData.vault:workspaceData.drawings,S=k=>k==='cad'?activeVaultSelection:activeDwgSelection,col={};
+const BL={};
+async function fileUrl(f){if(f.uid&&BL[f.uid])return BL[f.uid];const u='./vault/'+encodeURIComponent(f.file||f.name);try{const r=await fetch(u,{method:'HEAD',cache:'no-store'});if(r.ok)return u}catch(e){}alert('"'+f.name+'" is not available online yet.\n\nUpload the file into the "vault" folder of your GitHub repository with the exact name "'+(f.file||f.name)+'", or add it again here with the upload symbol (files added here last until you refresh the page).');return null}
 W.fa=function(k,op,d,s,f){
  const tree=T(k),sel=S(k),F=tree[d],sub=F&&F.subfolders[s],file=sub&&sub.files[f];
  if(op==='sel'){sel.discKey=d;sel.subfolderIdx=s;renderAll();return}
  if(op==='tog'){col[k+d]=!col[k+d];renderAll();return}
- if(op==='view'){$('#pdf-modal-title').innerHTML='<span>📐</span> PDF Inspection: <strong>'+esc(file.name)+'</strong>';$('#pdf-modal-frame').src='./vault/'+encodeURIComponent(file.file||file.name)+(G()?'#toolbar=0&navpanes=0':'');$('#pdf-modal').style.display='flex';return}
+ if(op==='view'){if(k==='cad'){fileUrl(file).then(u=>{if(u)view3d(u,file.file||file.name)});return}fileUrl(file).then(u=>{if(!u)return;$('#pdf-modal-title').innerHTML='<span>📐</span> PDF Inspection: <strong>'+esc(file.name)+'</strong>';$('#pdf-modal-frame').src=u+(G()&&u.indexOf('blob:')!==0?'#toolbar=0&navpanes=0':'');$('#pdf-modal').style.display='flex'});return}
  if(G())return alertGuestBlocked();
  const ask=(m,v)=>{const r=prompt(m,v);return r&&r.trim()?r.trim():null};
  if(op==='addF'){const n=ask('Folder name:','New Folder');if(!n)return;const id='f'+Date.now();tree[id]={title:n,icon:'📁',color:'var(--accent)',subfolders:[{id:'s'+Date.now(),name:'General',files:[]}]};sel.discKey=id;sel.subfolderIdx=0}
@@ -1168,7 +1186,7 @@ W.fa=function(k,op,d,s,f){
  else if(op==='delS'){if(F.subfolders.length<2)return alert('Cannot delete the last subfolder.');if(!confirm('Delete subfolder "'+sub.name+'" and its '+sub.files.length+' file(s)?'))return;F.subfolders.splice(s,1);sel.discKey=d;sel.subfolderIdx=0}
  else if(op==='delX'){if(!confirm('Delete "'+file.name+'"?'))return;sub.files.splice(f,1)}
  else if(op==='renX'){const n=ask('Name:',file.name);if(!n)return;if(!file.file)file.file=file.name;file.name=n;if(k==='dwg'){const sh=ask('Sheet:',file.sheet||'A1');if(sh)file.sheet=sh;const r=ask('Revision:',file.rev||'Rev A');if(r)file.rev=r}}
- else if(op==='dl'){const a=document.createElement('a');a.href='./vault/'+encodeURIComponent(file.file||file.name);a.download=file.name;document.body.appendChild(a);a.click();a.remove();return}
+  else if(op==='dl'){fileUrl(file).then(u=>{if(!u)return;const a=document.createElement('a');a.href=u;a.download=file.name;document.body.appendChild(a);a.click();a.remove()});return}
  renderAll();
 };
 function build(k,isSplit){
@@ -1184,7 +1202,7 @@ function build(k,isSplit){
  </aside>
  <main class="vault-browser-main"><div class="vault-browser-header"><div style="font-weight:700;">${esc(D.title)} / <strong>${esc(sub.name)}</strong></div>${ico('⬆️','Upload',`document.getElementById('${dwg?'dwg':'vault'}-uploader').click()`,1)}<input type="file" id="${dwg?'dwg':'vault'}-uploader" ${dwg?'accept=".pdf"':''} style="display:none;" multiple onchange="${dwg?'handleDwgFileUpload':'handleBrowserFileUpload'}(this.files)"></div>
  <div class="vault-table-wrap"><table class="vault-table"><thead><tr><th>Type</th><th>${dwg?'Drawing Title':'File Name'}</th>${dwg?'<th>Sheet</th><th>Revision</th>':'<th>Size</th><th>Date</th>'}<th style="text-align:right;">Actions</th></tr></thead><tbody>
- ${sub.files.length?sub.files.map((x,i)=>`<tr><td>${dwg?'📄':'📦'}</td><td style="font-weight:700;">${esc(x.name)}</td>${dwg?`<td>${esc(x.sheet||'A1')}</td><td style="color:var(--accent);">${esc(x.rev||'Rev A')}</td>`:`<td style="color:var(--accent);">${esc(x.size)}</td><td>${esc(x.date)}</td>`}<td style="text-align:right;white-space:nowrap;">${dwg?ico('👁️','View',A('view',i),1,1):''}${ico('✏️','Rename',A('renX',i),1)}${ico('⬇️','Download',A('dl',i),1)}${ico('🗑️','Delete',A('delX',i),1)}</td></tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:22px;">Empty folder</td></tr>'}
+ ${sub.files.length?sub.files.map((x,i)=>`<tr><td>${dwg?'📄':'📦'}</td><td style="font-weight:700;">${esc(x.name)}</td>${dwg?`<td>${esc(x.sheet||'A1')}</td><td style="color:var(--accent);">${esc(x.rev||'Rev A')}</td>`:`<td style="color:var(--accent);">${esc(x.size)}</td><td>${esc(x.date)}</td>`}<td style="text-align:right;white-space:nowrap;">${(dwg||/\.(stl|obj)$/i.test(x.file||x.name))?ico('👁️','View',A('view',i),1,1):''}${ico('✏️','Rename',A('renX',i),1)}${ico('⬇️','Download',A('dl',i),1)}${ico('🗑️','Delete',A('delX',i),1)}</td></tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:22px;">Empty folder</td></tr>'}
  </tbody></table></div></main></div>`;
  return p;
 }
@@ -1220,10 +1238,10 @@ W.buildGraphPanel=function(isSplit){
 /* ---------- HEADER: IST clock, quicksave, backup, flag ---------- */
 const KEY='POWERSHARE_QUICKSAVE_V1',ha=$('.header-actions'),ts=$('#theme-selector');
 function fixup(){workspaceData.pastedImages=workspaceData.pastedImages||[];currentSlideIndex=0;activeDocSelection={mainIndex:0,subIndex:null}}
-const snap=()=>JSON.stringify({v:1,saved:new Date().toISOString(),theme:document.body.className.replace('guest-mode','').trim(),workspaceData});
+const snap=()=>JSON.stringify({v:1,saved:new Date().toISOString(),theme:document.body.className.replace('guest-mode','').trim(),workspaceData,design:DD});
 function quickSave(){try{localStorage.setItem(KEY,snap());lastStr=cur();if(W.FB&&FB.owner)FB.save(JSON.stringify(workspaceData)).then(()=>toast('☁️ Saved to cloud ✓')).catch(x=>alert('Cloud save failed: '+(x.message||x)));else toast('💾 Saved on this device ✓')}catch(e){alert('Quicksave failed: browser storage is full or blocked. Use 📤 to save a backup file instead.')}}
 function exportBackup(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([snap()],{type:'application/json'}));a.download='powershare-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-function importBackup(f){if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);if(!j.workspaceData||!Array.isArray(j.workspaceData.sheet))throw 0;if(!confirm('Replace the current workspace with this backup?'))return;workspaceData=j.workspaceData;fixup();renderAll();toast('📥 Backup restored ✓')}catch(e){alert('Invalid backup file.')}};r.readAsText(f);$('#bk-in').value=''}
+function importBackup(f){if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);if(!j.workspaceData||!Array.isArray(j.workspaceData.sheet))throw 0;if(!confirm('Replace the current workspace with this backup?'))return;workspaceData=j.workspaceData;fixup();if(j.design&&j.design.f){DD=j.design;ddSave()}renderAll();toast('📥 Backup restored ✓')}catch(e){alert('Invalid backup file.')}};r.readAsText(f);$('#bk-in').value=''}
 try{const j=JSON.parse(localStorage.getItem(KEY)||'null');if(j&&j.workspaceData&&Array.isArray(j.workspaceData.sheet)){workspaceData=j.workspaceData;fixup();if(j.theme){document.body.className=j.theme;ts.value=j.theme}}}catch(e){}
 const clk=document.createElement('span');clk.id='ist-clock';ha.insertBefore(clk,ts);
 const tick=()=>{const d=new Date(),o={timeZone:'Asia/Kolkata'};clk.textContent=d.toLocaleDateString('en-GB',{...o,weekday:'short',day:'2-digit',month:'short',year:'numeric'})+' • '+d.toLocaleTimeString('en-GB',{...o,hourCycle:'h23'})+' IST'};tick();setInterval(tick,1000);
@@ -1254,6 +1272,7 @@ W.parseMarkdownAndMath=function(text){
   else if(l.startsWith('### '))out.push(`<h3>${inl(l.substring(4))}</h3>`);
   else if(l.startsWith('- '))out.push(`<li>${inl(l.substring(2))}</li>`);
   else if(l)out.push(`<p>${inl(l)}</p>`);
+  else out.push('<div style="height:12px"></div>');
  }
  return out.join('\n');
 };
@@ -1282,6 +1301,134 @@ addEventListener('fb-data',e=>{const j=e.detail;if(!j)return;if(!G()&&got)return
  try{const d=JSON.parse(j);if(!d||!Array.isArray(d.sheet))return;
   if(!G()&&!localStorage.getItem('POWERSHARE_LOCAL_BACKUP')){const q=localStorage.getItem(KEY);if(q)localStorage.setItem('POWERSHARE_LOCAL_BACKUP',q)}
   workspaceData=d;workspaceData.pastedImages=workspaceData.pastedImages||[];if(currentSlideIndex>=(d.slides||[]).length)currentSlideIndex=0;lastStr=cur();renderAll()}catch(x){}});
+const up=(k,files)=>{const d=T(k)[S(k).discKey],sub=d.subfolders[S(k).subfolderIdx];Array.from(files).forEach(f=>{const uid='u'+Date.now()+Math.random().toString(36).slice(2,7),m=(f.size/1048576).toFixed(1)+' MB',dt=new Date().toISOString().slice(0,10);BL[uid]=URL.createObjectURL(f);sub.files.push(k==='cad'?{name:f.name,size:m,date:dt,uid}:{name:f.name,sheet:'A1 Format',rev:'Rev 1.0',size:m,date:dt,uid})});renderAll()};
+W.handleBrowserFileUpload=f=>up('cad',f);W.handleDwgFileUpload=f=>up('dwg',f);
+
+W.buildDocPanel=function(isSplit){
+ const p=document.createElement('div');p.className='window-panel';const A=getActiveDocObject(),gu=G(),secs=workspaceData.docSections,ms=activeDocSelection.mainIndex,sec=secs[ms];
+ const tab=(on,t,c)=>`<div class="doc-tab ${on?'on':''}" onclick="${c}">${t}</div>`;
+ p.innerHTML=`<div class="window-header"><div class="window-title" style="color:var(--doc-color);"><span>📝</span> Technical Engineering Documentation & Report Hub</div><div class="window-controls" style="display:flex;align-items:center;gap:8px;"><div class="view-mode-toggle" style="background:var(--bg-card);padding:2px;"><button class="mode-toggle-btn ${docMode==='split'?'active':''}" onclick="setDocDisplayMode('split')">🌓 Split</button><button class="mode-toggle-btn ${docMode==='preview'?'active':''}" onclick="setDocDisplayMode('preview')">👁️ Preview</button><button class="mode-toggle-btn ${docMode==='edit'?'active':''}" onclick="setDocDisplayMode('edit')">✏️ Editor</button></div>${isSplit?`<button class="btn-icon btn-icon-danger" onclick="closeToolInSplit('doc')">✕</button>`:''}</div></div>
+ <div class="symbols-toolbar"><button class="sym-btn" onclick="addMainDocSection()">➕ Main Section</button><button class="sym-btn" onclick="addSubDocSection()">➕ Sub-section</button><button class="sym-btn sym-btn-danger" onclick="deleteActiveDocItem()">🗑️ Delete</button></div>
+ <div class="window-content" style="flex:1;display:flex;flex-direction:column;overflow:hidden;padding:0;">
+  <div class="doc-nav">${secs.map((x,i)=>tab(ms===i&&activeDocSelection.subIndex===null,'📁 '+esc(x.title),`activeDocSelection={mainIndex:${i},subIndex:null};renderAll();`)).join('')}</div>
+  ${sec&&(sec.subsections||[]).length?`<div class="doc-nav doc-nav-sub"><span class="doc-nav-lbl">SUB-SECTIONS</span>${sec.subsections.map((x,j)=>tab(activeDocSelection.subIndex===j,'📄 '+esc(x.title),`activeDocSelection={mainIndex:${ms},subIndex:${j}};renderAll();`)).join('')}</div>`:''}
+  <div style="flex:1;display:flex;flex-direction:column;padding:16px;overflow:hidden;">
+   <input type="text" value="${esc(A.obj.title)}" ${gu?'readonly':''} oninput="getActiveDocObject().obj.title=this.value" onchange="renderAll()" style="background:transparent;border:none;font-size:18px;font-weight:800;color:var(--text-main);outline:none;margin-bottom:10px;border-bottom:1px solid var(--border);padding-bottom:6px;">
+   <div class="doc-split-editor" style="display:flex;flex:1;gap:12px;overflow:hidden;">
+    ${docMode!=='preview'?`<div class="doc-pane" style="flex:1;display:flex;flex-direction:column;overflow:hidden;"><div style="font-size:10px;font-weight:700;color:var(--text-muted);margin-bottom:4px;">MARKDOWN / LATEX SOURCE</div><textarea class="doc-textarea" style="flex:1;width:100%;background:transparent;border:none;color:var(--text-main);font-family:inherit;font-size:13px;line-height:1.6;resize:none;outline:none;" oninput="docInput(this)">${esc(A.obj.content)}</textarea></div>`:''}
+    ${docMode!=='edit'?`<div class="doc-pane" style="flex:1;overflow-y:auto;"><div style="font-size:10px;font-weight:700;color:var(--accent);margin-bottom:4px;">LIVE FORMATTED PREVIEW</div><div class="doc-preview-pane">${W.parseMarkdownAndMath(A.obj.content)}</div></div>`:''}
+   </div></div></div>`;
+ return p};
+
+const PH='cc8b27410e10b3e47696d1beb67dc52b2c442a118a31d2d0234fe178909b473c';let unl=sessionStorage.getItem('MGSE_PROJ_UNLOCK')==='1';
+const sha=async t=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)))].map(b=>b.toString(16).padStart(2,'0')).join('');
+function askPw(){return new Promise(res=>{const b=document.createElement('div');b.className='card-back';b.innerHTML='<div class="msg-card" style="text-align:left;"><span class="ico x" title="Close">✕</span><div class="msg-main" style="font-size:16px;">🔒 Project folder password</div><input id="pw-in" type="password" autocomplete="off" placeholder="Enter password" style="margin-top:12px;width:100%;padding:8px;border-radius:6px;border:1px solid var(--border);background:var(--bg-sidebar);color:var(--text-main);"><div id="pw-err" style="color:var(--status-red);font-size:12px;min-height:16px;margin-top:6px;"></div><button class="sym-btn" id="pw-ok" style="margin-top:8px;">🔓 Unlock</button></div>';document.body.appendChild(b);const i=b.querySelector('#pw-in'),e=b.querySelector('#pw-err');i.focus();const done=v=>{b.remove();res(v)};b.querySelector('.x').onclick=()=>done(false);const go=async()=>{if(await sha(i.value)===PH)done(true);else{e.textContent='Wrong password';i.value=''}};b.querySelector('#pw-ok').onclick=go;i.onkeydown=ev=>{if(ev.key==='Enter')go()}})}
+wrap('renderAll',o=>{if(unl)return o();const sv=workspaceData.projects.map(x=>x.expanded);workspaceData.projects.forEach(x=>x.expanded=false);try{return o()}finally{workspaceData.projects.forEach((x,i)=>x.expanded=sv[i])}});
+const tpc=W.toggleProjectCollapse;W.toggleProjectCollapse=async function(id){if(!unl){if(!await askPw())return;unl=true;sessionStorage.setItem('MGSE_PROJ_UNLOCK','1');renderAll();return}tpc(id)};
+/* ===== 3D viewer (STL / OBJ) ===== */
+const lj=src=>new Promise((r,j)=>{if(document.querySelector('script[src="'+src+'"]'))return r();const e=document.createElement('script');e.src=src;e.onload=r;e.onerror=()=>j(new Error('could not load '+src));document.head.appendChild(e)});
+async function view3d(u,name){const T3='https://cdn.jsdelivr.net/npm/three@0.128.0/',obj3=/\.obj$/i.test(name);
+ const b=document.createElement('div');b.className='card-back';b.style.cssText+='flex-direction:column;align-items:stretch;padding:12px;gap:8px;';
+ b.innerHTML='<div style="display:flex;justify-content:space-between;color:#fff;font-weight:700;padding:2px 8px;"><span>🧊 '+esc(name)+' — drag to rotate, scroll to zoom, right-drag to pan</span><span class="ico" id="v3x" style="font-size:18px;">✕</span></div><div id="v3c" style="flex:1;background:#0b1220;border-radius:8px;position:relative;overflow:hidden;"><div style="color:#94a3b8;padding:20px;">Loading 3D viewer…</div></div>';
+ document.body.appendChild(b);let raf,ren;b.querySelector('#v3x').onclick=()=>{cancelAnimationFrame(raf);if(ren)ren.dispose();b.remove()};
+ const c=b.querySelector('#v3c');
+ try{await lj(T3+'build/three.min.js');await lj(T3+'examples/js/controls/OrbitControls.js');await lj(T3+'examples/js/loaders/'+(obj3?'OBJLoader':'STLLoader')+'.js');
+  const buf=await (await fetch(u)).arrayBuffer(),mat=()=>new THREE.MeshStandardMaterial({color:0x9ab4d6,metalness:.3,roughness:.5});let obj;
+  if(obj3){obj=new THREE.OBJLoader().parse(new TextDecoder().decode(buf));obj.traverse(m=>{if(m.isMesh)m.material=mat()})}
+  else{const g=new THREE.STLLoader().parse(buf);g.computeVertexNormals();obj=new THREE.Mesh(g,mat())}
+  c.innerHTML='';const sc=new THREE.Scene(),dl=new THREE.DirectionalLight(0xffffff,.8);dl.position.set(1,1,1);sc.add(new THREE.HemisphereLight(0xffffff,0x334155,1),dl,obj);
+  const bx=new THREE.Box3().setFromObject(obj),sz=bx.getSize(new THREE.Vector3()).length()||1;obj.position.sub(bx.getCenter(new THREE.Vector3()));
+  const cam=new THREE.PerspectiveCamera(45,c.clientWidth/c.clientHeight,sz/100,sz*100);cam.position.set(sz*.8,sz*.6,sz*.8);
+  ren=new THREE.WebGLRenderer({antialias:true});ren.setSize(c.clientWidth,c.clientHeight);c.appendChild(ren.domElement);
+  const ctl=new THREE.OrbitControls(cam,ren.domElement),loop=()=>{raf=requestAnimationFrame(loop);ctl.update();ren.render(sc,cam)};loop();
+ }catch(e){c.innerHTML='<div style="color:#fca5a5;padding:20px;">Could not open this model ('+esc(e.message||e)+'). Only .stl and .obj files can be viewed.</div>'}}
+
+/* ===== Design Data Code (owner only, stored in private/design) ===== */
+const DDEF=JSON.stringify({f:[{t:'Design Data 1',c:'',s:[]}]});
+let DD=(()=>{try{return JSON.parse(localStorage.getItem('POWERSHARE_DESIGN_V1'))}catch(e){return null}})();if(!DD||!DD.f)DD=JSON.parse(DDEF);
+let dsel={m:0,s:null},dtm;
+const ddSave=()=>{clearTimeout(dtm);dtm=setTimeout(()=>{if(G())return;const j=JSON.stringify(DD);try{localStorage.setItem('POWERSHARE_DESIGN_V1',j)}catch(e){}if(W.FB&&FB.owner)FB.dsave(j).catch(()=>toast('Design data saved on this device only. Add the "private" rule in Firebase to sync it.'))},700)};
+const dcur=()=>{const f=DD.f[dsel.m]||DD.f[0];return dsel.s!==null&&f.s[dsel.s]?f.s[dsel.s]:f};
+W.ddA=op=>{if(G())return;const f=DD.f[dsel.m]||DD.f[0];
+ if(op==='addF'){const n=prompt('Folder name:','New Folder');if(!n)return;DD.f.push({t:n,c:'',s:[]});dsel={m:DD.f.length-1,s:null}}
+ else if(op==='addS'){const n=prompt('Sub-folder name:','New Sub-folder');if(!n)return;f.s.push({t:n,c:''});dsel.s=f.s.length-1}
+ else if(op==='del'){if(dsel.s!==null){if(!confirm('Delete this sub-folder?'))return;f.s.splice(dsel.s,1);dsel.s=null}else{if(DD.f.length<2)return alert('Cannot delete the last folder.');if(!confirm('Delete folder "'+f.t+'" and its sub-folders?'))return;DD.f.splice(dsel.m,1);dsel={m:0,s:null}}}
+ ddSave();renderAll()};
+W.ddIn=t=>{dcur().c=t.value;const pv=t.closest('.window-panel').querySelector('.doc-preview-pane');if(pv)pv.innerHTML=W.parseMarkdownAndMath(t.value);ddSave()};
+W.ddT=v=>{dcur().t=v;ddSave()};W.ddSel=(m,s)=>{dsel={m,s};renderAll()};
+function buildDesign(isSplit){const p=document.createElement('div');p.className='window-panel';const f=DD.f[dsel.m]||DD.f[0],c=dcur(),tab=(on,t,a)=>`<div class="doc-tab ${on?'on':''}" onclick="${a}">${t}</div>`,md={split:'🌓 Split',preview:'👁️ Preview',edit:'✏️ Editor'};
+ p.innerHTML=`<div class="window-header"><div class="window-title" style="color:var(--doc-color);"><span>🧬</span> Design Data Code</div><div class="window-controls" style="display:flex;align-items:center;gap:8px;"><div class="view-mode-toggle" style="background:var(--bg-card);padding:2px;">${Object.keys(md).map(m=>`<button class="mode-toggle-btn ${docMode===m?'active':''}" onclick="setDocDisplayMode('${m}')">${md[m]}</button>`).join('')}</div>${isSplit?`<button class="btn-icon btn-icon-danger" onclick="closeToolInSplit('design')">✕</button>`:''}</div></div>
+ <div class="symbols-toolbar"><button class="sym-btn" onclick="ddA('addF')">➕ Folder</button><button class="sym-btn" onclick="ddA('addS')">➕ Sub-folder</button><button class="sym-btn sym-btn-danger" onclick="ddA('del')">🗑️ Delete</button></div>
+ <div class="window-content" style="flex:1;display:flex;flex-direction:column;overflow:hidden;padding:0;">
+  <div class="doc-nav">${DD.f.map((x,i)=>tab(dsel.m===i&&dsel.s===null,'📁 '+esc(x.t),`ddSel(${i},null)`)).join('')}</div>
+  ${f.s.length?`<div class="doc-nav doc-nav-sub"><span class="doc-nav-lbl">SUB-FOLDERS</span>${f.s.map((x,j)=>tab(dsel.s===j,'📂 '+esc(x.t),`ddSel(${dsel.m},${j})`)).join('')}</div>`:''}
+  <div style="flex:1;display:flex;flex-direction:column;padding:16px;overflow:hidden;"><input type="text" value="${esc(c.t)}" oninput="ddT(this.value)" onchange="renderAll()" style="background:transparent;border:none;font-size:18px;font-weight:800;color:var(--text-main);outline:none;margin-bottom:10px;border-bottom:1px solid var(--border);padding-bottom:6px;">
+   <div class="doc-split-editor" style="display:flex;flex:1;gap:12px;overflow:hidden;">
+    ${docMode!=='preview'?`<div class="doc-pane" style="flex:1;display:flex;flex-direction:column;overflow:hidden;"><div style="font-size:10px;font-weight:700;color:var(--text-muted);margin-bottom:4px;">DESIGN DATA / CODE SOURCE</div><textarea class="doc-textarea" style="flex:1;width:100%;background:transparent;border:none;color:var(--text-main);font-family:inherit;font-size:13px;line-height:1.6;resize:none;outline:none;" oninput="ddIn(this)">${esc(c.c)}</textarea></div>`:''}
+    ${docMode!=='edit'?`<div class="doc-pane" style="flex:1;overflow-y:auto;"><div style="font-size:10px;font-weight:700;color:var(--accent);margin-bottom:4px;">LIVE FORMATTED PREVIEW</div><div class="doc-preview-pane">${W.parseMarkdownAndMath(c.c)}</div></div>`:''}
+   </div></div></div>`;return p}
+wrap('renderAll',o=>{o();const cv=$('#canvas-stage');if(!cv)return;if(G()){if(focusedTool==='design'){focusedTool='sheet';W.renderAll()}return}
+ if(viewMode==='fullscreen'){if(focusedTool==='design'){cv.innerHTML='';cv.appendChild(buildDesign(false))}}else if(splitOpenTools.design)cv.appendChild(buildDesign(true))});
+addEventListener('fb-auth',e=>{if(!e.detail||!W.FB||!FB.dget)return;FB.dget().then(s=>{if(s.exists()){const d=JSON.parse(s.data().json);if(d&&d.f){const l=JSON.stringify(DD);if(l!==DDEF&&l!==JSON.stringify(d))try{localStorage.setItem('POWERSHARE_DESIGN_BACKUP',l)}catch(x){}DD=d;dsel={m:0,s:null};renderAll()}}else if(JSON.stringify(DD)!==DDEF)ddSave()}).catch(()=>{})});
+
+/* ===== PowerPoint: 4 sections, editable slides, pictures, import, present ===== */
+const PK=[['mech','Mechanical'],['elec','Electrical'],['mecha','Mechatronics'],['all','Complete Project Coverage']],PKEY='POWERSHARE_PPT_V1',pLast={},pGot={};
+let PD=(()=>{try{return JSON.parse(localStorage.getItem(PKEY))}catch(e){return null}})()||{};PK.forEach(([k])=>{if(!Array.isArray(PD[k]))PD[k]=[]});
+let pk='all',pi=0,psel=-1,ptm;
+const conv=()=>(workspaceData.slides||[]).map(s=>({els:[{t:'txt',x:6,y:8,w:88,h:16,fs:4.2,b:1,v:s.title||''},{t:'txt',x:6,y:28,w:88,h:62,fs:2.4,v:s.body||''}]}));
+const getDeck=k=>PD[k].length?PD[k]:(k==='all'?conv():[]),own=k=>{if(!PD[k].length)PD[k]=getDeck(k)};
+const TXT=(x,y,w,h,fs,v,b)=>({t:'txt',x,y,w,h,fs,b,v});
+const LAY={'Title slide':[TXT(10,34,80,20,5.5,'Title',1),TXT(10,58,80,12,2.6,'Subtitle')],'Title + content':[TXT(6,8,88,16,4.2,'Title',1),TXT(6,28,88,62,2.4,'Content')],'Two columns':[TXT(6,8,88,16,4.2,'Title',1),TXT(6,28,42,62,2.4,'Left'),TXT(52,28,42,62,2.4,'Right')],'Image + text':[TXT(6,8,88,16,4.2,'Title',1),TXT(52,28,42,62,2.4,'Text')]};
+const pSave=()=>{clearTimeout(ptm);ptm=setTimeout(()=>{try{localStorage.setItem(PKEY,JSON.stringify(PD))}catch(e){toast('Slides are too large to keep on this device')}
+ if(W.FB&&FB.owner)PK.forEach(([k])=>{const j=JSON.stringify(PD[k]);if(j===pLast[k]||(!PD[k].length&&!pLast[k]))return;FB.psave('ppt_'+k,j).then(()=>pLast[k]=j).catch(e=>toast('Slides not synced: '+(e.message||e)))})},700)};
+addEventListener('fb-ppt',e=>{const {id,json}=e.detail,k=id.slice(4);if(!G()&&pGot[id])return;pGot[id]=1;try{const d=JSON.parse(json);if(Array.isArray(d)&&json!==JSON.stringify(PD[k])){PD[k]=d;pLast[k]=json;if(pi>=d.length)pi=0;renderAll()}}catch(x){}});
+const sh=(sl,ed)=>sl.els.map((e,i)=>`<div class="pp-el${ed&&psel===i?' sel':''}" data-i="${i}" style="left:${e.x}%;top:${e.y}%;width:${e.w}%;height:${e.h}%;" ${ed?`onpointerdown="ppSel(${i})"`:''}>${e.t==='img'?`<img src="${e.v}" draggable="false" style="width:100%;height:100%;object-fit:fill;pointer-events:none;">`:`<div class="pp-t" ${ed?`contenteditable="true" onblur="ppTxt(${i},this)"`:''} style="font-size:${e.fs||2.4}cqw;${e.b?'font-weight:800;':''}">${esc(e.v)}</div>`}${ed&&psel===i?hnd(i):''}</div>`).join('');
+const hnd=i=>`<span class="pp-mv" onpointerdown="ppDrag(event,${i},'move')">✥</span>`+['nw','ne','sw','se'].map(c=>`<span class="pp-h ${c}" onpointerdown="ppDrag(event,${i},'${c}')"></span>`).join('');
+const csl=()=>{own(pk);return PD[pk][pi]};
+W.ppSel=i=>{if(G())return;const st=$('#pp-stage');if(!st)return;st.querySelectorAll('.pp-mv,.pp-h').forEach(x=>x.remove());st.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'));psel=i;if(i<0)return;const el=st.querySelector('[data-i="'+i+'"]');if(el){el.classList.add('sel');el.insertAdjacentHTML('beforeend',hnd(i))}};
+W.ppDrag=(e,i,mode)=>{e.preventDefault();e.stopPropagation();if(G())return;const st=$('#pp-stage'),r=st.getBoundingClientRect(),sl=csl(),el=sl.els[i],o={...el},sx=e.clientX,sy=e.clientY,node=st.querySelector('[data-i="'+i+'"]');
+ const mv=ev=>{const dx=(ev.clientX-sx)/r.width*100,dy=(ev.clientY-sy)/r.height*100;
+  if(mode==='move'){el.x=o.x+dx;el.y=o.y+dy}
+  else{const w=Math.max(4,o.w+(mode.includes('e')?dx:-dx)),h=el.t==='img'&&el.ar?w*el.ar*16/9:Math.max(4,o.h+(mode.includes('s')?dy:-dy));el.w=w;el.h=h;if(mode.includes('w'))el.x=o.x+o.w-w;if(mode.includes('n'))el.y=o.y+o.h-h}
+  node.style.left=el.x+'%';node.style.top=el.y+'%';node.style.width=el.w+'%';node.style.height=el.h+'%'};
+ const up=()=>{removeEventListener('pointermove',mv);removeEventListener('pointerup',up);pSave()};addEventListener('pointermove',mv);addEventListener('pointerup',up)};
+W.ppTxt=(i,n)=>{if(G())return;const e=csl().els[i];if(e){e.v=n.innerText;pSave()}};
+W.ppTab=k=>{pk=k;pi=0;psel=-1;renderAll()};
+W.ppGo=d=>{pi=Math.max(0,Math.min(getDeck(pk).length-1,pi+d));psel=-1;renderAll()};
+W.ppAdd=()=>{if(G())return alertGuestBlocked();own(pk);PD[pk].push({els:LAY['Title + content'].map(x=>({...x}))});pi=PD[pk].length-1;psel=-1;pSave();renderAll()};
+W.ppDel=()=>{if(G())return alertGuestBlocked();if(!getDeck(pk).length||!confirm('Delete this slide?'))return;own(pk);PD[pk].splice(pi,1);pi=Math.max(0,pi-1);psel=-1;pSave();renderAll()};
+W.ppText=()=>{if(G())return alertGuestBlocked();if(!getDeck(pk).length)return W.ppAdd();csl().els.push(TXT(10,30,40,14,2.4,'New text'));psel=csl().els.length-1;pSave();renderAll()};
+W.ppDelEl=()=>{if(G())return alertGuestBlocked();if(psel<0)return;csl().els.splice(psel,1);psel=-1;pSave();renderAll()};
+W.ppFs=d=>{if(G())return alertGuestBlocked();const e=psel>=0&&csl().els[psel];if(e&&e.t==='txt'){e.fs=Math.max(1,(e.fs||2.4)+d);pSave();renderAll()}};
+W.ppLay=n=>{if(G()||!n||!LAY[n])return;if(!getDeck(pk).length)W.ppAdd();const s=csl();s.els=s.els.filter(x=>x.t==='img').concat(LAY[n].map(x=>({...x})));psel=-1;pSave();renderAll()};
+const shrinkU=(src,max=1000)=>new Promise(res=>{const im=new Image();im.onload=()=>{const s=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*s)||1;c.height=Math.round(im.height*s)||1;const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,c.width,c.height);g.drawImage(im,0,0,c.width,c.height);res({v:c.toDataURL('image/jpeg',.7),ar:c.height/c.width})};im.onerror=()=>res(null);im.src=src});
+W.ppImg=async files=>{if(G())return alertGuestBlocked();if(!getDeck(pk).length)W.ppAdd();for(const f of files){const u=URL.createObjectURL(f),r=await shrinkU(u);URL.revokeObjectURL(u);if(!r)continue;let w=40,h=w*r.ar*16/9;if(h>80){h=80;w=h/(r.ar*16/9)}const s=csl();s.els.push({t:'img',x:20,y:12,w,h,ar:r.ar,v:r.v});psel=s.els.length-1}pSave();renderAll()};
+document.addEventListener('paste',e=>{if(G()||(focusedTool!=='ppt'&&!splitOpenTools.ppt)||(e.target&&e.target.isContentEditable))return;const fs=[...(e.clipboardData?e.clipboardData.files:[])].filter(f=>f.type.indexOf('image/')===0);if(fs.length){e.preventDefault();W.ppImg(fs)}});
+W.ppImport=async f=>{if(!f||G())return;toast('Importing…');own(pk);const out=[];
+ try{if(/\.pdf$/i.test(f.name)){const B='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';await lj(B+'pdf.min.js');pdfjsLib.GlobalWorkerOptions.workerSrc=B+'pdf.worker.min.js';const d=await pdfjsLib.getDocument({data:await f.arrayBuffer()}).promise;
+   for(let n=1;n<=d.numPages;n++){const pg=await d.getPage(n),vp=pg.getViewport({scale:1}),c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;await pg.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;out.push({els:[{t:'img',x:0,y:0,w:100,h:100,v:c.toDataURL('image/jpeg',.65)}]})}}
+  else{await lj('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');const z=await JSZip.loadAsync(f),ps=new DOMParser(),rd=async n=>ps.parseFromString(await z.file(n).async('string'),'text/xml'),NS=(n,t)=>n.getElementsByTagNameNS('*',t);
+   const sz=NS(await rd('ppt/presentation.xml'),'sldSz')[0],W0=+sz.getAttribute('cx'),H0=+sz.getAttribute('cy');
+   const names=Object.keys(z.files).filter(n=>/^ppt\/slides\/slide\d+\.xml$/.test(n)).sort((a,b)=>a.match(/\d+/)[0]-b.match(/\d+/)[0]);
+   for(const nm of names){const x=await rd(nm),rl=await rd(nm.replace('slides/','slides/_rels/')+'.rels'),mp={},els=[];let ti=0;[...rl.getElementsByTagName('Relationship')].forEach(r=>mp[r.getAttribute('Id')]=r.getAttribute('Target'));
+    for(const sp of [...NS(x,'spTree')[0].children]){const ln=sp.localName;if(ln!=='sp'&&ln!=='pic')continue;const o=NS(sp,'off')[0],e=NS(sp,'ext')[0];let b=null;if(o&&e)b={x:o.getAttribute('x')/W0*100,y:o.getAttribute('y')/H0*100,w:e.getAttribute('cx')/W0*100,h:e.getAttribute('cy')/H0*100};
+     if(ln==='sp'){const t=[...NS(sp,'p')].map(p=>[...NS(p,'t')].map(q=>q.textContent).join('')).join('\n').trim();if(!t)continue;els.push({t:'txt',...(b||(ti===0?{x:6,y:6,w:88,h:16}:{x:6,y:26,w:88,h:64})),fs:ti===0?(b?3:4.2):2.2,b:ti===0?1:0,v:t});ti++}
+     else{const be=NS(sp,'blip')[0],tg=be&&mp[be.getAttribute('r:embed')];if(!tg||!b)continue;const mn='ppt/'+tg.replace('../',''),fl=z.file(mn);if(!fl||!/\.(png|jpe?g|gif)$/i.test(mn))continue;const r=await shrinkU('data:image/'+mn.split('.').pop().toLowerCase().replace('jpg','jpeg')+';base64,'+await fl.async('base64'));if(r)els.push({t:'img',...b,v:r.v})}}
+    out.push({els})}}
+  if(!out.length)throw new Error('no slides found');PD[pk]=PD[pk].concat(out);pi=PD[pk].length-out.length;psel=-1;pSave();renderAll();toast('Imported '+out.length+' slide(s)')}catch(e){alert('Import failed: '+(e.message||e))}};
+W.ppPresent=()=>{const deck=getDeck(pk);if(!deck.length)return;let n=pi;const b=document.createElement('div');b.style.cssText='position:fixed;inset:0;background:#000;z-index:100002;display:flex;align-items:center;justify-content:center;';document.body.appendChild(b);
+ const draw=()=>{b.innerHTML='<div class="pp-stage" style="width:min(100vw,177.78vh);">'+sh(deck[n],false)+'</div><div style="position:absolute;bottom:8px;right:14px;color:#64748b;font:12px sans-serif;">'+(n+1)+' / '+deck.length+'</div>'},nx=d=>{n=Math.max(0,Math.min(deck.length-1,n+d));draw()};draw();
+ const key=e=>{if(['ArrowRight',' ','PageDown'].includes(e.key))nx(1);else if(['ArrowLeft','PageUp'].includes(e.key))nx(-1);else if(e.key==='Escape')end()};
+ const end=()=>{if(!b.isConnected)return;document.removeEventListener('keydown',key,true);document.removeEventListener('fullscreenchange',fc);if(document.fullscreenElement)document.exitFullscreen();b.remove();pi=n;renderAll()},fc=()=>{if(!document.fullscreenElement)end()};
+ document.addEventListener('keydown',key,true);document.addEventListener('fullscreenchange',fc);b.onclick=e=>nx(e.clientX>innerWidth/2?1:-1);if(b.requestFullscreen)b.requestFullscreen().catch(()=>{})};
+W.buildPptPanel=function(isSplit){const gu=G(),deck=getDeck(pk);if(pi>=deck.length)pi=Math.max(0,deck.length-1);const sl=deck[pi],p=document.createElement('div');p.className='window-panel';
+ const bt=(c,t,a)=>`<button class="sym-btn ${gu&&a?'disabled-read-only':''}" onclick="${gu&&a?'alertGuestBlocked()':c}">${t}</button>`;
+ p.innerHTML=`<div class="window-header"><div class="window-title" style="color:var(--ppt-color);"><span>📽️</span> Presentation Deck</div>${isSplit?`<button class="btn-icon btn-icon-danger" onclick="closeToolInSplit('ppt')">✕</button>`:''}</div>
+ <div class="doc-nav">${PK.map(([k,n])=>`<div class="doc-tab ${k===pk?'on':''}" onclick="ppTab('${k}')">${n}</div>`).join('')}</div>
+ <div class="symbols-toolbar" style="flex-wrap:wrap;">${bt('ppGo(-1)','◀',0)}<span style="font-size:12px;font-weight:800;">${deck.length?pi+1:0} / ${deck.length}</span>${bt('ppGo(1)','▶',0)}${bt('ppPresent()','▶️ Present',0)}<div class="sym-divider"></div>${bt('ppAdd()','➕ Slide',1)}${bt('ppDel()','🗑️ Slide',1)}${bt('ppText()','🔤 Text',1)}${bt("document.getElementById('pp-img').click()",'🖼️ Image',1)}${bt("document.getElementById('pp-file').click()",'⬆️ Import PPTX / PDF',1)}${bt('ppFs(-.3)','A−',1)}${bt('ppFs(.3)','A+',1)}${bt('ppDelEl()','🗑️ Item',1)}
+  <select class="theme-select" ${gu?'disabled':''} onchange="ppLay(this.value);this.value=''"><option value="">Layout…</option>${Object.keys(LAY).map(n=>`<option>${n}</option>`).join('')}</select>
+  <input type="file" id="pp-img" accept="image/*" multiple style="display:none" onchange="ppImg(this.files)"><input type="file" id="pp-file" accept=".pptx,.pdf" style="display:none" onchange="ppImport(this.files[0])"></div>
+ <div class="window-content"><div style="padding:14px;">${sl?`<div class="pp-stage" id="pp-stage" style="max-width:960px;margin:0 auto;box-shadow:0 0 0 1px var(--border);" onpointerdown="if(event.target.id==='pp-stage')ppSel(-1)">${sh(sl,!gu)}</div>`:'<div style="color:var(--text-muted);text-align:center;padding:40px;">No slides in this section yet. Use ➕ Slide or import a PPTX / PDF.</div>'}</div></div>`;return p};
 let sp='';for(let i=0;i<24;i++){const a=i*Math.PI/12;sp+=`<line x1="15" y1="10" x2="${(15+2.7*Math.cos(a)).toFixed(2)}" y2="${(10+2.7*Math.sin(a)).toFixed(2)}" stroke="#000080" stroke-width=".25"/>`}
 const fl=document.createElement('span');fl.className='hdr-flag';fl.title='India';fl.innerHTML=`<svg width="33" height="22" viewBox="0 0 30 20" role="img" aria-label="India"><rect width="30" height="20" fill="#fff"/><rect width="30" height="6.67" fill="#FF9933"/><rect y="13.33" width="30" height="6.67" fill="#138808"/><circle cx="15" cy="10" r="2.8" fill="none" stroke="#000080" stroke-width=".4"/>${sp}<rect width="30" height="20" fill="none" stroke="#94a3b8" stroke-width=".6"/></svg>`;ha.appendChild(fl);
 })();
@@ -1289,16 +1436,20 @@ const fl=document.createElement('span');fl.className='hdr-flag';fl.title='India'
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {getFirestore,doc,onSnapshot,setDoc} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {getFirestore,doc,onSnapshot,setDoc,getDoc} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import {getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 const app=initializeApp({apiKey:"AIzaSyBm1IH0fIXRfV45_pKjF_BD_9tu0lhttZs",authDomain:"mgse-hub.firebaseapp.com",projectId:"mgse-hub",storageBucket:"mgse-hub.firebasestorage.app",messagingSenderId:"301872543500",appId:"1:301872543500:web:600725bab6a91725c3bb29"});
 const db=getFirestore(app),auth=getAuth(app),ref=doc(db,"workspace","main");
 window.FB={owner:false,
  login:(e,p)=>signInWithEmailAndPassword(auth,e,p),
  logout:()=>signOut(auth),
+ psave:(id,j)=>{if(new Blob([j]).size>1000000)return Promise.reject(new Error("too large for one cloud document (large pictures?)"));return setDoc(doc(db,"workspace",id),{json:j,updated:Date.now()})},
+ dget:()=>getDoc(doc(db,"private","design")),
+ dsave:j=>setDoc(doc(db,"private","design"),{json:j,updated:Date.now()}),
  save:j=>{if(new Blob([j]).size>1000000)return Promise.reject(new Error("Data is too large for one cloud document (large pasted images?)"));return setDoc(ref,{json:j,updated:Date.now()})}};
 onAuthStateChanged(auth,u=>{FB.owner=!!u;window.dispatchEvent(new CustomEvent("fb-auth",{detail:!!u}))});
 onSnapshot(ref,s=>{if(s.exists()&&!s.metadata.hasPendingWrites)window.dispatchEvent(new CustomEvent("fb-data",{detail:s.data().json}))},e=>console.warn("Cloud read failed",e));
+["ppt_mech","ppt_elec","ppt_mecha","ppt_all"].forEach(id=>onSnapshot(doc(db,"workspace",id),s=>{if(s.exists()&&!s.metadata.hasPendingWrites)window.dispatchEvent(new CustomEvent("fb-ppt",{detail:{id,json:s.data().json}}))},()=>{}));
 </script>
 </body>
 </html>
